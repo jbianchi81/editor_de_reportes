@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instituto Nacional del Agua (INA) - Subgerencia Laboratorio de Hidrología</title>
+  <meta name="description"
+    content="Es un organismo científico tecnológico descentralizado que tiene por objetivo satisfacer los requerimientos de estudio,    investigación, desarrollo y prestación de servicios especializados en el campo del aprovechamiento y preservación del agua.    Depende de la Secretaría de Infraestructura y Política Hídrica de la Nación,    del [Ministerio de Obras Públicas](https://www.argentina.gob.ar/obras-publicas) de la República Argentina.">
+  <meta name="keywords"
+    content="instituto nacional del agua, INA, ina, subsecretaria de recursos hidricos, laboratorio de hidraulica,    direccion de servicios hidrologicos, centro de tecnologia del uso del agua, centro regional litoral, crl, centro de la region semiarida, cirsa,    centro de economia legislacion y administracion del agua, cela, subgerencia laboratorio de calidad de aguas, subgerencia hidrologia aplicada, delta parana, inundaciones urbanas, productos de emergencia, analisis de agua, alerta hidrologico, monitoreo rio parana,   cuenca del plata, investigaciones en riego y drenaje, calidad de aguas, canal de panama, hidraulica, ingenieria hidraulica, hidrologia superficial,    hidrologia subterranea, programa de investigaciones en hidroquimica, red hidrometeorologica, area pedemontana gran mendoza,   calidad de aguas e impacto ambiental">
+  <meta name="author" content="Instituto Nacional del Agua">
+  <link rel="shortcut icon" href="https://www.ina.gov.ar/img/favicon.ico">
+  <!-- Nav and address bar color -->
+  <meta name="theme-color" content="#0072b8">
+  <meta name="msapplication-navbutton-color" content="#0072b8">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#0072b8">
+  <meta property="og:url" content="https://www.argentina.gob.ar/ina/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Instituto Nacional del Agua (INA) - Subgerencia Laboratorio de Hidrología">
+  <meta property="og:description"
+    content="Es un organismo científico tecnológico descentralizado que tiene por objetivo satisfacer los requerimientos de estudio,    investigación, desarrollo y prestación de servicios especializados en el campo del aprovechamiento y preservación del agua.    Depende de la Secretaría de Infraestructura y Política Hídrica de la Nación,    del [Ministerio de Obras Públicas](https://www.argentina.gob.ar/obras-publicas) de la República Argentina.">
+  <meta property="og:image" content="https://www.ina.gob.ar/img/Logo_ina_chico.png">
+  <meta property="og:locale" content="es_AR">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Instituto Nacional del Agua (INA) - Subgerencia Laboratorio de Hidrología">
+  <meta name="twitter:description"
+    content="Es un organismo científico tecnológico descentralizado que tiene por objetivo satisfacer los requerimientos de estudio,    investigación, desarrollo y prestación de servicios especializados en el campo del aprovechamiento y preservación del agua.    Depende de la Secretaría de Infraestructura y Política Hídrica de la Nación,    del [Ministerio de Obras Públicas](https://www.argentina.gob.ar/obras-publicas) de la República Argentina.">
+  <meta name="twitter:image" content="https://www.ina.gob.ar/img/Logo_ina_chico.png">
+  <link rel="stylesheet" href="styles/bootstrap.min.css"
+    integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/font-awesome.min.css">
+  <link rel="stylesheet" href="styles/poncho.min.css">
+  <!-- <link rel="stylesheet" href="/poncho/dist/css/argentina.css"> -->
+  <link rel="stylesheet" href="styles/icono-arg.css">
+  <link rel="stylesheet" href="styles/ina.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+          <script src="http://argob.github.io/poncho/js/html5shiv.js"></script>
+          <script src="http://argob.github.io/poncho/js/respond.min.js"></script>
+      <![endif]-->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"
+    integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+    crossorigin="anonymous"></script>
+  <link href="styles/owl.carousel.css" type="text/css" rel="stylesheet" media="screen">
+  <script src="js/owl.carousel.min.js" type="text/javascript"></script>
+</head>
+<body>
+  <div id="report_container"></div>
+  <script>
+    fetch("saved.html")
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('report_container').innerHTML = html;
+      });
+  </script>
+</body>
+
+</html>
