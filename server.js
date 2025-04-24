@@ -26,8 +26,8 @@ app.get('/template', (req, res) => {
 app.post('/save', (req, res) => {
   const html = req.body.html;
   fs.writeFile('public/saved.html', html, err => {
-    if (err) return res.status(500).send('Failed to save');
-    res.send('Saved successfully!');
+    if (err) return res.status(500).send('Error al guardar');
+    res.send('Se guardó exitosamente!');
   });
 });
 
