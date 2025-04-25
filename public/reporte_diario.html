@@ -59,10 +59,37 @@
     #report_container img {
       max-width: 714px;
     }
+    #report_container table {
+      width: 714px; 
+      margin: 10px 0;
+    }
+    #report_container table td, #report_container table th {
+      padding: 10px;
+      border: #EFEFEF solid 1px;
+    }
+    
+    .print-header {
+      display: none;
+    }
+    
+    @media print {
+      .print-header {
+        display: block;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        text-align: center;
+        padding-bottom: 10px;
+      }
+    }
+    
 
   </style>
 </head>
 <body>
+  <div class="print-header">
+    <img src="membrete-2025.jpg" alt="Instituto Nacional del Agua" />
+  </div>
   <div id="report_container"></div>
   <script>
     fetch("saved.html")
