@@ -1,48 +1,64 @@
-<html lang="es">
-<body>
+
+
   <main role="main">
     <section>
-      <div class="container">
+      <div class="container-reporte">
         <h2>Reporte diario</h2>
         <h3>Situación meteorológica</h3>
         <h4>Mapa de acumulado semanal</h4>
-        <p><img class="mapa" src=https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_semanales/pp_semanal_20181213_rst.png></p>
-        <p>Texto que describe el acumulado semanal</p>
+        <div><img class="mapa" src="https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_semanales/pp_semanal_20181213_rst.png"></div>
+        <div>Texto que describe el acumulado semanal</div>
         <h4>Mapa de pronóstico a 7 días</h4>
-        <p><img class="mapa" src=https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.2025042406.2025042412.suma.png></p>
+        <div><img class="mapa" src="https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.2025042406.2025042412.suma.png"></div>
         <h3>Situación hidrológica</h3>
         <h4>Tabla de situación y perspectiva a corto plazo</h4>
         <table>
           <thead>
-            <td>Estación</td>
+            <tr><td>Estación</td>
             <td>Río</td>
             <td>Lectura (m)</td>
             <td>Alerta</td>
             <td>Evacuación</td>
+            <td>Estado</td>
             <td>Perspectiva</td>
-          </thead>
+            <td></td>
+          </tr></thead>
+            <tbody><tr>
+                <td>Bahia Negra</td>
+                <td>PARAGUAY</td>
+                <td>5.31 <i class="fas fa-equals"></i></td>
+                <td>5</td>
+                <td>5.5</td>
+                <td><div style="background-color: #cfe2f3; width: 100%; height: 100%;">aguas medias altas</div></td>
+                <td></td>
+                <td><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow;"></i></td>
+            </tr>
             <tr>
                 <td>Corrientes</td>
-                <td></td>
-                <td>1.68</td>
+                <td>PARANAMED</td>
+                <td>2.25 <i class="fa fa-arrow-down" aria-hidden="true"></i></td>
                 <td>6.5</td>
                 <td>7</td>
+                <td><div style="background-color: #ffd580; width: 100%; height: 100%;">aguas medias bajas</div></td>
+                <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Barranqueras</td>
-                <td></td>
-                <td>1.67</td>
+                <td>BARRANQUERAS</td>
+                <td>2.2 <i class="fa fa-arrow-down" aria-hidden="true"></i></td>
                 <td>6</td>
                 <td>6.5</td>
+                <td><div style="background-color: #ffd580; width: 100%; height: 100%;">aguas medias bajas</div></td>
+                <td></td>
                 <td></td>
             </tr>
-        </table>
-        <p>Texto que describe la situación y perspectiva</p>
+        </tbody></table>
+        <div>Texto que describe la situación y perspectiva</div>
         <h4>Hidrogramas</h4>
-            <p><img class="plot" src=https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png></p>
-            <p><img class="plot" src=https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/barranqueras.png></p>
+            <div><img class="plot" src="https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png"></div>
+            <div><img class="plot" src="https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/barranqueras.png"></div>
       </div>
     </section>
-</body>
-</html>
+
+</main>

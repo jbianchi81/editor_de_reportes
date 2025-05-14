@@ -1,5 +1,5 @@
     <section>
-      <div class="container">
+      <div class="container-reporte">
         <h2>Reporte diario</h2>
         <h3>Situación meteorológica</h3>
         <h4>Mapa de acumulado semanal</h4>
@@ -16,16 +16,20 @@
             <td>Lectura (m)</td>
             <td>Alerta</td>
             <td>Evacuación</td>
+            <td>Estado</td>
             <td>Perspectiva</td>
+            <td></td>
           </thead>
           {{#each tabla_hidro}}
             <tr>
                 <td>{{this.estacion_nombre}}</td>
                 <td>{{this.rio}}</td>
-                <td>{{this.valor}}</td>
+                <td>{{this.valor}} {{{this.tendencia}}}</td>
                 <td>{{this.alerta}}</td>
                 <td>{{this.evacuacion}}</td>
+                <td>{{{this.estado}}}</td>
                 <td>{{this.perspectiva}}</td>
+                <td>{{{this.aviso}}}</td>
             </tr>
           {{/each}}
         </table>

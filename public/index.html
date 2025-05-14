@@ -56,9 +56,9 @@
   <link rel="stylesheet" href="styles/richtext.min.css" type="text/css">
   <script class="jsbin" src="js/jquery.richtext.min.js" type="application/javascript"></script>
   <style>
-    #editor, div.richText { 
+    /* #editor, div.richText {  */
       /* width: 794px;  */
-      height: 500px; 
+      /* height: 500px;  */
       /* margin: 0 auto;
       padding: 40px;
       background: white;
@@ -67,7 +67,12 @@
       flex: 1;
       overflow-y: auto;     Scrollable content */
 
+    /* } */
+
+    .container-reporte {
+      width: 714px;
     }
+
     #editor img, div.richText img {
       max-width: 714px;
     }
@@ -86,6 +91,9 @@
     .richText .richText-editor table td, .richText .richText-editor table th {
       padding: 10px;
       border: #EFEFEF solid 1px;
+    }
+    .richText .richText-editor, .richText .richText-initial {
+      height: 600px;
     }
     .button {
       margin-top: 10px; 

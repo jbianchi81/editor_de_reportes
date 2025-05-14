@@ -10,11 +10,13 @@ type Feature = {
         unid: number;
         fecha: string;
         valor: number;
+        valor_precedente: number;
         nombre: string;
         rio: string;
         perspectiva: string;
         nivel_de_alerta: number;
         nivel_de_evacuacion: number;
+        percentil: number;
     };
 };
 export type HydroTableRow = {
@@ -22,9 +24,12 @@ export type HydroTableRow = {
     estacion_nombre: string;
     rio: string;
     valor: number;
+    tendencia: string;
     alerta: number;
     evacuacion: number;
+    estado: string;
     perspectiva: string;
+    aviso: string;
 };
 export declare function fetchLastValues(): Promise<GeoJSONObject>;
 export declare function getLastValues(station_ids: number[]): Promise<HydroTableRow[]>;
@@ -36,4 +41,7 @@ export declare function getValuesDiario(station_ids: number[]): Promise<{
     texto_hidro: string;
     hidrogramas: string[];
 }>;
+export declare function getStatusColor(percentil: number): string;
+export declare function getStatusText(percentil: number): string;
+export declare function getStatus(percentil: number): string;
 export {};

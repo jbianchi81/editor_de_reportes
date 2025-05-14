@@ -18,19 +18,46 @@ export async function fetchLastValues() {
         throw err;
     }
 }
+function detectWarning(valor, nivel_de_alerta, nivel_de_evacuacion) {
+    if (valor == null) {
+        return "no_data";
+    }
+    if (nivel_de_alerta != null && valor >= nivel_de_alerta) {
+        if (nivel_de_evacuacion != null && valor >= nivel_de_evacuacion) {
+            return "evacuacion";
+        }
+        else {
+            return "alerta";
+        }
+    }
+    else {
+        return "ok";
+    }
+}
+function getTrend(valor, valor_precedente) {
+    if (valor == null || valor_precedente == null) {
+        return "no_data";
+    }
+    return (valor > valor_precedente) ? "sube" : (valor < valor_precedente) ? "baja" : "igual";
+}
 export async function getLastValues(station_ids) {
     const data = await fetchLastValues();
     const rows = [];
     for (const feature of data.features) {
         if (station_ids.indexOf(feature.properties.unid) >= 0) {
+            const tendencia = getTrend(feature.properties.valor, feature.properties.valor_precedente);
+            const aviso = detectWarning(feature.properties.valor, feature.properties.nivel_de_alerta, feature.properties.nivel_de_evacuacion);
             rows.push({
                 id: feature.properties.unid,
                 estacion_nombre: feature.properties.nombre,
                 rio: feature.properties.rio, // undefined
                 valor: feature.properties.valor,
+                tendencia: trend_icon_mapping[tendencia],
                 alerta: feature.properties.nivel_de_alerta,
                 evacuacion: feature.properties.nivel_de_evacuacion,
-                perspectiva: feature.properties.perspectiva // undefined
+                estado: getStatus(feature.properties.percentil),
+                perspectiva: feature.properties.perspectiva, // undefined
+                aviso: warning_icon_mapping[aviso]
             });
         }
     }
@@ -53,6 +80,61 @@ export async function getValuesDiario(station_ids) {
         hidrogramas: hidrogramas
     };
 }
+const warning_icon_mapping = {
+    "ok": '',
+    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow;"></i>',
+    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>',
+    "no_data": ''
+};
+const status_categories = {
+    5: "aguas altas",
+    25: "aguas medias altas",
+    75: "aguas medias",
+    95: "aguas medias bajas",
+    100: "aguas bajas"
+};
+const status_colors = {
+    5: "#9fc5e8",
+    25: "#cfe2f3",
+    75: "#ffff66",
+    95: "#ffd580",
+    100: "#ea9999"
+};
+export function getStatusColor(percentil) {
+    if (percentil == null) {
+        return "#ffffff";
+    }
+    const keys = Object.keys(status_categories).map(Number).sort((a, b) => a - b);
+    for (const key of keys) {
+        if (percentil <= key) {
+            return status_colors[key];
+        }
+    }
+    return "";
+}
+export function getStatusText(percentil) {
+    if (percentil == null) {
+        return "";
+    }
+    const keys = Object.keys(status_categories).map(Number).sort((a, b) => a - b);
+    for (const key of keys) {
+        if (percentil <= key) {
+            return status_categories[key];
+        }
+    }
+    return "";
+}
+export function getStatus(percentil) {
+    const status_text = getStatusText(percentil);
+    const color = getStatusColor(percentil);
+    return `<div style="background-color: ${color}; width: 100%; height: 100%;">${status_text}</div>`;
+}
+const trend_icon_mapping = {
+    "baja": '<i class="fa fa-arrow-down" aria-hidden="true"></i>',
+    "sube": '<i class="fa fa-arrow-up" aria-hidden="true"></i>',
+    "igual": '<i class="fas fa-equals"></i>',
+    "no_data": '<i class="fa fa-times" aria-hidden="true"></i>'
+};
 const plot_mapping = {
     19: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png",
     20: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/barranqueras.png",
