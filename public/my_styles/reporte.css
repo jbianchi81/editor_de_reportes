@@ -1,0 +1,62 @@
+.container-reporte {
+      width: 714px;
+    }
+
+#editor_container img, div.richText img, #report_container img {
+    max-width: 714px;
+}
+
+#editor_container img.mapa, div.richText img.mapa, #report_container img.mapa {
+    width: 355px;
+}
+
+#editor_container img.img.plot, div.richText img.plot, #report_container img.plot {
+    width: 500px;
+}
+
+.richText .richText-editor table.tabla-hidro, #report_container table.tabla-hidro {
+    width: 714px; 
+    margin: 10px 0;
+}
+
+.richText .richText-editor table.tabla-hidro td, .richText .richText-editor table.tabla-hidro th, #report_container table.tabla-hidro td, #report_container table.tabla-hidro th {
+    padding: 5px;
+    border: #EFEFEF solid 2px;
+    text-align: center;
+}
+
+.richText .richText-editor table.tabla-hidro thead, #report_container table.tabla-hidro thead {
+    background-color: darkgray;
+}
+
+.richText .richText-editor table.leyenda-tabla-hidro, #report_container table.leyenda-tabla-hidro {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.richText .richText-editor table.leyenda-tabla-hidro td, #report_container table.leyenda-tabla-hidro td {
+    padding: 0px;
+    text-align: center;
+}
+
+.richText .richText-editor, .richText .richText-initial {
+    height: 600px;
+}
+
+#report_container { 
+    margin: 0 auto;
+    padding: 40px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+#report_container table {
+    width: 714px; 
+    margin: 10px 0;
+}
+#report_container table td, #report_container table th {
+    padding: 10px;
+    border: #EFEFEF solid 1px;
+}

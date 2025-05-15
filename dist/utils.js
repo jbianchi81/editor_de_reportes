@@ -130,8 +130,8 @@ export async function getValuesDiario(station_ids) {
 }
 const warning_icon_mapping = {
     "ok": '',
-    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow;"></i>',
-    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>',
+    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>',
+    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>',
     "no_data": ''
 };
 const status_categories = {

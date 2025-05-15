@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Instituto Nacional del Agua (INA) - Subgerencia Laboratorio de Hidrología</title>
+  <title>Reporte diario - Cuenca del Plata - INA - SLHi</title>
   <meta name="description"
     content="Es un organismo científico tecnológico descentralizado que tiene por objetivo satisfacer los requerimientos de estudio,    investigación, desarrollo y prestación de servicios especializados en el campo del aprovechamiento y preservación del agua.    Depende de la Secretaría de Infraestructura y Política Hídrica de la Nación,    del [Ministerio de Obras Públicas](https://www.argentina.gob.ar/obras-publicas) de la República Argentina.">
   <meta name="keywords"
@@ -47,35 +47,9 @@
     crossorigin="anonymous"></script>
   <link href="styles/owl.carousel.css" type="text/css" rel="stylesheet" media="screen">
   <script src="js/owl.carousel.min.js" type="text/javascript"></script>
-  <style>
-    #report_container { 
-      margin: 0 auto;
-      padding: 40px;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      box-sizing: border-box;
-    }
-    #report_container img {
-      max-width: 714px;
-    }
-
-    #report_container img.mapa {
-      width: 355px;
-    }
-
-    #report_container img.plot {
-      width: 500px;
-    }
-
-    #report_container table {
-      width: 714px; 
-      margin: 10px 0;
-    }
-    #report_container table td, #report_container table th {
-      padding: 10px;
-      border: #EFEFEF solid 1px;
-    }
-    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="my_styles/reporte.css" type="text/css" rel="stylesheet" media="all">
+  <style>  
     .print-header {
       display: none;
     }
@@ -84,12 +58,9 @@
 
       .print-header {
         display: block;
-        /* position: fixed; */
-        /* top: -10mm; */
         width: 100%;
         height: 40mm;
         text-align: center;
-        /* padding-bottom: 10px; */
         z-index: 999;
       }
 
@@ -97,8 +68,12 @@
         width: 794px; 
       }
 
+      .fa-exclamation-triangle::before {
+        color: inherit !important;
+      }
 
     }
+    
     
 
   </style>
@@ -109,11 +84,13 @@
   </div>
   <div id="report_container"></div>
   <script>
-    fetch("saved.html")
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('report_container').innerHTML = html;
-      });
+    window.onload = function() {
+      fetch("saved.html")
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('report_container').innerHTML = html;
+        });
+    }
   </script>
 </body>
 

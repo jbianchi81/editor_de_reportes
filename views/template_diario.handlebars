@@ -24,7 +24,7 @@
             <tr>
                 <td>{{this.estacion_nombre}}</td>
                 <td>{{this.rio}}</td>
-                <td style="background-color: {{this.status_color}};">{{this.valor}} {{{this.tendencia}}}</td>
+                <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
                 <td>{{this.alerta}}</td>
                 <td>{{this.evacuacion}}</td>
                 <td>{{this.perspectiva}}</td>
@@ -33,11 +33,11 @@
           {{/each}}
         </table>
         <table class="leyenda-tabla-hidro">
-          <tr><td style="background-color: {{status_colors.aguas_altas}};">aguas altas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias_altas}};">aguas medias altas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias}};">aguas medias</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias_bajas}};"> aguas medias bajas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_bajas}};">aguas bajas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_altas}} !important;">aguas altas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias_altas}} !important;">aguas medias altas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias}} !important;">aguas medias</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias_bajas}} !important;"> aguas medias bajas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_bajas}} !important;">aguas bajas</td></tr>
         </table>
         <p>{{texto_hidro}}</p>
         <h4>Hidrogramas</h4>

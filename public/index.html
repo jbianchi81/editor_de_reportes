@@ -55,6 +55,7 @@
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js" integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI=" crossorigin="anonymous"></script>  
   <link rel="stylesheet" href="styles/richtext.min.css" type="text/css">
   <script class="jsbin" src="js/jquery.richtext.min.js" type="application/javascript"></script>
+  <link rel="stylesheet" href="my_styles/reporte.css" type="text/css">
   <style>
     /* #editor, div.richText {  */
       /* width: 794px;  */
@@ -69,45 +70,6 @@
 
     /* } */
 
-    .container-reporte {
-      width: 714px;
-    }
-
-    #editor img, div.richText img {
-      max-width: 714px;
-    }
-
-    #editor img.mapa, div.richText img.mapa {
-      width: 355px;
-    }
-    #editor img.img.plot, div.richText img.plot {
-      width: 500px;
-    }
-
-    .richText .richText-editor table.tabla-hidro {
-      width: 714px; 
-      margin: 10px 0;
-    }
-    .richText .richText-editor table.tabla-hidro td, .richText .richText-editor table.tabla-hidro th {
-      padding: 5px;
-      border: #EFEFEF solid 2px;
-      text-align: center;
-    }
-    .richText .richText-editor table.tabla-hidro thead {
-      background-color: darkgray;
-    }
-    .richText .richText-editor, .richText .richText-initial {
-      height: 600px;
-    }
-    .richText .richText-editor table.leyenda-tabla-hidro {
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .richText .richText-editor table.leyenda-tabla-hidro td {
-      padding: 0px;
-      text-align: center;
-    }
     .button {
       margin-top: 10px; 
     }
@@ -141,7 +103,9 @@
     <h1>Editar reporte diario</h1>
     <div style="display: grid; place-items: center;">
       <!-- <button id="toggleView">Cambiar a vista de código</button> -->
-      <textarea id="editor"></textarea>
+      <div id="editor_container">
+        <textarea id="editor"></textarea>
+      </div>
       <div>
         <button class="button" id=save-button onclick="saveContent()">Guardar</button>
         <span>
