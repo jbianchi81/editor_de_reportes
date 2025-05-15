@@ -1,6 +1,7 @@
     <section>
       <div class="container-reporte">
         <h2>Reporte diario</h2>
+        <div>Fecha de emisión: <b>{{fecha_emision}}</b></div>
         <h3>Situación meteorológica</h3>
         <h4>Mapa de acumulado semanal</h4>
         <p><img class="mapa" src={{mapa_synop_semanal}}></p>
@@ -9,14 +10,13 @@
         <p><img class="mapa" src={{mapa_suma_gfs}}></p>
         <h3>Situación hidrológica</h3>
         <h4>Tabla de situación y perspectiva a corto plazo</h4>
-        <table>
+        <table class="tabla-hidro">
           <thead>
             <td>Estación</td>
             <td>Río</td>
             <td>Lectura (m)</td>
             <td>Alerta</td>
             <td>Evacuación</td>
-            <td>Estado</td>
             <td>Perspectiva</td>
             <td></td>
           </thead>
@@ -24,14 +24,20 @@
             <tr>
                 <td>{{this.estacion_nombre}}</td>
                 <td>{{this.rio}}</td>
-                <td>{{this.valor}} {{{this.tendencia}}}</td>
+                <td style="background-color: {{this.status_color}};">{{this.valor}} {{{this.tendencia}}}</td>
                 <td>{{this.alerta}}</td>
                 <td>{{this.evacuacion}}</td>
-                <td>{{{this.estado}}}</td>
                 <td>{{this.perspectiva}}</td>
                 <td>{{{this.aviso}}}</td>
             </tr>
           {{/each}}
+        </table>
+        <table class="leyenda-tabla-hidro">
+          <tr><td style="background-color: {{status_colors.aguas_altas}};">aguas altas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias_altas}};">aguas medias altas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias}};">aguas medias</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_medias_bajas}};"> aguas medias bajas</td></tr>
+          <tr><td style="background-color: {{status_colors.aguas_bajas}};">aguas bajas</td></tr>
         </table>
         <p>{{texto_hidro}}</p>
         <h4>Hidrogramas</h4>

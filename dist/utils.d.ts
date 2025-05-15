@@ -23,13 +23,13 @@ export type HydroTableRow = {
     id: number;
     estacion_nombre: string;
     rio: string;
-    valor: number;
+    valor: string;
     tendencia: string;
-    alerta: number;
-    evacuacion: number;
-    estado: string;
+    alerta: string;
+    evacuacion: string;
     perspectiva: string;
     aviso: string;
+    status_color: string;
 };
 export declare function fetchLastValues(): Promise<GeoJSONObject>;
 export declare function getLastValues(station_ids: number[]): Promise<HydroTableRow[]>;
@@ -40,7 +40,10 @@ export declare function getValuesDiario(station_ids: number[]): Promise<{
     tabla_hidro: HydroTableRow[];
     texto_hidro: string;
     hidrogramas: string[];
+    status_colors: Record<string, string>;
+    fecha_emision: string;
 }>;
+export declare function statusColorsDict(): Record<string, string>;
 export declare function getStatusColor(percentil: number): string;
 export declare function getStatusText(percentil: number): string;
 export declare function getStatus(percentil: number): string;
