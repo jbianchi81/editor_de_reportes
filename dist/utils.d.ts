@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+export declare function loadConfig(config_file?: string): Promise<any>;
 export type GeoJSONObject = {
     type: string;
     features: Feature[];
@@ -31,13 +33,15 @@ export type HydroTableRow = {
     aviso: string;
     status_color: string;
 };
-export declare function fetchLastValues(): Promise<GeoJSONObject>;
-export declare function getLastValues(station_ids: number[]): Promise<HydroTableRow[]>;
-export declare function getValuesDiario(station_ids: number[]): Promise<{
+export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
+export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;
+export declare function getLastValues(station_ids: number[], var_id?: number): Promise<HydroTableRow[]>;
+export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
     mapa_synop_semanal: string;
     texto_synop_semanal: string;
     mapa_suma_gfs: string;
     tabla_hidro: HydroTableRow[];
+    tabla_caudales: HydroTableRow[];
     texto_hidro: string;
     hidrogramas: string[];
     status_colors: Record<string, string>;

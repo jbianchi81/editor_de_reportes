@@ -1,11 +1,9 @@
 {
     "station_ids": [9, 19, 20, 23, 24, 26, 29, 30, 32, 34, 55, 57, 65, 68, 72, 79, 81, 84, 153],
     "station_ids_caudal": [91, 92, 8, 93, 87, 88],
-    "station_ids_all": [19, 20, 23, 24, 26, 29, 30, 34],
     "geoserver": {
         "url": "https://alerta.ina.gob.ar/geoserver/ows",
-        "username": "xxx",
-        "password": "xxxxxxx"
+        "username": "username",
+        "password": "password"
     }
-
 }

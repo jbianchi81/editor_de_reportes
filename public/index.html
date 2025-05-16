@@ -187,11 +187,22 @@
     // new from template
     function startFromTemplate() {
       fetch('/template')
-      .then(res => res.text())
+      .then(async res => {
+        if(!res.ok) {
+          const text = await res.text()
+          throw new Error(`HTTP ${res.status} - ${res.statusText}: ${text}`);
+        }
+        return res.text()
+      })
       .then(html => {
         $("textarea#editor").val(html).trigger("change")
-      });
+      })
+      .catch((err) => {
+          console.error(`Error al cargar template: ${err.message}`)
+          alert(`Error al cargar template: ${err.message}`)
+      })
     }
+
 
     // function htmlStringToDOM(html) {
     //   return new DOMParser().parseFromString(html, 'text/html').body;

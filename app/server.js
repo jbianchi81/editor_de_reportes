@@ -32,8 +32,13 @@ app.get('/content', (req, res) => {
 // });
 
 app.get('/template', async (req, res) => {
-  const values = await getValuesDiario(config.station_ids)
-  res.render('template_diario', values)
+  try {
+    const values = await getValuesDiario(config.station_ids, config.station_ids_caudal)
+    res.render('template_diario', values)
+  } catch(e) {
+    console.error(e)
+    res.status(500).send({ error: e.message || 'Internal Server Error' })
+  }
 })
 
 // Save new HTML content

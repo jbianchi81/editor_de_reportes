@@ -1,4 +1,12 @@
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
+
+import fs from 'fs/promises';
+
+export async function loadConfig(config_file : string = './config/default.json') {
+    const config_raw = await fs.readFile(config_file, 'utf-8');
+    return JSON.parse(config_raw);
+}
 
 export type GeoJSONObject = {
     type : string
@@ -36,24 +44,39 @@ export type HydroTableRow = {
     status_color : string
 }
 
-const last_values_url = "https://alerta.ina.gob.ar/geoserver/ows"
+export async function getFeature(url :string, layer_name : string) {// , username : string, password : string) : Promise<AxiosResponse> {
+    return axios.get(
+        url,
+        {
+            params: {
+                service: 'WFS',
+                version: '1.0.0',
+                request: 'GetFeature',
+                typeName: layer_name,
+                maxFeatures: '500',
+                outputFormat: 'application/json'
+            }
+            // ,
+            // auth: {
+            //     username: username,
+            //     password: password
+            // }
+        }
+    )
+}
 
-export async function fetchLastValues() : Promise<GeoJSONObject> {
+export async function fetchLastValues(var_id : number = 2) : Promise<GeoJSONObject> {
+
+    const config = await loadConfig()
+
+    if(Object.keys(var_layer_map).indexOf(var_id.toString()) < 0) {
+        throw new Error("Invalid var_id")
+    }
+
+    const layer_name = var_layer_map[var_id]
 
     try {
-        const response = await axios.get(
-            last_values_url,
-            {
-                params: {
-                    service: 'WFS',
-                    version: '1.0.0',
-                    request: 'GetFeature',
-                    typeName: 'public2:ultimas_alturas_con_timeseries',
-                    maxFeatures: '500',
-                    outputFormat: 'application/json'
-                }
-            }
-        )
+        const response = await getFeature(config.geoserver.url, layer_name) //, config.geoserver.username, config.geoserver.password)
         return response.data as GeoJSONObject; // Use the parsed JSON
     } catch (err) {
       throw err
@@ -82,12 +105,16 @@ function getTrend(valor : number, valor_precedente : number) : "sube" | "baja" |
     return (valor > valor_precedente) ? "sube" : (valor < valor_precedente) ? "baja" : "igual"
 }
 
-function formatDecimal(value : number) : string {
-    return value.toFixed(2).replace(/\./,",")
+function formatDecimal(value : number, places : number = 2) : string {
+    if(value == null) {
+        return ""
+    }
+    return value.toFixed(places).replace(/\./,",")
 }
 
-export async function getLastValues(station_ids : number[]) {
-    const data = await fetchLastValues()
+export async function getLastValues(station_ids : number[], var_id : number = 2) {
+    const data = await fetchLastValues(var_id)
+    const decimal_places = (var_id == 2) ? 2 : 0
     const rows : HydroTableRow[] = []
     for(const feature of data.features) {
         if(station_ids.indexOf(feature.properties.unid) >= 0) {
@@ -97,10 +124,10 @@ export async function getLastValues(station_ids : number[]) {
                 id: feature.properties.unid,
                 estacion_nombre: feature.properties.nombre,
                 rio: getRio(feature.properties.rio),
-                valor: formatDecimal(feature.properties.valor),
+                valor: formatDecimal(feature.properties.valor, decimal_places),
                 tendencia: trend_icon_mapping[tendencia],
-                alerta: formatDecimal(feature.properties.nivel_de_alerta),
-                evacuacion: formatDecimal(feature.properties.nivel_de_evacuacion),
+                alerta: formatDecimal(feature.properties.nivel_de_alerta, decimal_places),
+                evacuacion: formatDecimal(feature.properties.nivel_de_evacuacion, decimal_places),
                 perspectiva: feature.properties.perspectiva, // undefined
                 aviso: warning_icon_mapping[aviso],
                 status_color: getStatusColor(feature.properties.percentil)
@@ -124,8 +151,10 @@ function toTitleCase(str : string) : string {
 function getRio(rio : string) {
     if(rio_mapping.hasOwnProperty(rio)) {
         return rio_mapping[rio]
-    } else {
+    } else if(rio != null) {
         return toTitleCase(rio)
+    } else {
+        return ""
     }
 }
 
@@ -162,8 +191,10 @@ function getGfsUrl(current_date : Date) : string {
     return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.png`
 }
 
-export async function getValuesDiario(station_ids : number[]) {
-    const tabla_hidro = await getLastValues(station_ids)
+export async function getValuesDiario(station_ids : number[], station_ids_caudal : number[]) {
+    // const tabla_hidro = await getLastValues(station_ids)
+    const [tabla_hidro, tabla_caudales] = await Promise.all([getLastValues(station_ids, 2), getLastValues(station_ids_caudal, 4)])
+    
     const hidrogramas = []
     for(const id of station_ids) {
         if(plot_mapping.hasOwnProperty(id)) {
@@ -176,34 +207,12 @@ export async function getValuesDiario(station_ids : number[]) {
         texto_synop_semanal: defaults.texto_synop_semanal,
         mapa_suma_gfs: getGfsUrl(current_date),
         tabla_hidro: tabla_hidro,
+        tabla_caudales: tabla_caudales,
         texto_hidro: defaults.texto_hidro,
         hidrogramas: hidrogramas,
         status_colors: statusColorsDict(),
         fecha_emision: current_date.toLocaleDateString('en-GB')
     }
-}
-
-const warning_icon_mapping: Record<string, string> = {
-    "ok": '',
-    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>',
-    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>',
-    "no_data": ''
-}
-
-const status_categories: Record<number, string> = {
-    5: "aguas altas",
-    25: "aguas medias altas",
-    75: "aguas medias",
-    95: "aguas medias bajas",
-    100: "aguas bajas"
-}
-
-const status_colors: Record<number, string> = {
-    5: "#6fa8dc",
-    25: "#cfe2f3",
-    75: "#fff2cc",
-    95: "#f6b26b",
-    100: "#ea9999"
 }
 
 export function statusColorsDict() : Record<string,string> {
@@ -246,6 +255,37 @@ export function getStatus(percentil : number) : string {
     const status_text = getStatusText(percentil)
     const color = getStatusColor(percentil)
     return `<div style="background-color: ${color}; width: 100%; height: 100%;">${status_text}</div>`
+}
+
+
+const var_layer_map : Record<number, string> = {
+    2: 'siyah:ultimas_alturas_con_timeseries',
+    4: "siyah:ultimos_caudales_con_timeseries"
+}
+
+const warning_icon_mapping: Record<string, string> = {
+    "ok": '',
+    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>',
+    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>',
+    "no_data": ''
+}
+
+// MAPS
+
+const status_categories: Record<number, string> = {
+    5: "aguas altas",
+    25: "aguas medias altas",
+    75: "aguas medias",
+    95: "aguas medias bajas",
+    100: "aguas bajas"
+}
+
+const status_colors: Record<number, string> = {
+    5: "#6fa8dc",
+    25: "#cfe2f3",
+    75: "#fff2cc",
+    95: "#f6b26b",
+    100: "#ea9999"
 }
 
 

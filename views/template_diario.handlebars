@@ -14,13 +14,35 @@
           <thead>
             <td>Estación</td>
             <td>Río</td>
-            <td>Lectura (m)</td>
+            <td>Nivel (m)</td>
             <td>Alerta</td>
             <td>Evacuación</td>
             <td>Perspectiva</td>
             <td></td>
           </thead>
           {{#each tabla_hidro}}
+            <tr>
+                <td>{{this.estacion_nombre}}</td>
+                <td>{{this.rio}}</td>
+                <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
+                <td>{{this.alerta}}</td>
+                <td>{{this.evacuacion}}</td>
+                <td>{{this.perspectiva}}</td>
+                <td>{{{this.aviso}}}</td>
+            </tr>
+          {{/each}}
+        </table>
+        <table class="tabla-hidro">
+          <thead>
+            <td>Estación</td>
+            <td>Río</td>
+            <td>Caudal (m<sup>3</sup>/s)</td>
+            <td>Alerta</td>
+            <td>Evacuación</td>
+            <td>Perspectiva</td>
+            <td></td>
+          </thead>
+          {{#each tabla_caudales}}
             <tr>
                 <td>{{this.estacion_nombre}}</td>
                 <td>{{this.rio}}</td>
