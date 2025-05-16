@@ -192,13 +192,15 @@ function getGfsUrl(current_date : Date) : string {
 }
 
 export async function getValuesDiario(station_ids : number[], station_ids_caudal : number[]) {
-    // const tabla_hidro = await getLastValues(station_ids)
     const [tabla_hidro, tabla_caudales] = await Promise.all([getLastValues(station_ids, 2), getLastValues(station_ids_caudal, 4)])
     
     const hidrogramas = []
     for(const id of station_ids) {
         if(plot_mapping.hasOwnProperty(id)) {
-            hidrogramas.push(plot_mapping[id])
+            hidrogramas.push({
+                id: id,
+                src: plot_mapping[id]
+            })
         }
     }
     const current_date : Date = new Date()

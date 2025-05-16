@@ -43,7 +43,10 @@ export declare function getValuesDiario(station_ids: number[], station_ids_cauda
     tabla_hidro: HydroTableRow[];
     tabla_caudales: HydroTableRow[];
     texto_hidro: string;
-    hidrogramas: string[];
+    hidrogramas: {
+        id: number;
+        src: string;
+    }[];
     status_colors: Record<string, string>;
     fecha_emision: string;
 }>;

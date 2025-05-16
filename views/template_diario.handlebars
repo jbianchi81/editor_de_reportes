@@ -1,70 +1,70 @@
-    <section>
-      <div class="container-reporte">
-        <h2>Reporte diario</h2>
-        <div>Fecha de emisión: <b>{{fecha_emision}}</b></div>
-        <h3>Situación meteorológica</h3>
-        <h4>Mapa de acumulado semanal</h4>
-        <p><img class="mapa" src={{mapa_synop_semanal}}></p>
-        <p>{{texto_synop_semanal}}</p>
-        <h4>Mapa de pronóstico a 7 días</h4>
-        <p><img class="mapa" src={{mapa_suma_gfs}}></p>
-        <h3>Situación hidrológica</h3>
-        <h4>Tabla de situación y perspectiva a corto plazo</h4>
-        <table class="tabla-hidro">
-          <thead>
-            <td>Estación</td>
-            <td>Río</td>
-            <td>Nivel (m)</td>
-            <td>Alerta</td>
-            <td>Evacuación</td>
-            <td>Perspectiva</td>
-            <td></td>
-          </thead>
-          {{#each tabla_hidro}}
-            <tr>
-                <td>{{this.estacion_nombre}}</td>
-                <td>{{this.rio}}</td>
-                <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
-                <td>{{this.alerta}}</td>
-                <td>{{this.evacuacion}}</td>
-                <td>{{this.perspectiva}}</td>
-                <td>{{{this.aviso}}}</td>
-            </tr>
-          {{/each}}
-        </table>
-        <table class="tabla-hidro">
-          <thead>
-            <td>Estación</td>
-            <td>Río</td>
-            <td>Caudal (m<sup>3</sup>/s)</td>
-            <td>Alerta</td>
-            <td>Evacuación</td>
-            <td>Perspectiva</td>
-            <td></td>
-          </thead>
-          {{#each tabla_caudales}}
-            <tr>
-                <td>{{this.estacion_nombre}}</td>
-                <td>{{this.rio}}</td>
-                <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
-                <td>{{this.alerta}}</td>
-                <td>{{this.evacuacion}}</td>
-                <td>{{this.perspectiva}}</td>
-                <td>{{{this.aviso}}}</td>
-            </tr>
-          {{/each}}
-        </table>
-        <table class="leyenda-tabla-hidro">
-          <tr><td style="background-color: {{status_colors.aguas_altas}} !important;">aguas altas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias_altas}} !important;">aguas medias altas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias}} !important;">aguas medias</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_medias_bajas}} !important;"> aguas medias bajas</td></tr>
-          <tr><td style="background-color: {{status_colors.aguas_bajas}} !important;">aguas bajas</td></tr>
-        </table>
-        <p>{{texto_hidro}}</p>
-        <h4>Hidrogramas</h4>
-        {{#each hidrogramas}}
-            <p><img class="plot" src={{this}}></p>
-        {{/each}}
-      </div>
-    </section>
+<div>
+  <div class="container-reporte">
+    <h2>Reporte diario</h2>
+    <div>Fecha de emisión: <b>{{fecha_emision}}</b></div>
+    <h3>Situación meteorológica</h3>
+    <h4>Mapa de acumulado semanal</h4>
+    <p><img class="mapa" src={{mapa_synop_semanal}}></p>
+    <p>{{texto_synop_semanal}}</p>
+    <h4>Mapa de pronóstico a 7 días</h4>
+    <p><img class="mapa" src={{mapa_suma_gfs}}></p>
+    <h3>Situación hidrológica</h3>
+    <h4>Tabla de situación y perspectiva a corto plazo</h4>
+    <table class="tabla-hidro">
+      <thead>
+        <td>Estación</td>
+        <td>Río</td>
+        <td>Nivel (m)</td>
+        <td>Alerta</td>
+        <td>Evacuación</td>
+        <td>Perspectiva</td>
+        <td></td>
+      </thead>
+      {{#each tabla_hidro}}
+        <tr>
+            <td><a href="#hidrograma-{{this.id}}">{{this.estacion_nombre}}</a></td>
+            <td>{{this.rio}}</td>
+            <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
+            <td>{{this.alerta}}</td>
+            <td>{{this.evacuacion}}</td>
+            <td>{{this.perspectiva}}</td>
+            <td>{{{this.aviso}}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    <table class="tabla-hidro">
+      <thead>
+        <td>Estación</td>
+        <td>Río</td>
+        <td>Caudal (m<sup>3</sup>/s)</td>
+        <td>Alerta</td>
+        <td>Evacuación</td>
+        <td>Perspectiva</td>
+        <td></td>
+      </thead>
+      {{#each tabla_caudales}}
+        <tr>
+            <td><a href="#hidrograma-{{this.id}}">{{this.estacion_nombre}}</a></td>
+            <td>{{this.rio}}</td>
+            <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
+            <td>{{this.alerta}}</td>
+            <td>{{this.evacuacion}}</td>
+            <td>{{this.perspectiva}}</td>
+            <td>{{{this.aviso}}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    <table class="leyenda-tabla-hidro">
+      <tr><td style="background-color: {{status_colors.aguas_altas}} !important;">aguas altas</td></tr>
+      <tr><td style="background-color: {{status_colors.aguas_medias_altas}} !important;">aguas medias altas</td></tr>
+      <tr><td style="background-color: {{status_colors.aguas_medias}} !important;">aguas medias</td></tr>
+      <tr><td style="background-color: {{status_colors.aguas_medias_bajas}} !important;"> aguas medias bajas</td></tr>
+      <tr><td style="background-color: {{status_colors.aguas_bajas}} !important;">aguas bajas</td></tr>
+    </table>
+    <p>{{texto_hidro}}</p>
+    <h4>Hidrogramas</h4>
+    {{#each hidrogramas}}
+        <p><img class="plot" id="hidrograma-{{this.id}}" src={{this.src}}></p>
+    {{/each}}
+  </div>
+</div>

@@ -133,12 +133,14 @@ function getGfsUrl(current_date) {
     return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.png`;
 }
 export async function getValuesDiario(station_ids, station_ids_caudal) {
-    // const tabla_hidro = await getLastValues(station_ids)
     const [tabla_hidro, tabla_caudales] = await Promise.all([getLastValues(station_ids, 2), getLastValues(station_ids_caudal, 4)]);
     const hidrogramas = [];
     for (const id of station_ids) {
         if (plot_mapping.hasOwnProperty(id)) {
-            hidrogramas.push(plot_mapping[id]);
+            hidrogramas.push({
+                id: id,
+                src: plot_mapping[id]
+            });
         }
     }
     const current_date = new Date();
