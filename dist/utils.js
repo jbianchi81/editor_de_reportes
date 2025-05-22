@@ -81,7 +81,9 @@ export async function getLastValues(station_ids, var_id = 2) {
                 evacuacion: formatDecimal(feature.properties.nivel_de_evacuacion, decimal_places),
                 perspectiva: feature.properties.perspectiva, // undefined
                 aviso: warning_icon_mapping[aviso],
-                status_color: getStatusColor(feature.properties.percentil)
+                status_color: getStatusColor(feature.properties.percentil),
+                series_id: feature.properties.series_id,
+                secciones_url: getSeccionesUrl(feature.properties.series_id)
             });
         }
     }
@@ -131,6 +133,9 @@ function getGfsUrl(current_date) {
     fecha_emision.setDate(fecha_emision.getDate() - dt_emision);
     const fe = getYMDstrings(fecha_emision);
     return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.png`;
+}
+function getSeccionesUrl(series_id) {
+    return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`;
 }
 export async function getValuesDiario(station_ids, station_ids_caudal) {
     const [tabla_hidro, tabla_caudales] = await Promise.all([getLastValues(station_ids, 2), getLastValues(station_ids_caudal, 4)]);

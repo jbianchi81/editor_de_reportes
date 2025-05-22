@@ -99,6 +99,8 @@
   </style>
 </head>
 <body>
+  <div id="screen-blocker" class="position-fixed top-0 start-0 w-100 h-100 bg-light bg-opacity-50" 
+     style="z-index: 1055; display: none; cursor: wait; position: fixed; top: 0; width: 100%; height: 100%; opacity: 50;"></div>
   <div>
     <h1>Editar reporte diario</h1>
     <div style="display: grid; place-items: center;">
@@ -117,17 +119,32 @@
       </div>
     </div>
   </div>
+  <!-- blocking overlay -->
   <script>
 
       $("textarea#editor").richText()
 
-      // Load existing content
-      fetch('/content')
-        .then(res => res.text())
-        .then(html => {
-          $("textarea#editor").val(html).trigger("change")     
-        });
-
+      async function loadContent(content_path) {
+        // Load existing content
+        const blocker = document.getElementById('screen-blocker');
+        blocker.style.display = 'block';
+        try {
+          const response = await fetch(content_path)
+          if(!response.ok) {
+            const error_text = await response.text()
+            throw new Error(`HTTP ${response.status} - ${response.statusText}: ${error_text}`);
+          }
+          const response_text = await response.text()
+          $("textarea#editor").val(response_text).trigger("change")
+          await new Promise(requestAnimationFrame);
+          await new Promise(requestAnimationFrame);
+        } catch (error) {
+          console.error('Falló la carga de contenido', error.message);
+        } finally {
+          blocker.style.display = 'none'; // re-enable interaction
+        }
+      }
+      loadContent('/content')
       // const toggleBtn = document.getElementById('toggleView');
       const htmlView = document.getElementById('html-view');
       const editorContainer = document.getElementById('editor');
@@ -186,21 +203,7 @@
 
     // new from template
     function startFromTemplate() {
-      fetch('/template')
-      .then(async res => {
-        if(!res.ok) {
-          const text = await res.text()
-          throw new Error(`HTTP ${res.status} - ${res.statusText}: ${text}`);
-        }
-        return res.text()
-      })
-      .then(html => {
-        $("textarea#editor").val(html).trigger("change")
-      })
-      .catch((err) => {
-          console.error(`Error al cargar template: ${err.message}`)
-          alert(`Error al cargar template: ${err.message}`)
-      })
+      loadContent("/template")
     }
 
 

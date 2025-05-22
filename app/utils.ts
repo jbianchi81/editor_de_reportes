@@ -27,7 +27,8 @@ type Feature = {
         perspectiva : string,
         nivel_de_alerta : number,
         nivel_de_evacuacion : number,
-        percentil : number
+        percentil : number,
+        series_id: number
     }
 }
 
@@ -41,7 +42,9 @@ export type HydroTableRow = {
     evacuacion : string,
     perspectiva : string, // undefined
     aviso : string,
-    status_color : string
+    status_color : string,
+    series_id : number,
+    secciones_url : string
 }
 
 export async function getFeature(url :string, layer_name : string) {// , username : string, password : string) : Promise<AxiosResponse> {
@@ -130,7 +133,9 @@ export async function getLastValues(station_ids : number[], var_id : number = 2)
                 evacuacion: formatDecimal(feature.properties.nivel_de_evacuacion, decimal_places),
                 perspectiva: feature.properties.perspectiva, // undefined
                 aviso: warning_icon_mapping[aviso],
-                status_color: getStatusColor(feature.properties.percentil)
+                status_color: getStatusColor(feature.properties.percentil),
+                series_id: feature.properties.series_id,
+                secciones_url: getSeccionesUrl(feature.properties.series_id)
             })
         }
     }
@@ -189,6 +194,10 @@ function getGfsUrl(current_date : Date) : string {
     fecha_emision.setDate(fecha_emision.getDate() - dt_emision)
     const fe = getYMDstrings(fecha_emision)
     return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.png`
+}
+
+function getSeccionesUrl(series_id : number) : string {
+    return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`
 }
 
 export async function getValuesDiario(station_ids : number[], station_ids_caudal : number[]) {

@@ -6,6 +6,6 @@
         "url": "https://alerta.ina.gob.ar/geoserver/ows",
         "username": "xxx",
         "password": "xxxxxxx"
-    }
-
+    },
+    "port": 3000
 }

@@ -5,7 +5,7 @@ const { json } = pkg;
 import { readFile, writeFile } from 'fs';
 import {config} from './config.js'
 const app = express();
-const PORT = 3000;
+const PORT = config.port || 3000;
 
 app.use(express_static('public'));
 app.use(json({ limit: '5mb' }));

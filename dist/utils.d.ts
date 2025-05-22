@@ -19,6 +19,7 @@ type Feature = {
         nivel_de_alerta: number;
         nivel_de_evacuacion: number;
         percentil: number;
+        series_id: number;
     };
 };
 export type HydroTableRow = {
@@ -32,6 +33,8 @@ export type HydroTableRow = {
     perspectiva: string;
     aviso: string;
     status_color: string;
+    series_id: number;
+    secciones_url: string;
 };
 export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;

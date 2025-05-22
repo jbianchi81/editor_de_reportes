@@ -22,7 +22,7 @@
       </thead>
       {{#each tabla_hidro}}
         <tr>
-            <td><a href="#hidrograma-{{this.id}}">{{this.estacion_nombre}}</a></td>
+            <td><p class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</p></td>
             <td>{{this.rio}}</td>
             <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
             <td>{{this.alerta}}</td>
@@ -44,7 +44,7 @@
       </thead>
       {{#each tabla_caudales}}
         <tr>
-            <td><a href="#hidrograma-{{this.id}}">{{this.estacion_nombre}}</a></td>
+            <td><p class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</p></td>
             <td>{{this.rio}}</td>
             <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
             <td>{{this.alerta}}</td>
