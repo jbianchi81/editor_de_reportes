@@ -1,6 +1,8 @@
 node_modules
 public/js
 public/styles
+public/reportes/js
+public/reportes/styles
 .vscode
 config/default.json
 log

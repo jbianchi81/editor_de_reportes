@@ -3,6 +3,7 @@ import { engine } from 'express-handlebars';
 import pkg from 'body-parser';
 const { json } = pkg;
 import { readFile, writeFile } from 'fs';
+import axios from 'axios';
 import {config} from './config.js'
 const app = express();
 const PORT = config.port || 3000;
@@ -16,10 +17,41 @@ app.set('views', './views');
 
 import {getValuesDiario} from '../dist/utils.js'
 
+// authentication
+async function isWriter(req,res,next) {
+		if(config.skip_authentication) {
+			  return next()
+		}
+    const redirect_url = `${config.authentication_url}/login?redirected=true&path=${req.path}&unauthorized=true`
+		try {
+        var response = await axios.get(`${config.authentication_url}/isWriter`, {
+            headers: {
+                Cookie: req.headers.cookie // Forward cookies from the client
+            }
+        })       
+        if (response.status == 200) {
+            console.log("Authenticated")
+            next()
+        } else {
+            console.error(`Authentication failed. Response status: ${response.status}`);
+            res.redirect(redirect_url)
+            // res.status(401).send("Unauthorized")
+        }
+    } catch (e) {
+			console.error(e.toString())
+      res.redirect(redirect_url)
+		}		
+}
+
+app.use(isWriter)
+
 // Serve the saved HTML content
-app.get('/content', (req, res) => {
-  readFile('public/saved.html', 'utf8', (err, data) => {
-    if (err) return res.send('');
+app.get('/reportes/content', isWriter, (req, res) => {
+  readFile('public/reportes/saved.html', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
     res.send(data);
   });
 });
@@ -31,7 +63,7 @@ app.get('/content', (req, res) => {
 //   });
 // });
 
-app.get('/template', async (req, res) => {
+app.get('/reportes/template', isWriter, async (req, res) => {
   try {
     const values = await getValuesDiario(config.station_ids, config.station_ids_caudal)
     res.render('template_diario', values)
@@ -42,12 +74,19 @@ app.get('/template', async (req, res) => {
 })
 
 // Save new HTML content
-app.post('/save', (req, res) => {
+app.post('/reportes/save', isWriter, (req, res) => {
   const html = req.body.html;
-  writeFile('public/saved.html', html, err => {
+  writeFile('public/reportes/saved.html', html, err => {
     if (err) return res.status(500).send('Error al guardar');
     res.send('Se guardó exitosamente!');
   });
 });
+
+app.get('/reportes', isWriter, (req, res) => {
+  res.render('index',
+    {
+      layout: 'index'
+  })
+})
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

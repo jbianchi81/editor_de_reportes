@@ -7,5 +7,7 @@
         "username": "xxx",
         "password": "xxxxxxx"
     },
-    "port": 3000
+    "port": 3000,
+    "skip_authentication": false,
+    "authentication_url": "http://localhost:4000"
 }
