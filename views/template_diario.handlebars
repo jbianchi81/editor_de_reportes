@@ -3,13 +3,15 @@
     <h2>Reporte diario</h2>
     <div>Fecha de emisión: <b>{{fecha_emision}}</b></div>
     <h3>Situación meteorológica</h3>
-    <h4>Mapa de acumulado semanal</h4>
-    <p><img class="mapa" src={{mapa_synop_semanal}}></p>
+    <div class="mapas-flex-grid">
+      <div class="mapas-flex-item">Precipitación acumulada semanal</div>
+      <div class="mapas-flex-item">Pronóstico a 7 días</div>
+      <div class="mapas-flex-item"><img class="mapa" src={{mapa_synop_semanal}}></div>
+      <div class="mapas-flex-item"><img class="mapa" src={{mapa_suma_gfs}}></div>
+    </div>
     <p>{{texto_synop_semanal}}</p>
-    <h4>Mapa de pronóstico a 7 días</h4>
-    <p><img class="mapa" src={{mapa_suma_gfs}}></p>
     <h3>Situación hidrológica</h3>
-    <h4>Tabla de situación y perspectiva a corto plazo</h4>
+    {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <table class="tabla-hidro">
       <thead>
         <td>Estación</td>

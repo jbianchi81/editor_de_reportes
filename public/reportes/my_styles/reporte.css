@@ -7,7 +7,7 @@
 }
 
 #editor_container img.mapa, div.richText img.mapa, #report_container img.mapa {
-    width: 355px;
+    width: 333px;
 }
 
 #editor_container img.img.plot, div.richText img.plot, #report_container img.plot {
@@ -63,6 +63,20 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+.mapas-flex-grid {
+    display: flex; 
+    flex-wrap: wrap;
+    max-width: 714px;
+}
+
+.mapas-flex-item {
+  flex: 0 0 50%;  /* 2 items per row */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
 }
 
 @media (max-width: 660px) {
