@@ -71,6 +71,23 @@
       text-decoration: underline;
     }
 
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background-color: #121212; /* Dark sides */
+    }
+
+    
+    #report_container {
+      width: 794px;
+      background-color: #ffffff; /* main content background */
+      /* min-height: 100vh; */
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      box-sizing: border-box;
+    }
+
     
     @media print {
 
@@ -86,11 +103,15 @@
       }
 
       body {
-        margin-top: 50mm; /* Add space so content doesn't overlap header */
+        margin-top: 70mm; /* Add space so content doesn't overlap header */
+      }
+      html, body {
+        background-color: #ffffff;
       }
 
       #report_container {
-        width: 794px; 
+        width: 994px; 
+        padding: 0rem;
       }
 
       .fa-exclamation-triangle::before {
