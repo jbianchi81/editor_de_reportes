@@ -132,7 +132,7 @@ function getGfsUrl(current_date) {
     const dt_emision = (current_date.getHours() * 60 + current_date.getMinutes() >= 10 * 60 + 31) ? 0 : 1;
     fecha_emision.setDate(fecha_emision.getDate() - dt_emision);
     const fe = getYMDstrings(fecha_emision);
-    return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.png`;
+    return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.mask.png`;
 }
 function getSeccionesUrl(series_id) {
     return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`;
