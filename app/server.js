@@ -22,9 +22,9 @@ async function isWriter(req,res,next) {
 		if(config.skip_authentication) {
 			  return next()
 		}
-    const redirect_url = `${config.authentication_url}/login?redirected=true&path=${req.path}&unauthorized=true`
+    const redirect_url = `${config.login_url}?redirected=true&path=${req.path}&unauthorized=true`
 		try {
-        var response = await axios.get(`${config.authentication_url}/isWriter`, {
+        var response = await axios.get(`${config.authentication_url}`, {
             headers: {
                 Cookie: req.headers.cookie // Forward cookies from the client
             }
