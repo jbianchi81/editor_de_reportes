@@ -34,6 +34,31 @@ async function isWriter(req,res,next) {
             next()
         } else {
             console.error(`Authentication failed. Response status: ${response.status}`);
+            // res.redirect(redirect_url)
+            res.status(401).send("Unauthorized")
+        }
+    } catch (e) {
+			console.error(e)
+      res.status(401).send("Unauthorized")
+		}		
+}
+
+async function isWriterRedirect(req,res,next) {
+		if(config.skip_authentication) {
+			  return next()
+		}
+    const redirect_url = `${config.login_url}?redirected=true&path=${req.path}&unauthorized=true`
+		try {
+        var response = await axios.get(`${config.authentication_url}`, {
+            headers: {
+                Cookie: req.headers.cookie // Forward cookies from the client
+            }
+        })       
+        if (response.status == 200) {
+            console.log("Authenticated")
+            next()
+        } else {
+            console.error(`Authentication failed. Response status: ${response.status}`);
             res.redirect(redirect_url)
             // res.status(401).send("Unauthorized")
         }
@@ -43,7 +68,9 @@ async function isWriter(req,res,next) {
 		}		
 }
 
-app.use(isWriter)
+
+// app.use(isWriter)
+// app.use(isWriterRedirect)
 
 // Serve the saved HTML content
 app.get('/reportes/content', isWriter, (req, res) => {
@@ -82,7 +109,7 @@ app.post('/reportes/save', isWriter, (req, res) => {
   });
 });
 
-app.get('/reportes', isWriter, (req, res) => {
+app.get('/reportes', isWriterRedirect, (req, res) => {
   res.render('index',
     {
       layout: 'index'

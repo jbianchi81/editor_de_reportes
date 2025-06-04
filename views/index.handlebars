@@ -130,6 +130,7 @@
           const response = await fetch(content_path)
           if(!response.ok) {
             const error_text = await response.text()
+            alert(error_text)
             throw new Error(`HTTP ${response.status} - ${response.statusText}: ${error_text}`);
           }
           const response_text = await response.text()
@@ -137,6 +138,7 @@
           await new Promise(requestAnimationFrame);
           await new Promise(requestAnimationFrame);
         } catch (error) {
+          alert('Falló la carga de contenido: ' + error.message)
           console.error('Falló la carga de contenido', error.message);
         } finally {
           blocker.style.display = 'none'; // re-enable interaction
@@ -196,7 +198,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ html })
-      }).then(res => res.text()).then(alert);
+      }).then(res => res.text()).then(alert).catch(alert);
     }
 
     // new from template
