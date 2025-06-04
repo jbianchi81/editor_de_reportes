@@ -1,9 +1,13 @@
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import fs from 'fs/promises';
 
-export async function loadConfig(config_file : string = './config/default.json') {
+export async function loadConfig(config_file : string = path.join(__dirname,'../config/default.json')) {
     const config_raw = await fs.readFile(config_file, 'utf-8');
     return JSON.parse(config_raw);
 }
