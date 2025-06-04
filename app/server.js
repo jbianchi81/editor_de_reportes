@@ -38,7 +38,7 @@ async function isWriter(req,res,next) {
             // res.status(401).send("Unauthorized")
         }
     } catch (e) {
-			console.error(e.toString())
+			console.error(e)
       res.redirect(redirect_url)
 		}		
 }
