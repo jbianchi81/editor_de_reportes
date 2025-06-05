@@ -20,6 +20,14 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,'..','views'));
 
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.originalUrl}`);
+  console.log('Cookies:', req.headers.cookie);
+  console.log('Session ID:', req.sessionID);
+  console.log('Session data:', req.session);
+  next();
+});
+
 import {getValuesDiario} from '../dist/utils.js'
 
 // authentication
@@ -28,7 +36,7 @@ async function isWriter(req,res,next) {
 			  return next()
 		}
 		try {
-        var response = await axios.get(`${config.authentication_url}`, {
+        var respon   = await axios.get(`${config.authentication_url}`, {
             headers: {
                 Cookie: req.headers.cookie // Forward cookies from the client
             }
