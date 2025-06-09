@@ -48,7 +48,9 @@ export declare function getValuesDiario(station_ids: number[], station_ids_cauda
     texto_hidro: string;
     hidrogramas: {
         id: number;
+        name: string;
         src: string;
+        river: string;
     }[];
     status_colors: Record<string, string>;
     fecha_emision: string;

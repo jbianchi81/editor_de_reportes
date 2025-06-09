@@ -83,11 +83,41 @@
       width: 794px;
       background-color: #ffffff; /* main content background */
       /* min-height: 100vh; */
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      /* padding: 2rem; */
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
       box-sizing: border-box;
     }
 
+    .accordion {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .accordion-header {
+      background: #f0f0f0;
+      cursor: pointer;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .accordion-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .accordion.open .accordion-content {
+      display: block;
+    }
     
     @media print {
 
@@ -102,6 +132,10 @@
         z-index: 999;
       }
 
+      .print-header img {
+        width: 714px;
+      }
+
       body {
         margin-top: 70mm; /* Add space so content doesn't overlap header */
       }
@@ -109,15 +143,34 @@
         background-color: #ffffff;
       }
 
-      #report_container {
-        width: 994px; 
+      /* #report_container {
+        width: 714px; 
         padding: 0rem;
-      }
+      } */
 
       .fa-exclamation-triangle::before {
         color: inherit !important;
       }
 
+      .accordion .accordion-content {
+        display: block;
+      }
+
+      div.paragraph {
+          width: 714px;
+      }
+
+      table.tabla-hidro {
+        page-break-inside: avoid;
+      }
+
+      .accordion-header {
+        display: none;
+      }
+
+      #report_container img.plot {
+        width: 642px;
+      }
     }
     
     
@@ -150,6 +203,12 @@
         .then(response => response.text())
         .then(html => {
           document.getElementById('report_container').innerHTML = html;
+          document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+              header.parentElement.classList.toggle('open');
+            });
+      });
+
         });
     }
     function closeModal() {
@@ -168,6 +227,7 @@
       hidrolinksModal.querySelector('#hidrograma-link').setAttribute("href",`#hidrograma-${id}`);
       hidrolinksModal.querySelector('#secciones-link').setAttribute("href", seccionesurl);
     });
+    
   </script>
 </body>
 

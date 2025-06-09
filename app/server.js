@@ -36,7 +36,7 @@ async function isWriter(req,res,next) {
 			  return next()
 		}
 		try {
-        var respon   = await axios.get(`${config.authentication_url}`, {
+        var response = await axios.get(`${config.authentication_url}`, {
             headers: {
                 Cookie: req.headers.cookie // Forward cookies from the client
             }

@@ -212,7 +212,9 @@ export async function getValuesDiario(station_ids : number[], station_ids_caudal
         if(plot_mapping.hasOwnProperty(id)) {
             hidrogramas.push({
                 id: id,
-                src: plot_mapping[id]
+                name: plot_mapping[id].name,
+                src: plot_mapping[id].src,
+                river: plot_mapping[id].river
             })
         }
     }
@@ -311,20 +313,26 @@ const trend_icon_mapping: Record<string, string> = {
     "no_data": '<i class="fa fa-times" aria-hidden="true"></i>'
 }
 
-const plot_mapping: Record<number, string> = {
-    19: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png",
-    20: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/barranqueras.png",
-    23: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/goya.png",
-    24: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/reconquista.png",
-    26: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/la_paz.png",
-    29: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/parana.png",
-    30: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santa_fe.png",
-    34: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/rosario.png",
-    65: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/san_javier.png",
-    68: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santo_tome.png",
-    72: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/paso_de_los_libres.png",
-    55: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/puerto_pilcomayo.png",
-    57: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/puerto_formosa.png"
+interface Hidrograma {
+    name: string
+    src: string
+    river: string
+}
+
+const plot_mapping: Record<number, Hidrograma> = {
+    19: {name: "Corrientes", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png", river: "Paraná"},
+    20: {name: "Barranqueras", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/barranqueras.png", river: "Paraná"},
+    23: {name: "Goya", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/goya.png", river: "Paraná"},
+    24: {name: "Reconquista", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/reconquista.png", river: "Paraná"},
+    26: {name: "La Paz", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/la_paz.png", river: "Paraná"},
+    29: {name: "Paraná", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/parana.png", river: "Paraná"},
+    30: {name: "Santa Fe", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santa_fe.png", river: "Paraná"},
+    34: {name: "Rosario", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/rosario.png", river: "Paraná"},
+    65: {name: "San Javier", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/san_javier.png", river: "Uruguay"},
+    68: {name: "Santo Tomé", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santo_tome.png", river: "Uruguay"},
+    72: {name: "Paso de los Libres", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/paso_de_los_libres.png", river: "Uruguay"},
+    55: {name: "Puerto Pilcomayo", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/puerto_pilcomayo.png", river: "Paraguay"},
+    57: {name: "Puerto Formosa", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/puerto_formosa.png", river: "Paraguay"}
 }
 
 const rio_mapping: Record<string, string> = {

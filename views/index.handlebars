@@ -208,6 +208,58 @@
       loadContent("template")
     }
 
+    function addToolbarButton() {
+      setTimeout(function () {
+        // Append custom button to toolbar
+            const alertaButton = `
+              <li class="alerta-icon-btn">
+                <a href="#" title="Insertar ícono alerta">
+                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>
+                </a>
+              </li>
+            `;
+
+            $('.richText .richText-toolbar ul').append(alertaButton);
+
+            const evacuacionButton = `
+              <li class="evacuacion-icon-btn">
+                <a href="#" title="Insertar ícono alerta">
+                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>
+                </a>
+              </li>
+            `;
+
+        $('.richText .richText-toolbar ul').append(evacuacionButton);
+
+        // Insert icon on click
+        $('.alerta-icon-btn').on('click', function (e) {
+          e.preventDefault();
+
+          const iconHtml = '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>';
+
+          // Insert HTML at caret position
+          const editor = $('.richText-editor');
+          document.execCommand('insertHTML', false, iconHtml);
+        });
+
+        $('.evacuacion-icon-btn').on('click', function (e) {
+          e.preventDefault();
+
+          const iconHtml = '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>';
+
+          // Insert HTML at caret position
+          const editor = $('.richText-editor');
+          document.execCommand('insertHTML', false, iconHtml);
+        });
+
+      }, 500); // Give it time to initialize
+
+    }
+    
+    $(document).ready(function() {
+      addToolbarButton()
+    });
+
 
     // function htmlStringToDOM(html) {
     //   return new DOMParser().parseFromString(html, 'text/html').body;

@@ -10,8 +10,9 @@
     width: 333px;
 }
 
-#editor_container img.img.plot, div.richText img.plot, #report_container img.plot {
-    width: 500px;
+#editor_container img.plot, div.richText img.plot, #report_container img.plot {
+    width: 714px;
+    clip-path: inset(0% 3% 0% 1%);
 }
 
 .richText .richText-editor table.tabla-hidro, #report_container table.tabla-hidro {
