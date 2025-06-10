@@ -75,12 +75,12 @@
       margin: 0;
       padding: 0;
       min-height: 100%;
-      background-color: #121212; /* Dark sides */
+      /* background-color: #121212; /* Dark sides */
     }
 
     
     #report_container {
-      width: 794px;
+      /* width: 794px; */
       background-color: #ffffff; /* main content background */
       /* min-height: 100vh; */
       /* padding: 2rem; */
@@ -121,6 +121,12 @@
 
     a.hidden {
       display: none;
+    }
+
+    @media (min-width: 1200px) {
+      #report_container {
+        width: 1170px;
+      }
     }
     
     @media print {

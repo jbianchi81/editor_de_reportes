@@ -1,23 +1,30 @@
 .container-reporte {
-      width: 714px;
+      padding: 10px;
     }
 
 #editor_container img, div.richText img, #report_container img {
-    max-width: 714px;
+    max-width: 100%;
 }
 
 #editor_container img.mapa, div.richText img.mapa, #report_container img.mapa {
-    width: 333px;
+    /* width: 333px; */
+    width: 100%;
+    height: auto;
 }
 
 #editor_container img.plot, div.richText img.plot, #report_container img.plot {
-    width: 714px;
+    /* max-width: 714px; */
     clip-path: inset(0% 3% 0% 1%);
+    width: 100%;
+    height: auto;
 }
 
 .richText .richText-editor table.tabla-hidro, #report_container table.tabla-hidro {
-    width: 714px; 
+    /* width: 714px;  */
     margin: 10px 0;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .richText .richText-editor table.tabla-hidro td, .richText .richText-editor table.tabla-hidro th, #report_container table.tabla-hidro td, #report_container table.tabla-hidro th {
@@ -47,7 +54,7 @@
 
 #report_container { 
     margin: 0 auto;
-    padding: 10px;
+    /* padding: 10px; */
     background: white;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     box-sizing: border-box;
@@ -58,7 +65,7 @@
     margin: 10px 0;
 }
 #report_container table td, #report_container table th {
-    padding: 10px;
+    padding: 15px;
     border: #EFEFEF solid 1px;
 }
 
@@ -69,7 +76,7 @@ html {
 .mapas-flex-grid {
     display: flex; 
     flex-wrap: wrap;
-    max-width: 714px;
+    /* max-width: 714px; */
 }
 
 .mapas-flex-item {
@@ -89,4 +96,10 @@ html {
     .richText .richText-editor table.leyenda-tabla-hidro, #report_container table.leyenda-tabla-hidro {
         margin-left: 100px;
     }
+}
+
+@media (min-width: 1200px) {
+  .container-reporte {
+    width: 1170px;
+  }
 }
