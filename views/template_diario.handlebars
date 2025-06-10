@@ -11,6 +11,7 @@
     </div>
     <div class="paragraph">{{texto_synop_semanal}}</div>
     <h3>Situación hidrológica</h3>
+    <div><img src="https://alerta.ina.gob.ar/ina/mapa_informe_semanal/mapa_estado_2025-06-06.png" alt="mapa caudales" class="mapa_caudales"></div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <table class="tabla-hidro">
       <thead>
@@ -24,7 +25,7 @@
       </thead>
       {{#each tabla_hidro}}
         <tr>
-            <td><p class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</p></td>
+            <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
             <td>{{this.rio}}</td>
             <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
             <td>{{this.alerta}}</td>
@@ -46,7 +47,7 @@
       </thead>
       {{#each tabla_caudales}}
         <tr>
-            <td><p class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</p></td>
+            <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
             <td>{{this.rio}}</td>
             <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
             <td>{{this.alerta}}</td>

@@ -60,14 +60,14 @@
       display: block !important;
     }
 
-    p.as-link {
+    div.as-link {
       color: #0d6efd;            /* Bootstrap link blue */
       text-decoration: none;
       cursor: pointer;
       display: inline;           /* inline so it behaves like a link */
     }
 
-    p.as-link:hover {
+    div.as-link:hover {
       text-decoration: underline;
     }
 
@@ -118,12 +118,16 @@
     .accordion.open .accordion-content {
       display: block;
     }
+
+    a.hidden {
+      display: none;
+    }
     
     @media print {
 
       .print-header {
         position: absolute;
-        top: -10mm;
+        top: -5mm;
         left: 0;
         display: block;
         width: 100%;
@@ -137,7 +141,7 @@
       }
 
       body {
-        margin-top: 70mm; /* Add space so content doesn't overlap header */
+        margin-top: 45mm; /* Add space so content doesn't overlap header */
       }
       html, body {
         background-color: #ffffff;
@@ -224,8 +228,24 @@
       const seccionesurl = trigger.getAttribute('data-seccionesurl');
 
       hidrolinksModal.querySelector('.modal-title').textContent = title;
-      hidrolinksModal.querySelector('#hidrograma-link').setAttribute("href",`#hidrograma-${id}`);
+      hidrolinksModal.querySelector('#hidrograma-link').setAttribute("href",`#hidrograma-${id}`)
+      const hidrograma = document.getElementById(`hidrograma-${id}`)
+      if(hidrograma) {
+        hidrolinksModal.querySelector('#hidrograma-link').classList.remove("hidden")
+      } else {
+        hidrolinksModal.querySelector('#hidrograma-link').classList.add("hidden")
+      }
       hidrolinksModal.querySelector('#secciones-link').setAttribute("href", seccionesurl);
+    });
+    const hidrograma_link = hidrolinksModal.querySelector('#hidrograma-link')
+    hidrograma_link.addEventListener("click",(event)=>{
+      event.preventDefault()
+      const hidrograma_id = event.target.getAttribute("href").replace("#","")
+      const hidrograma = document.getElementById(hidrograma_id)
+      if(hidrograma) {
+        hidrograma.parentElement.parentElement.classList.add("open")
+        hidrograma.parentElement.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } 
     });
     
   </script>
