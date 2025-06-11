@@ -3,4 +3,8 @@
 import downloadPdf from './dist/downloadPdf.js'
 import {config} from './app/config.js'
 
-downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario.html` : undefined)
+try {
+    await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario.html` : undefined)
+} catch(e) {
+    console.error(e)
+}
