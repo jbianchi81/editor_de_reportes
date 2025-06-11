@@ -6,7 +6,7 @@ const __dirname = path.dirname(__filename);
 export default async (page_url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(page_url || 'https://alerta.ina.gob.ar/a5/diario/reporte_diario.html', { waitUntil: 'networkidle0' });
+    await page.goto(page_url || 'http://localhost:3000/reporte_diario', { waitUntil: 'networkidle0' });
     const date = new Date().toISOString().substring(0, 10);
     await page.pdf({
         path: path.join(__dirname, `../public/pdf/reporte_diario_${date}.pdf`),

@@ -249,7 +249,6 @@ export async function getValuesDiario(station_ids : number[], station_ids_caudal
         status_colors: statusColorsDict(),
         fecha_emision: current_date.toLocaleDateString('en-GB'),
         mapa_caudales: getMapaCaudalesUrl(current_date),
-        landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
         pdf_url: getPdfUrl(current_date)
     }
 }

@@ -113,6 +113,13 @@ app.get('/template', isWriter, async (req, res) => {
   }
 })
 
+app.get('/reporte_diario', async (req,res) => {
+  res.render(
+    'reporte_diario', {
+      landscape_warning_class: (config.allow_portrait) ? "" : "enabled"
+    })
+})
+
 // Save new HTML content
 app.post('/save', isWriter, (req, res) => {
   const html = req.body.html;
@@ -121,7 +128,7 @@ app.post('/save', isWriter, (req, res) => {
     res.send('Se guardó exitosamente!');
     // download pdf
     try {
-      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario.html` : undefined)
+      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario` : undefined)
     } catch(e) {
       console.error(e)
     }
