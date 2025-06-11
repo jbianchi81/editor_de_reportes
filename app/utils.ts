@@ -200,11 +200,30 @@ function getGfsUrl(current_date : Date) : string {
     return `https://alerta.ina.gob.ar/ina/34-GFS/mapas/suma/gfs.${fe.year}${fe.month}${fe.day}06.${fe.year}${fe.month}${fe.day}12.suma.mask.png`
 }
 
+function getMapaCaudalesUrl(current_date : Date) : string {
+    const fecha_emision = new Date(current_date) 
+    const dt_emision : number = (current_date.getHours() * 60 + current_date.getMinutes() >= 12 * 60 + 2) ? 0 : 1
+    fecha_emision.setDate(fecha_emision.getDate() - dt_emision)
+    const fe = getYMDstrings(fecha_emision)
+    return `https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado_${fe.year}-${fe.month}-${fe.day}.png`
+}
+
+function getPdfUrl(current_date : Date) : string {
+    const fecha_emision = new Date(current_date) 
+    const dt_emision : number = (current_date.getHours() * 60 + current_date.getMinutes() >= 12 * 60 + 2) ? 0 : 1
+    fecha_emision.setDate(fecha_emision.getDate() - dt_emision)
+    const fe = getYMDstrings(fecha_emision)
+    return `https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`
+}
+
 function getSeccionesUrl(series_id : number) : string {
     return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`
 }
 
 export async function getValuesDiario(station_ids : number[], station_ids_caudal : number[]) {
+
+    const config = await loadConfig()
+
     const [tabla_hidro, tabla_caudales] = await Promise.all([getLastValues(station_ids, 2), getLastValues(station_ids_caudal, 4)])
     
     const hidrogramas = []
@@ -228,7 +247,10 @@ export async function getValuesDiario(station_ids : number[], station_ids_caudal
         texto_hidro: defaults.texto_hidro,
         hidrogramas: hidrogramas,
         status_colors: statusColorsDict(),
-        fecha_emision: current_date.toLocaleDateString('en-GB')
+        fecha_emision: current_date.toLocaleDateString('en-GB'),
+        mapa_caudales: getMapaCaudalesUrl(current_date),
+        landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
+        pdf_url: getPdfUrl(current_date)
     }
 }
 
@@ -347,6 +369,9 @@ const rio_mapping: Record<string, string> = {
 }
 
 const defaults = {
-    texto_synop_semanal: "Para lo que resta del día se esperan precipitaciones sobre aportes al Paraná en territorio argentino por margen derecha, así como sobre aportes al Bermejo y Pilcomayo. Para lo que resta de la semana, se esperan precipitaciones en gran parte de la cuenca, con acumulados mayores esperados sobre el tramo medio e inferior del Paraguay, sobre el tramo del Paraná en territorio argentino - paraguayo y sobre aportes al Salado Juramento y aportes por margen derecha al Paraná en territorio argentino.",
-    texto_hidro: "En Guairá, la afluencia a Itaipú se observa oscilante en el límite de las aguas bajas/medias bajas. A corto plazo se prevé que se mantenga con aumento de punta hacia las aguas medias bajas y el nivel de base se sostenga estable en aguas bajas, en asociación a la amplitud observada en la erogación en Porto Primavera (incremento de punta). En Itaipú, la erogación se observó con descenso de base en aguas bajas, y todavía con punta en aguas medias bajas. La descarga del río Iguazú persiste con base en aguas bajas, en asociación al déficit prolongado. Se espera que continúe con base en aguas bajas y punta en aguas medias bajas, fuertemente regulado en una condición por debajo de lo normal. La afluencia a Yacyretá se observó con incremento de punta en aguas medias bajas, en respuesta al aumento del aporte de la cuenca propia, en asociación a las últimas lluvias registradas (abundantes). Asimismo, por este efecto persistirá con base estable o con leve ascenso, en aguas bajas, durante los próximos días (si bien es presumible que la amplitud disminuya). A su vez, la erogación se observó con punta en aguas medias bajas y leve aumento de base, con previsión a corto plazo de continuar con base estable y punta estable o en leve disminución. Aguas abajo, el río Paraná en el tramo Corrientes - Goya se observa con incremento ocasional de punta en aguas medias bajas, asociado a las lluvias ocurridas sobre el Paraná argentino - paraguayo y al efecto del aporte en ruta. A corto plazo se prevé que persista con la dinámica observada, para observarse luego disminución de punta, si bien con base en leve incremento (probablemente con aproximación a aguas medias bajas en Corrientes) por efecto del gradual aumento de caudal del río Paraguay y la erogación estable en Yacyretá. Por otro lado, sobre La Paz - Rosario se observa en aguas bajas, con gradual aumento en los valores semanales, más significativo en La Paz por propagación del patrón observado aguas arriba."
+    texto_synop_semanal: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    texto_hidro: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
 }

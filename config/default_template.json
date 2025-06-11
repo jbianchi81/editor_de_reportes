@@ -9,5 +9,7 @@
     "port": 3000,
     "skip_authentication": false,
     "authentication_url": "http://localhost:4000",
-    "login_url": "http://localhost:4000/login"
+    "login_url": "http://localhost:4000/login",
+    "allow_portrait": true,
+    "public_url": "http://localhost:3000"
 }

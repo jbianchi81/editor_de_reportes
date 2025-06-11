@@ -3,6 +3,7 @@ public/js
 public/styles
 public/reportes/js
 public/reportes/styles
+public/pdf
 .vscode
 config/default.json
 log

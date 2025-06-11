@@ -1,7 +1,8 @@
 <div>
   <div class="container-reporte">
-    <h2>Reporte diario</h2>
-    <div>Fecha de emisión: <b>{{fecha_emision}}</b></div>
+    <h2>Reporte hidrometeorológico diario de la Cuenca del Plata</h2>
+    <div>Fecha de actualización: <b>{{fecha_emision}}</b></div>
+    <div class="pdf_download"><a href="{{pdf_url}}" target="_blank">Versión PDF</a></div>
     <h3>Situación meteorológica</h3>
     <div class="mapas-flex-grid">
       <div class="mapas-flex-item">Precipitación acumulada semanal</div>
@@ -11,7 +12,12 @@
     </div>
     <div class="paragraph">{{texto_synop_semanal}}</div>
     <h3>Situación hidrológica</h3>
-    <div><img src="https://alerta.ina.gob.ar/ina/mapa_informe_semanal/mapa_estado_2025-06-06.png" alt="mapa caudales" class="mapa_caudales"></div>
+    <div>
+      <picture class="mapa_caudales">
+        <source srcset="{{mapa_caudales}}" type="image/png">
+        <img src="https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado.png" alt="mapa caudales">
+      </picture>
+    </div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <table class="tabla-hidro">
       <thead>

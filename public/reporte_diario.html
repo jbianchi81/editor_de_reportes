@@ -185,6 +185,10 @@
       #report_container img.plot {
         width: 642px;
       }
+
+      div.pdf_download {
+        display: none;
+      }
     }
 
     #landscape-warning {
@@ -201,14 +205,14 @@
     }
 
     @media screen and (orientation: portrait) {
-      #landscape-warning { display: block; }
-      #report_container { display: none; }
+      #landscape-warning.enabled { display: block; }
+      /* #report_container { display: none; } */
     }   
 
   </style>
 </head>
 <body>
-  <div id="landscape-warning">Por favor rote su dispositivo</div>
+  <div id="landscape-warning" class="{{landscape_warning_class}}">Por favor rote su dispositivo</div>
   <div class="print-header">
     <img src="img/membrete-2025_con_logo_slhi.jpg" alt="Instituto Nacional del Agua" />
   </div>

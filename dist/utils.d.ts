@@ -54,6 +54,9 @@ export declare function getValuesDiario(station_ids: number[], station_ids_cauda
     }[];
     status_colors: Record<string, string>;
     fecha_emision: string;
+    mapa_caudales: string;
+    landscape_warning_class: string;
+    pdf_url: string;
 }>;
 export declare function statusColorsDict(): Record<string, string>;
 export declare function getStatusColor(percentil: number): string;

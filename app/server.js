@@ -20,15 +20,16 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,'..','views'));
 
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.originalUrl}`);
-  console.log('Cookies:', req.headers.cookie);
-  console.log('Session ID:', req.sessionID);
-  console.log('Session data:', req.session);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`[${req.method}] ${req.originalUrl}`);
+//   console.log('Cookies:', req.headers.cookie);
+//   console.log('Session ID:', req.sessionID);
+//   console.log('Session data:', req.session);
+//   next();
+// });
 
 import {getValuesDiario} from '../dist/utils.js'
+import downloadPdf from '../dist/downloadPdf.js'
 
 // authentication
 async function isWriter(req,res,next) {
@@ -115,9 +116,15 @@ app.get('/template', isWriter, async (req, res) => {
 // Save new HTML content
 app.post('/save', isWriter, (req, res) => {
   const html = req.body.html;
-  writeFile(path.join(__dirname,'../public/saved.html'), html, err => {
+  writeFile(path.join(__dirname,'../public/saved.html'), html, async err => {
     if (err) return res.status(500).send('Error al guardar');
     res.send('Se guardó exitosamente!');
+    // download pdf
+    try {
+      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario.html` : undefined)
+    } catch(e) {
+      console.error(e)
+    }
   });
 });
 
