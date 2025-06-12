@@ -216,7 +216,7 @@
   <div class="print-header">
     <img src="img/membrete-2025_con_logo_slhi.jpg" alt="Instituto Nacional del Agua" />
   </div>
-  <div id="report_container"></div>
+  <div id="report_container">{{{html_content}}}</div>
   <!-- MODAL -->
   <div class="modal fade" id="hidrolinksModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-sm"> <!-- small modal -->
@@ -234,17 +234,17 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     window.onload = function() {
-      fetch("saved.html")
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('report_container').innerHTML = html;
-          document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-              header.parentElement.classList.toggle('open');
-            });
-      });
-
+      // fetch("saved.html")
+      //  .then(response => response.text())
+      //  .then(html => {
+      //    document.getElementById('report_container').innerHTML = html;
+        document.querySelectorAll('.accordion-header').forEach(header => {
+          header.addEventListener('click', () => {
+            header.parentElement.classList.toggle('open');
+          });
         });
+
+      // });
     }
     function closeModal() {
       const modalEl = document.getElementById('hidrolinksModal');

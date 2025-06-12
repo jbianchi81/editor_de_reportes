@@ -114,10 +114,17 @@ app.get('/template', isWriter, async (req, res) => {
 })
 
 app.get('/reporte_diario', async (req,res) => {
-  res.render(
-    'reporte_diario', {
-      landscape_warning_class: (config.allow_portrait) ? "" : "enabled"
-    })
+  readFile(path.join(__dirname, '..','public','saved.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
+    res.render(
+      'reporte_diario', {
+        landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
+        html_content: data
+      })
+  });
 })
 
 // Save new HTML content
