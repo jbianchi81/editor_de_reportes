@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+import { readFile } from 'fs';
 
 app.use(express_static(path.join(__dirname,'..','public')));
 
