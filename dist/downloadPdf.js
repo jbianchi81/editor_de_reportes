@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export default async (page_url) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(page_url || 'http://localhost:3000/reporte_diario', { waitUntil: 'networkidle0' });
     const ymd = getYMDstrings(new Date());
@@ -20,6 +20,9 @@ export default async (page_url) => {
             });
         }));
     });
+    // await page.evaluate(() => {
+    //   return new Promise((resolve) => requestAnimationFrame(() => resolve));
+    // });
     await page.pdf({
         path: path.join(__dirname, `../public/pdf/reporte_diario_${ymd.year}-${ymd.month}-${ymd.day}.pdf`),
         format: 'A4',
