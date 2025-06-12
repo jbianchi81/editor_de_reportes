@@ -152,7 +152,7 @@ app.post('/save', isWriter, (req, res) => {
     res.send('Se guardó exitosamente!');
     // download pdf
     try {
-      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario` : undefined)
+      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario_local` : undefined)
     } catch(e) {
       console.error(e)
     }
