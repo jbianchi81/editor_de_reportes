@@ -13,10 +13,11 @@
     <div class="paragraph">{{texto_synop_semanal}}</div>
     <h3>Situación hidrológica</h3>
     <div>
-      <picture class="mapa_caudales">
-        <source srcset="{{mapa_caudales}}" type="image/png">
-        <img src="https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado.png" alt="mapa caudales">
-      </picture>
+      <img 
+        class="mapa_caudales" 
+        src="{{mapa_caudales}}" 
+        onerror="this.onerror=null; this.src='https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado.png';" 
+        alt="mapa caudales">
     </div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <table class="tabla-hidro">
