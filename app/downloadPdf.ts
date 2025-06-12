@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer';
 
+import {getYMDstrings} from './utils.js'
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -9,9 +11,9 @@ export default async (page_url: string | undefined) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(page_url || 'http://localhost:3000/reporte_diario', { waitUntil: 'networkidle0' });
-    const date = new Date().toISOString().substring(0, 10)
+    const ymd = getYMDstrings(new Date())
     await page.pdf({
-        path: path.join(__dirname,`../public/pdf/reporte_diario_${date}.pdf`),
+        path: path.join(__dirname,`../public/pdf/reporte_diario_${ymd.year}-${ymd.month}-${ymd.day}.pdf`),
         format: 'A4',
         printBackground: true,
         displayHeaderFooter: true,

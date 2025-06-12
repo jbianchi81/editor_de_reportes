@@ -121,7 +121,7 @@ function getSynopSemanalUrl(current_date) {
     const d = getYMDstrings(date);
     return `https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_semanales_/${d.year}/${d.month}/pp_semanal_${d.year}${d.month}${d.day}_surf.png`;
 }
-function getYMDstrings(date) {
+export function getYMDstrings(date) {
     const year = String(date.getFullYear());
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
     const day = String(date.getDate()).padStart(2, '0');
@@ -145,12 +145,10 @@ function getMapaCaudalesUrl(current_date) {
     const fe = getYMDstrings(fecha_emision);
     return `https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado_${fe.year}-${fe.month}-${fe.day}.png`;
 }
-function getPdfUrl(current_date) {
-    const fecha_emision = new Date(current_date);
-    const dt_emision = (current_date.getHours() * 60 + current_date.getMinutes() >= 12 * 60 + 2) ? 0 : 1;
-    fecha_emision.setDate(fecha_emision.getDate() - dt_emision);
-    const fe = getYMDstrings(fecha_emision);
-    return `https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`;
+function getPdfUrl(current_date, pdf_dir = "http://localhost:3000/pdf" // "https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf"
+) {
+    const fe = getYMDstrings(current_date);
+    return `${pdf_dir}/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`;
 }
 function getSeccionesUrl(series_id) {
     return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`;
@@ -181,7 +179,7 @@ export async function getValuesDiario(station_ids, station_ids_caudal) {
         status_colors: statusColorsDict(),
         fecha_emision: current_date.toLocaleDateString('en-GB'),
         mapa_caudales: getMapaCaudalesUrl(current_date),
-        pdf_url: getPdfUrl(current_date)
+        pdf_url: getPdfUrl(current_date, config.pdf_dir)
     };
 }
 export function statusColorsDict() {

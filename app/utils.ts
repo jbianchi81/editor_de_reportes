@@ -181,7 +181,7 @@ type YMDstrings  = {
     day : string
 }
 
-function getYMDstrings(date : Date) : YMDstrings {
+export function getYMDstrings(date : Date) : YMDstrings {
     const year = String(date.getFullYear());
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
     const day = String(date.getDate()).padStart(2, '0');
@@ -208,12 +208,12 @@ function getMapaCaudalesUrl(current_date : Date) : string {
     return `https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado_${fe.year}-${fe.month}-${fe.day}.png`
 }
 
-function getPdfUrl(current_date : Date) : string {
-    const fecha_emision = new Date(current_date) 
-    const dt_emision : number = (current_date.getHours() * 60 + current_date.getMinutes() >= 12 * 60 + 2) ? 0 : 1
-    fecha_emision.setDate(fecha_emision.getDate() - dt_emision)
-    const fe = getYMDstrings(fecha_emision)
-    return `https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`
+function getPdfUrl(
+    current_date : Date, 
+    pdf_dir : string = "http://localhost:3000/pdf" // "https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf"
+) : string {
+    const fe = getYMDstrings(current_date)
+    return `${pdf_dir}/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`
 }
 
 function getSeccionesUrl(series_id : number) : string {
@@ -249,7 +249,7 @@ export async function getValuesDiario(station_ids : number[], station_ids_caudal
         status_colors: statusColorsDict(),
         fecha_emision: current_date.toLocaleDateString('en-GB'),
         mapa_caudales: getMapaCaudalesUrl(current_date),
-        pdf_url: getPdfUrl(current_date)
+        pdf_url: getPdfUrl(current_date, config.pdf_dir)
     }
 }
 

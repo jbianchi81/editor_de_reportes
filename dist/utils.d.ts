@@ -39,6 +39,12 @@ export type HydroTableRow = {
 export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;
 export declare function getLastValues(station_ids: number[], var_id?: number): Promise<HydroTableRow[]>;
+type YMDstrings = {
+    year: string;
+    month: string;
+    day: string;
+};
+export declare function getYMDstrings(date: Date): YMDstrings;
 export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
     mapa_synop_semanal: string;
     texto_synop_semanal: string;
