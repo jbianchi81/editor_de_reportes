@@ -9,6 +9,17 @@ export default async (page_url) => {
     const page = await browser.newPage();
     await page.goto(page_url || 'http://localhost:3000/reporte_diario', { waitUntil: 'networkidle0' });
     const ymd = getYMDstrings(new Date());
+    await page.evaluate(async () => {
+        const images = Array.from(document.images);
+        await Promise.all(images.map(img => {
+            if (img.complete)
+                return Promise.resolve();
+            return new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        }));
+    });
     await page.pdf({
         path: path.join(__dirname, `../public/pdf/reporte_diario_${ymd.year}-${ymd.month}-${ymd.day}.pdf`),
         format: 'A4',
