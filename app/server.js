@@ -127,6 +127,23 @@ app.get('/reporte_diario', async (req,res) => {
   });
 })
 
+app.get('/reporte_diario_local', async (req,res) => {
+  readFile(path.join(__dirname, '..','public','saved.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
+    if(config.directory_listings_url) {
+      data = data.replace(/https\:\/\/alerta.ina.gob.ar\/ina/g, `${config.directory_listings_url}/ina`)
+    } 
+    res.render(
+      'reporte_diario', {
+        landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
+        html_content: data
+      })
+  });
+})
+
 // Save new HTML content
 app.post('/save', isWriter, (req, res) => {
   const html = req.body.html;

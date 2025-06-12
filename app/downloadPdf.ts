@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 export default async (page_url: string | undefined) => {
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
-    await page.goto(page_url || 'http://localhost:3000/reporte_diario', { waitUntil: 'networkidle0' });
+    await page.goto(page_url || 'http://localhost:3000/reporte_diario_local', { waitUntil: 'networkidle0' });
     const ymd = getYMDstrings(new Date())
     await page.evaluate(async () => {
       const images = Array.from(document.images);
