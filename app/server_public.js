@@ -23,7 +23,8 @@ app.get('/reporte_diario', async (req,res) => {
     res.render(
       'reporte_diario', {
         landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
-        html_content: data
+        html_content: data,
+        geoserver_url: "https://alerta.ina.gob.ar/geoserver"
       })
   });
 })
@@ -36,11 +37,15 @@ app.get('/reporte_diario_local', async (req,res) => {
     }
     if(config.directory_listings_url) {
       data = data.replace(/https\:\/\/alerta.ina.gob.ar\/ina/g, `${config.directory_listings_url}/ina`)
+    }
+    if(config.geoserver_url) {
+      data = data.replace(/https\:\/\/alerta.ina.gob.ar\/geoserver/g, `${config.geoserver_url}/geoserver`)
     } 
     res.render(
       'reporte_diario', {
         landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
-        html_content: data
+        html_content: data,
+        geoserver_url: config.geoserver_url || "https://alerta.ina.gob.ar/geoserver"
       })
   });
 })

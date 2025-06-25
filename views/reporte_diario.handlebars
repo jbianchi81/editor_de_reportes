@@ -306,9 +306,11 @@
       source: new ol.source.XYZ({ url: 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png'})
     });
 
+    const wmsLayerUrl = "{{geoserver_url}}/wms";
+
     const wmsLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'https://alerta.ina.gob.ar/geoserver/wms',
+        url: wmsLayerUrl,
         params: {
           'LAYERS': 'public2:tramos_condicion_params',
           'TILED': true
