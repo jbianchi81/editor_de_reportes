@@ -12,68 +12,75 @@
     </div>
     <div class="paragraph">{{texto_synop_semanal}}</div>
     <h3>Situación hidrológica</h3>
-    <div>
+    {{!-- <div>
       <img 
         class="mapa_caudales" 
         src="{{mapa_caudales}}" 
         onerror="this.onerror=null; this.src='https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado.png';" 
         alt="mapa caudales">
-    </div>
-    <div id="mapa-row"  style="display: none;">
+    </div> --}}
+    <div id="mapa-row"  style="display: flex;">
       <div id="mapa-condicion">
         <div class="ol-legend">
           <img src="https://alerta.ina.gob.ar/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=15&HEIGHT=15&LAYER=public2:tramos_condicion_params" alt="Leyenda">
         </div>
+      </div>
+      <div id="map-modal">
+        <div id="map-modal-content"></div>
       </div>
       <div class="text-box">
         <p>Condición hídrica de los principales cursos de la Cuenca del Plata en territorio Argentino en base a la última observación de nivel o caudal en estaciones de referencia. Se calcula la frecuencia de superación (%) en el periodo 1991-2020 y se clasifica en 5 categorías.</p>
       </div>
     </div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
-    <table class="tabla-hidro">
-      <thead>
-        <td>Estación</td>
-        <td>Río</td>
-        <td>Nivel (m)</td>
-        <td>Alerta</td>
-        <td>Evacuación</td>
-        <td>Perspectiva</td>
-        <td></td>
-      </thead>
-      {{#each tabla_hidro}}
-        <tr>
-            <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
-            <td>{{this.rio}}</td>
-            <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
-            <td>{{this.alerta}}</td>
-            <td>{{this.evacuacion}}</td>
-            <td>{{this.perspectiva}}</td>
-            <td>{{{this.aviso}}}</td>
-        </tr>
-      {{/each}}
-    </table>
-    <table class="tabla-hidro">
-      <thead>
-        <td>Estación</td>
-        <td>Río</td>
-        <td>Caudal (m<sup>3</sup>/s)</td>
-        <td>Alerta</td>
-        <td>Evacuación</td>
-        <td>Perspectiva</td>
-        <td></td>
-      </thead>
-      {{#each tabla_caudales}}
-        <tr>
-            <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
-            <td>{{this.rio}}</td>
-            <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
-            <td>{{this.alerta}}</td>
-            <td>{{this.evacuacion}}</td>
-            <td>{{this.perspectiva}}</td>
-            <td>{{{this.aviso}}}</td>
-        </tr>
-      {{/each}}
-    </table>
+    <div class="table-wrapper">
+      <table class="tabla-hidro">
+        <thead>
+          <td>Estación</td>
+          <td>Río</td>
+          <td>Nivel (m)</td>
+          <td>Alerta</td>
+          <td>Evacuación</td>
+          <td>Perspectiva</td>
+          <td></td>
+        </thead>
+        {{#each tabla_hidro}}
+          <tr>
+              <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
+              <td>{{this.rio}}</td>
+              <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
+              <td>{{this.alerta}}</td>
+              <td>{{this.evacuacion}}</td>
+              <td>{{this.perspectiva}}</td>
+              <td>{{{this.aviso}}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    </div>
+    <div class="table-wrapper">
+      <table class="tabla-hidro">
+        <thead>
+          <td>Estación</td>
+          <td>Río</td>
+          <td>Caudal (m<sup>3</sup>/s)</td>
+          <td>Alerta</td>
+          <td>Evacuación</td>
+          <td>Perspectiva</td>
+          <td></td>
+        </thead>
+        {{#each tabla_caudales}}
+          <tr>
+              <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
+              <td>{{this.rio}}</td>
+              <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
+              <td>{{this.alerta}}</td>
+              <td>{{this.evacuacion}}</td>
+              <td>{{this.perspectiva}}</td>
+              <td>{{{this.aviso}}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    </div>
     <table class="leyenda-tabla-hidro">
       <tr><td style="background-color: {{status_colors.aguas_altas}} !important;">aguas altas</td></tr>
       <tr><td style="background-color: {{status_colors.aguas_medias_altas}} !important;">aguas medias altas</td></tr>

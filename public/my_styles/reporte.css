@@ -19,10 +19,16 @@
     height: auto;
 }
 
+.richText .richText-editor .table-wrapper, #report_container .table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
 .richText .richText-editor table.tabla-hidro, #report_container table.tabla-hidro {
     /* width: 714px;  */
     margin: 10px 0;
-    width: fit-content;
+    border-collapse: collapse;
+    width: max-content;
     margin-left: auto;
     margin-right: auto;
 }
@@ -92,8 +98,9 @@ html {
       margin: 0;
       padding: 0;
       max-width: 400px;
+      min-width: 300px;
       height: 400px;
-      flex: 1;
+      /* flex: 1; */
 }
 .ol-legend {
       position: absolute;
@@ -119,7 +126,7 @@ html {
     justify-content: center; /* optional: horizontal centering */
 }
 
-.text-box p {
+.text-box p, .text-box div {
     font-size: 14px;
     font-style: italic;
 }
@@ -128,7 +135,27 @@ html {
 #mapa-row {
     display: flex;
     /* height: 100vh; */
-    width: 100vw;
+    max-width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#map-modal {
+    display: none;
+    position: absolute;
+    /* top: 20%; */
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    background: white;
+    border: 1px solid #ccc;
+    padding: 12px;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    font-size: 14px;
+}
+
+#map-modal button {
+    margin-top: 10px;
 }
 
 @media (max-width: 660px) {
@@ -140,6 +167,12 @@ html {
     .richText .richText-editor table.leyenda-tabla-hidro, #report_container table.leyenda-tabla-hidro {
         margin-left: 100px;
     }
+}
+
+@media (max-width: 600px) {
+  #mapa-row {
+    flex-direction: column; /* stack vertically on small screens */
+  }
 }
 
 @media (min-width: 1200px) {

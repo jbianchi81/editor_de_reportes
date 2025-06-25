@@ -232,15 +232,16 @@
   <div id="report_container">{{{html_content}}}</div>
   <!-- MODAL -->
   <div class="modal fade" id="hidrolinksModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-sm"> <!-- small modal -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Barranqueras</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body d-flex flex-column text-center gap-2">
-        <a href="#hidrograma-19" id="hidrograma-link" class="btn btn-link" onclick="closeModal()">hidrograma</a>
-        <a href="https://alerta.ina.gob.ar/a5/secciones?seriesId=19" target="_blank" id="secciones-link" class="btn btn-link" onclick="closeModal()">visualizador</a>
+    <div class="modal-dialog modal-sm"> <!-- small modal -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Barranqueras</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex flex-column text-center gap-2">
+          <a href="#hidrograma-19" id="hidrograma-link" class="btn btn-link" onclick="closeModal()">hidrograma</a>
+          <a href="https://alerta.ina.gob.ar/a5/secciones?seriesId=19" target="_blank" id="secciones-link" class="btn btn-link" onclick="closeModal()">visualizador</a>
+        </div>
       </div>
     </div>
   </div>
@@ -260,7 +261,7 @@
           });
         });
 
-        document.querySelector(".mapa_caudales").style.display = "none"
+        // document.querySelector(".mapa_caudales").style.display = "none"
         document.getElementById("mapa-row").style.display = "flex"
         map = load_map("mapa-condicion")
 
@@ -318,7 +319,7 @@
     });
 
     function load_map(target) {
-      return new ol.Map({
+      const map = new ol.Map({
         target: target || 'mapa-condicion',
         layers: [baseLayer, wmsLayer],
         view: new ol.View({
@@ -332,6 +333,56 @@
           })
         ])
       });
+
+      map.on('pointermove', mapQueryHandler);
+      map.on('click', mapQueryHandler);
+
+      return map
+    }
+         
+    let hoverTimer = null;
+    let lastPixel = null;
+
+    function mapQueryHandler(e) {
+
+      document.getElementById('map-modal').style.display='none'
+
+      const pixel = e.pixel;
+
+      // Reset if pointer moved
+      if (!lastPixel || pixel[0] !== lastPixel[0] || pixel[1] !== lastPixel[1]) {
+        lastPixel = pixel;
+        if (hoverTimer) clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+          const view = map.getView();
+          const viewResolution = view.getResolution();
+          const wmsSource = wmsLayer.getSource();  // Your TileWMS or ImageWMS source
+
+          const url = wmsSource.getFeatureInfoUrl(
+            e.coordinate,
+            viewResolution,
+            view.getProjection(),
+            {
+              'INFO_FORMAT': 'application/json',
+              'QUERY_LAYERS': 'public2:tramos_condicion_params'
+            }
+          );
+
+          if (url) {
+            fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                if (data && data.features && data.features.length > 0) {
+                  console.log(data.features[0].properties)
+                  const props = data.features[0].properties;
+                  const content = `${props.rio}<br>${props.nombre}<br>${props.condicion}`
+                  document.getElementById('map-modal-content').innerHTML = content;
+                  document.getElementById('map-modal').style.display = 'block';
+                }
+              });                
+          }            
+        }, 1000); // 1 second still
+      }
     }
 
   </script>
