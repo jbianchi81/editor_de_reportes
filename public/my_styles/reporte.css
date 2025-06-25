@@ -87,6 +87,50 @@ html {
   text-align: center;
 }
 
+#mapa-condicion {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      max-width: 400px;
+      height: 400px;
+      flex: 1;
+}
+.ol-legend {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      z-index: 1;
+}
+
+#report_container .ol-legend img {
+      max-width: 125px;
+}
+
+.text-box {
+    width: 300px;
+    padding: 1em;
+    background: #f8f8f8;
+    border-left: 1px solid #ccc;
+    display: flex;
+    align-items: center; /* vertical centering */
+    justify-content: center; /* optional: horizontal centering */
+}
+
+.text-box p {
+    font-size: 14px;
+    font-style: italic;
+}
+
+
+#mapa-row {
+    display: flex;
+    /* height: 100vh; */
+    width: 100vw;
+}
+
 @media (max-width: 660px) {
     .container-reporte p {
         max-width: 95vw;

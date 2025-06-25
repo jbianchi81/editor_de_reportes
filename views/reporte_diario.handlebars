@@ -189,6 +189,19 @@
       div.pdf_download {
         display: none;
       }
+
+      #mapa-condicion {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-before: auto;
+        break-before: auto;
+        width: 330px;
+        height: 330px;
+      }
+
+      #report_container .ol-legend img {
+        max-width: 125px;
+      }
     }
 
     #landscape-warning {
@@ -232,7 +245,10 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
   <script>
+    var map;
     window.onload = function() {
       // fetch("saved.html")
       //  .then(response => response.text())
@@ -243,6 +259,10 @@
             header.parentElement.classList.toggle('open');
           });
         });
+
+        document.querySelector(".mapa_caudales").style.display = "none"
+        document.getElementById("mapa-row").style.display = "flex"
+        map = load_map("mapa-condicion")
 
       // });
     }
@@ -279,6 +299,41 @@
       } 
     });
     
+    // MAPA CONDICION
+    
+    const baseLayer = new ol.layer.Tile({
+      source: new ol.source.XYZ({ url: 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png'})
+    });
+
+    const wmsLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: 'https://alerta.ina.gob.ar/geoserver/wms',
+        params: {
+          'LAYERS': 'public2:tramos_condicion_params',
+          'TILED': true
+        },
+        serverType: 'geoserver',
+        transition: 0
+      })
+    });
+
+    function load_map(target) {
+      return new ol.Map({
+        target: target || 'mapa-condicion',
+        layers: [baseLayer, wmsLayer],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-58.21, -31.58]),
+          zoom: 5,
+          projection: 'EPSG:3857'
+        }),
+        interactions: ol.interaction.defaults.defaults({mouseWheelZoom: false}).extend([
+          new ol.interaction.MouseWheelZoom({
+            condition: ol.events.condition.platformModifierKeyOnly
+          })
+        ])
+      });
+    }
+
   </script>
 </body>
 

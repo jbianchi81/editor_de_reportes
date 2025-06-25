@@ -19,6 +19,16 @@
         onerror="this.onerror=null; this.src='https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado.png';" 
         alt="mapa caudales">
     </div>
+    <div id="mapa-row"  style="display: none;">
+      <div id="mapa-condicion">
+        <div class="ol-legend">
+          <img src="https://alerta.ina.gob.ar/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=15&HEIGHT=15&LAYER=public2:tramos_condicion_params" alt="Leyenda">
+        </div>
+      </div>
+      <div class="text-box">
+        <p>Condición hídrica de los principales cursos de la Cuenca del Plata en territorio Argentino en base a la última observación de nivel o caudal en estaciones de referencia. Se calcula la frecuencia de superación (%) en el periodo 1991-2020 y se clasifica en 5 categorías.</p>
+      </div>
+    </div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <table class="tabla-hidro">
       <thead>
