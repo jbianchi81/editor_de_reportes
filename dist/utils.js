@@ -87,7 +87,13 @@ export async function getLastValues(station_ids, var_id = 2) {
                 aviso: warning_icon_mapping[aviso],
                 status_color: getStatusColor(feature.properties.percentil),
                 series_id: feature.properties.series_id,
-                secciones_url: getSeccionesUrl(feature.properties.series_id)
+                secciones_url: getSeccionesUrl(feature.properties.series_id),
+                x: feature.geometry.coordinates[0],
+                y: feature.geometry.coordinates[1],
+                status_text: getStatusText(feature.properties.percentil),
+                percentil: feature.properties.percentil,
+                tendencia_text: tendencia,
+                aviso_text: aviso
             });
         }
     }

@@ -17,10 +17,15 @@ export type GeoJSONObject = {
     features : Feature[] 
 }
 
+type Geometry = {
+    type : "Point"
+    coordinates : number[]
+}
+
 type Feature = {
     type : "Feature"
     id : string
-    geometry : Object
+    geometry : Geometry
     properties : {
         unid : number,
         fecha : string,
@@ -48,7 +53,14 @@ export type HydroTableRow = {
     aviso : string,
     status_color : string,
     series_id : number,
-    secciones_url : string
+    secciones_url : string,
+    x : number,
+    y : number,
+    status_text : string,
+    percentil : number,
+    tendencia_text : string,
+    aviso_text : string
+
 }
 
 export async function getFeature(url :string, layer_name : string) {// , username : string, password : string) : Promise<AxiosResponse> {
@@ -139,7 +151,14 @@ export async function getLastValues(station_ids : number[], var_id : number = 2)
                 aviso: warning_icon_mapping[aviso],
                 status_color: getStatusColor(feature.properties.percentil),
                 series_id: feature.properties.series_id,
-                secciones_url: getSeccionesUrl(feature.properties.series_id)
+                secciones_url: getSeccionesUrl(feature.properties.series_id),
+                x: feature.geometry.coordinates[0],
+                y: feature.geometry.coordinates[1],
+                status_text: getStatusText(feature.properties.percentil),
+                percentil : feature.properties.percentil,
+                tendencia_text: tendencia,
+                aviso_text: aviso
+
             })
         }
     }

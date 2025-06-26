@@ -240,7 +240,7 @@
         </div>
         <div class="modal-body d-flex flex-column text-center gap-2">
           <a href="#hidrograma-19" id="hidrograma-link" class="btn btn-link" onclick="closeModal()">hidrograma</a>
-          <a href="https://alerta.ina.gob.ar/a5/secciones?seriesId=19" target="_blank" id="secciones-link" class="btn btn-link" onclick="closeModal()">visualizador</a>
+          <a href="https://alerta.ina.gob.ar/a5/secciones?seriesId=19" target="_blank" id="secciones-link" class="btn btn-link" onclick="closeModal()">visualizador (en pestaña nueva)</a>
         </div>
       </div>
     </div>
@@ -320,10 +320,89 @@
       })
     });
 
+    const estacionId = "{{estacionId}}"
+
+    const estacionesLayerWMS = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: "http://localhost:8080/geoserver/wms",
+        params: {
+          'LAYERS': 'main:ultimas_alturas_con_timeseries',
+          'TILED': true,
+          'VIEWPARAMS': `redId:10;estacionId:${estacionId}`
+        }
+      })
+    })
+
+    const alturasSource = createVectorSourceFromTable("tabla-alturas")
+    const caudalesSource = createVectorSourceFromTable("tabla-caudales")
+
+    const faStyleFunction = function (feature) {
+      const condicion = feature.get('status_text');
+      const tendencia = feature.get('tendencia');
+      const aviso = feature.get('aviso');
+
+      // Choose color and shape based on status
+      let fill_color = 'gray';
+      let icon_unicode = '\uf111';
+
+      if(condicion) {
+        fill_color = getStatusColor(condicion)
+      }
+
+      switch(aviso) {
+        case 'alerta':
+          fill_color = 'yellow';
+          icon_unicode = '\uf071';
+          break;
+        case 'evacuacion':
+          fill_color = 'red';
+          icon_unicode = '\uf071';
+          break;
+        default:
+          switch(tendencia) {
+            case 'crece':
+            case 'sube':
+              icon_unicode = '\uf35b'
+              break;
+            case 'baja':
+              icon_unicode = '\uf358'
+              break;
+          }
+      }
+
+      return new ol.style.Style({
+        text: new ol.style.Text({
+          text: icon_unicode,
+          font: '900 12px "Font Awesome 6 Free"', // adjust for FA version/weight
+          fill: new ol.style.Fill({ color: fill_color }),
+          offsetY: 0, // optional: raise the icon
+        })
+      });
+    }
+    
+    const basicStyle = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: new ol.style.Fill({ color: 'red' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 1 })
+      })
+    })
+
+    const alturasLayer = new ol.layer.Vector({
+      source: alturasSource,
+      style: faStyleFunction
+    });
+
+    const caudalesLayer = new ol.layer.Vector({
+      source: caudalesSource,
+      style: faStyleFunction
+    });
+
+
     function load_map(target) {
       const map = new ol.Map({
         target: target || 'mapa-condicion',
-        layers: [baseLayer, wmsLayer],
+        layers: [baseLayer, wmsLayer, alturasLayer, caudalesLayer],
         view: new ol.View({
           center: ol.proj.fromLonLat([-58.21, -31.58]),
           zoom: 5,
@@ -355,36 +434,146 @@
       if (!lastPixel || pixel[0] !== lastPixel[0] || pixel[1] !== lastPixel[1]) {
         lastPixel = pixel;
         if (hoverTimer) clearTimeout(hoverTimer);
-        hoverTimer = setTimeout(() => {
-          const view = map.getView();
-          const viewResolution = view.getResolution();
-          const wmsSource = wmsLayer.getSource();  // Your TileWMS or ImageWMS source
+        hoverTimer = setTimeout( async () => {
 
-          const url = wmsSource.getFeatureInfoUrl(
-            e.coordinate,
-            viewResolution,
-            view.getProjection(),
-            {
-              'INFO_FORMAT': 'application/json',
-              'QUERY_LAYERS': 'public2:tramos_condicion_params'
+          const feature = map.forEachFeatureAtPixel(pixel, (feature, layer) => {
+              if (layer == alturasLayer || layer == caudalesLayer) {
+                return feature
+              }
+            }, {
+              hitTolerance: 5 // optional: increases clickable radius
             }
-          );
+          ) 
 
-          if (url) {
-            fetch(url)
-              .then(response => response.json())
-              .then(data => {
-                if (data && data.features && data.features.length > 0) {
-                  console.log(data.features[0].properties)
-                  const props = data.features[0].properties;
-                  const content = `${props.rio}<br>${props.nombre}<br>${props.condicion}`
-                  document.getElementById('map-modal-content').innerHTML = content;
-                  document.getElementById('map-modal').style.display = 'block';
-                }
-              });                
-          }            
+          if(feature) {
+            // shows point data (estaciones alturas/caudales)
+            showMapPopup(feature)
+            return
+          }
+
+          //else, query lines (tramos)
+          await queryWMSLayer(e)
+
+          
         }, 1000); // 1 second still
       }
+    }
+
+    function mapPopupContent(response_type, props) {
+      const feature_type = (response_type == "tramos") ? "tramo" : "estación" 
+      // const condicion = (response_type == "tramo") ? props.condicion : (props.estado && props.estado != "normal") ? props.estado : ""
+      var content = `<span style="font-style: italic;">río: </span>${props.rio}<br><span style="font-style: italic;">${feature_type}: </span>${props.nombre}`
+      if(props.condicion) {
+        content = `${content}<br><strong>${props.condicion}</strong>`
+      }
+      return content
+    }
+
+    function showMapPopup(feature, response_type="estacion") {
+      document.getElementById('map-modal').style.backgroundColor = null
+      const props = feature.getProperties();
+      console.log(props)
+      const content = mapPopupContent(response_type, {
+        rio: props.rio || props.Río,
+        nombre: props.nombre || props.Estación,
+        condicion: props.condicion || props.status_text
+      })
+      // const content = (response_type == "tramo") ? `<strong>tramo</strong><br>${props.rio}<br>${props.nombre}<br>${props.condicion}` : `<strong>estación</strong><br>${props.Río}<br>${props.Estación}<br>${props.status_text}`
+      document.getElementById('map-modal-content').innerHTML = content;
+      if(props.status_color) {
+        document.getElementById('map-modal').style.backgroundColor = props.status_color
+      }
+      document.getElementById('map-modal').style.display = 'block';
+    }
+
+    function createVectorSourceFromTable(table_id = "tabla-alturas") {
+      const rows = document.querySelectorAll(`#${table_id} tbody tr`);
+      const headers = Array.from(document.querySelectorAll(`#${table_id} thead th`)).map(th => th.textContent.trim());
+
+      const features = Array.from(rows).map(row => {
+        const x = parseFloat(row.dataset.x);
+        const y = parseFloat(row.dataset.y);
+        const id = row.dataset.id;
+      
+        const props = {
+          series_id: row.dataset.series_id,
+          status_color: row.dataset.status_color,
+          status_text: row.dataset.status_text,
+          percentil: row.dataset.percentil,
+          tendencia: row.dataset.tendencia,
+          aviso: row.dataset.aviso
+        };
+        row.querySelectorAll('td').forEach((td, i) => {
+          const key = headers[i];
+          const value = td.textContent.trim();
+          props[key] = value;
+        });
+
+        return new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.fromLonLat([x, y])),
+          ...props,
+          id: id
+        });
+      });
+
+      return new ol.source.Vector({
+        features: features
+      });
+
+    }
+
+    async function queryWMSLayer(e, layer=wmsLayer, response_type="tramos") {
+      const view = map.getView();
+      const viewResolution = view.getResolution();
+      const wmsSource = layer.getSource();  // Your TileWMS or ImageWMS source
+    
+      const url = wmsSource.getFeatureInfoUrl(
+        e.coordinate,
+        viewResolution,
+        view.getProjection(),
+        {
+          'INFO_FORMAT': 'application/json',
+          'QUERY_LAYERS': 'public2:tramos_condicion_params'
+        }
+      );
+
+      const response = await fetch(url)
+      if(response) {
+        data = await response.json()
+        if (data && data.features && data.features.length) {
+          document.getElementById('map-modal').style.backgroundColor = null
+          feature = data.features[0]
+          console.log(feature.properties)
+          const props = feature.properties;
+          props.condicion = (response_type == "tramos") ? props.condicion : (props.estado && props.estado != "normal") ? props.estado : ""
+          const content = mapPopupContent(response_type, props)
+          // `<span style="font-style: italic;">río: </span>${props.rio}<br><span style="font-style: italic;">${feature_type}: </span>${props.nombre}<br><strong>${condicion}</strong>` 
+          document.getElementById('map-modal-content').innerHTML = content;
+          document.getElementById('map-modal').style.display = 'block';
+          if(props.condicion) {
+            document.getElementById('map-modal').style.backgroundColor = getStatusColor(props.condicion)
+          }
+        }
+      }
+    }
+
+    function getStatusColor(condicion) {
+        if(!condicion) {
+            return "#ffffff"
+        }
+        if(condicion in status_colors) {
+          return status_colors[condicion]
+        } else {
+          return "#ffffff"
+        }
+    }
+
+    const status_colors = {
+        "aguas altas": "#6fa8dc",
+        "aguas medias altas": "#cfe2f3",
+        "aguas medias": "#fff2cc",
+        "aguas medias bajas": "#f6b26b",
+        "aguas bajas": "#ea9999"
     }
 
   </script>

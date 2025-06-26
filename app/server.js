@@ -123,7 +123,8 @@ app.get('/reporte_diario', async (req,res) => {
       'reporte_diario', {
         landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
         html_content: data,
-        geoserver_url: "https://alerta.ina.gob.ar/geoserver"
+        geoserver_url: "https://alerta.ina.gob.ar/geoserver",
+        estacionId: [...config.station_ids, ...config.station_ids_caudal].join("_")
       })
   });
 })
@@ -144,7 +145,8 @@ app.get('/reporte_diario_local', async (req,res) => {
       'reporte_diario', {
         landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
         html_content: data,
-        geoserver_url: config.geoserver_url || "https://alerta.ina.gob.ar/geoserver"
+        geoserver_url: config.geoserver_url || "https://alerta.ina.gob.ar/geoserver",
+        estacionId: [...config.station_ids, ...config.station_ids_caudal].join("_")
       })
   });
 })

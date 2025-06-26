@@ -34,18 +34,18 @@
     </div>
     {{!-- <h4>Tabla de situación y perspectiva a corto plazo</h4> --}}
     <div class="table-wrapper">
-      <table class="tabla-hidro">
+      <table class="tabla-hidro" id="tabla-alturas">
         <thead>
-          <td>Estación</td>
-          <td>Río</td>
-          <td>Nivel (m)</td>
-          <td>Alerta</td>
-          <td>Evacuación</td>
-          <td>Perspectiva</td>
-          <td></td>
+          <th>Estación</th>
+          <th>Río</th>
+          <th>Nivel (m)</th>
+          <th>Alerta</th>
+          <th>Evacuación</th>
+          <th>Perspectiva</th>
+          <th></th>
         </thead>
         {{#each tabla_hidro}}
-          <tr>
+          <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}" data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}" data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
               <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
               <td>{{this.rio}}</td>
               <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>
@@ -58,18 +58,18 @@
       </table>
     </div>
     <div class="table-wrapper">
-      <table class="tabla-hidro">
+      <table class="tabla-hidro" id="tabla-caudales">
         <thead>
-          <td>Estación</td>
-          <td>Río</td>
-          <td>Caudal (m<sup>3</sup>/s)</td>
-          <td>Alerta</td>
-          <td>Evacuación</td>
-          <td>Perspectiva</td>
-          <td></td>
+          <th>Estación</th>
+          <th>Río</th>
+          <th>Caudal (m<sup>3</sup>/s)</th>
+          <th>Alerta</th>
+          <th>Evacuación</th>
+          <th>Perspectiva</th>
+          <th></th>
         </thead>
         {{#each tabla_caudales}}
-          <tr>
+          <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}" data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}" data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
               <td><div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;" data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">{{this.estacion_nombre}}</div></td>
               <td>{{this.rio}}</td>
               <td style="background-color: {{this.status_color}} !important;">{{this.valor}} {{{this.tendencia}}}</td>

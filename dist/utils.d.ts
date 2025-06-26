@@ -4,10 +4,14 @@ export type GeoJSONObject = {
     type: string;
     features: Feature[];
 };
+type Geometry = {
+    type: "Point";
+    coordinates: number[];
+};
 type Feature = {
     type: "Feature";
     id: string;
-    geometry: Object;
+    geometry: Geometry;
     properties: {
         unid: number;
         fecha: string;
@@ -35,6 +39,12 @@ export type HydroTableRow = {
     status_color: string;
     series_id: number;
     secciones_url: string;
+    x: number;
+    y: number;
+    status_text: string;
+    percentil: number;
+    tendencia_text: string;
+    aviso_text: string;
 };
 export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;
