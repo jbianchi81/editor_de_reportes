@@ -375,6 +375,9 @@
           text: icon_unicode,
           font: '900 12px "Font Awesome 6 Free"', // adjust for FA version/weight
           fill: new ol.style.Fill({ color: fill_color }),
+          stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
+          // backgroundFill: new ol.style.Fill({ color: 'white' }),
+          // backgroundStroke: new ol.style.Stroke({ color: 'black', width: 1 }),
           offsetY: 0, // optional: raise the icon
         })
       });
@@ -466,6 +469,18 @@
       if(props.condicion) {
         content = `${content}<br><strong>${props.condicion}</strong>`
       }
+      if(props.aviso && props.aviso != "ok") {
+        var aviso_color = "white";
+        switch(props.aviso) {
+          case 'alerta':
+            aviso_color = 'yellow';
+            break;
+          case 'evacuacion':
+            aviso_color = 'red';
+            break;
+        }
+        content = `${content}<br><strong style="background-color: ${aviso_color};">${props.aviso}</strong>`
+      }
       return content
     }
 
@@ -476,7 +491,8 @@
       const content = mapPopupContent(response_type, {
         rio: props.rio || props.Río,
         nombre: props.nombre || props.Estación,
-        condicion: props.condicion || props.status_text
+        condicion: props.condicion || props.status_text,
+        aviso: props.aviso
       })
       // const content = (response_type == "tramo") ? `<strong>tramo</strong><br>${props.rio}<br>${props.nombre}<br>${props.condicion}` : `<strong>estación</strong><br>${props.Río}<br>${props.Estación}<br>${props.status_text}`
       document.getElementById('map-modal-content').innerHTML = content;
