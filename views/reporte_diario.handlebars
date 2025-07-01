@@ -174,10 +174,19 @@
           width: 714px;
       }
 
-      table.tabla-hidro {
+      #report_container table.tabla-hidro {
         page-break-inside: avoid;
+        width: 674px;
+        font-size: 13px;
       }
 
+      .paragraph {
+        font-size: 13px;
+      }
+      #report_container table.tabla-hidro th:nth-child(6), #report_container table.tabla-hidro td:nth-child(6){
+        overflow-wrap: break-word;
+        font-size: inherit;
+      }
       .accordion-header {
         display: none;
       }
