@@ -55,11 +55,17 @@ function detectWarning(valor, nivel_de_alerta, nivel_de_evacuacion) {
         return "ok";
     }
 }
-function getTrend(valor, valor_precedente) {
+function getTrend(valor, valor_precedente, var_id) {
     if (valor == null || valor_precedente == null) {
-        return "no_data";
+        return ["no_data", ""];
     }
-    return (valor > valor_precedente) ? "sube" : (valor < valor_precedente) ? "baja" : "igual";
+    const diferencia = Math.round((valor - valor_precedente) * 100) / 100;
+    const [tendencia_text, clases] = (diferencia > 0) ? ["sube", trend_icon_mapping["sube"]] : (diferencia < 0) ? ["baja", trend_icon_mapping["baja"]] : ["igual", trend_icon_mapping["igual"]];
+    const unidades = (var_id == 2) ? "m" : "m&#179/s";
+    return [
+        tendencia_text,
+        `<i class="${clases}" aria-hidden="true" title="diferencia con el registro anterior: ${diferencia.toString()} ${unidades}"></i>`
+    ];
 }
 function formatDecimal(value, places = 2) {
     if (value == null) {
@@ -73,14 +79,14 @@ export async function getLastValues(station_ids, var_id = 2) {
     const rows = [];
     for (const feature of data.features) {
         if (station_ids.indexOf(feature.properties.unid) >= 0) {
-            const tendencia = getTrend(feature.properties.valor, feature.properties.valor_precedente);
+            const [tendencia_text, tendencia_icon] = getTrend(feature.properties.valor, feature.properties.valor_precedente, var_id);
             const aviso = detectWarning(feature.properties.valor, feature.properties.nivel_de_alerta, feature.properties.nivel_de_evacuacion);
             rows.push({
                 id: feature.properties.unid,
                 estacion_nombre: feature.properties.nombre,
                 rio: getRio(feature.properties.rio),
                 valor: formatDecimal(feature.properties.valor, decimal_places),
-                tendencia: trend_icon_mapping[tendencia],
+                tendencia: tendencia_icon,
                 alerta: formatDecimal(feature.properties.nivel_de_alerta, decimal_places),
                 evacuacion: formatDecimal(feature.properties.nivel_de_evacuacion, decimal_places),
                 perspectiva: feature.properties.perspectiva, // undefined
@@ -92,7 +98,7 @@ export async function getLastValues(station_ids, var_id = 2) {
                 y: feature.geometry.coordinates[1],
                 status_text: getStatusText(feature.properties.percentil),
                 percentil: feature.properties.percentil,
-                tendencia_text: tendencia,
+                tendencia_text: tendencia_text,
                 aviso_text: aviso
             });
         }
@@ -251,10 +257,14 @@ const status_colors = {
     100: "#ea9999"
 };
 const trend_icon_mapping = {
-    "baja": '<i class="fa fa-arrow-down" aria-hidden="true"></i>',
-    "sube": '<i class="fa fa-arrow-up" aria-hidden="true"></i>',
-    "igual": '<i class="fas fa-equals"></i>',
-    "no_data": '<i class="fa fa-times" aria-hidden="true"></i>'
+    "baja": 'fa fa-arrow-down',
+    "sube": 'fa fa-arrow-up',
+    "igual": 'fas fa-equals',
+    "no_data": 'fa fa-times'
+    // "baja": '<i class="fa fa-arrow-down" aria-hidden="true"></i>',
+    // "sube": '<i class="fa fa-arrow-up" aria-hidden="true"></i>',
+    // "igual": '<i class="fas fa-equals"></i>',
+    // "no_data": '<i class="fa fa-times" aria-hidden="true"></i>'
 };
 const plot_mapping = {
     19: { name: "Corrientes", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/corrientes.png", river: "Paraná" },

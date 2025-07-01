@@ -22,6 +22,7 @@
 .richText .richText-editor .table-wrapper, #report_container .table-wrapper {
     overflow-x: auto;
     width: 100%;
+    scrollbar-width: thin; /* Firefox */
 }
 
 .richText .richText-editor table.tabla-hidro, #report_container table.tabla-hidro {
@@ -54,6 +55,7 @@
     text-align: center;
 }
 
+
 .richText .richText-editor, .richText .richText-initial {
     height: 600px;
 }
@@ -73,6 +75,14 @@
 #report_container table td, #report_container table th {
     padding: 15px;
     border: #EFEFEF solid 1px;
+}
+
+#report_container .paragraph {
+    font-size: 14px;
+}
+
+#report_container #lista-notas {
+    font-size: 14px;
 }
 
 html {
