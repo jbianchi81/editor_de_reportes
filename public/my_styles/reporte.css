@@ -51,7 +51,7 @@
 }
 
 .richText .richText-editor table.leyenda-tabla-hidro td, #report_container table.leyenda-tabla-hidro td {
-    padding: 0px;
+    padding: 1px 4px;
     text-align: center;
 }
 
@@ -175,7 +175,7 @@ html {
     }
 
     .richText .richText-editor table.leyenda-tabla-hidro, #report_container table.leyenda-tabla-hidro {
-        margin-left: 100px;
+        max-width: 674px;
     }
 
     #report_container table.tabla-hidro th:nth-child(1), #report_container table.tabla-hidro td:nth-child(1), #report_container table.tabla-hidro th:nth-child(6), #report_container table.tabla-hidro td:nth-child(6) {
