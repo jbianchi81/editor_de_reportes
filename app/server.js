@@ -11,6 +11,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+import {getYMDstrings} from '../dist/utils.js'
 
 app.use(express_static(path.join(__dirname,'..','public')));
 // app.use('/js',express_static('public'));
@@ -163,6 +164,22 @@ app.post('/save', isWriter, (req, res) => {
     } catch(e) {
       console.error(e)
     }
+    const date = new Date()
+    const ymd = getYMDstrings(date)
+    writeFile(
+      path.join(__dirname,'../public/json/reporte_diario.json'), 
+      JSON.stringify(
+        {
+          "url": "https://alerta.ina.gob.ar/a5/diario/reporte_diario",
+          "fecha": `${ymd.day}-${ymd.month}-${ymd.year}`,
+          "date": date.toISOString()
+        }
+      ),
+      async err => {
+        if(err) console.log("Error al guardar reporte_diario.json: " + e.toString())
+      }
+    )
+    
   });
 });
 
