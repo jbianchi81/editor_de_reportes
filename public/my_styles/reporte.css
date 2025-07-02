@@ -78,11 +78,11 @@
 }
 
 #report_container .paragraph {
-    font-size: 14px;
+    font-size: 18px;
 }
 
 #report_container #lista-notas {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 html {
@@ -177,7 +177,22 @@ html {
     .richText .richText-editor table.leyenda-tabla-hidro, #report_container table.leyenda-tabla-hidro {
         margin-left: 100px;
     }
+
+    #report_container table.tabla-hidro th:nth-child(1), #report_container table.tabla-hidro td:nth-child(1), #report_container table.tabla-hidro th:nth-child(6), #report_container table.tabla-hidro td:nth-child(6) {
+        overflow-wrap: break-word;
+        font-size: inherit;
+        max-width: 140px;
+    }
+
+    #report_container div.paragraph {
+        font-size: 16px;
+    }
+
+    #report_container #lista-notas {
+        font-size: 15px;
+    }
 }
+
 
 @media (max-width: 600px) {
   #mapa-row {
