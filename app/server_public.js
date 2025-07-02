@@ -40,8 +40,8 @@ app.get('/reporte_diario_local', async (req,res) => {
       data = data.replace(/https\:\/\/alerta.ina.gob.ar\/ina/g, `${config.directory_listings_url}/ina`)
     }
     if(config.geoserver_url) {
-      data = data.replace(/https\:\/\/alerta.ina.gob.ar\/geoserver/g, `${config.geoserver_url}/geoserver`)
-    } 
+      data = data.replace(/https\:\/\/alerta.ina.gob.ar\/geoserver/g, `${config.geoserver_url}`)
+    }
     res.render(
       'reporte_diario', {
         landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
