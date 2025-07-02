@@ -339,7 +339,8 @@
                       </li>
                       <li class="breadcrumb-item"><a href="https://argentina.gob.ar/ina">Instituto Nacional del Agua
                           (INA)</a></li>
-                      <li class="breadcrumb-item active" aria-current="page">Alerta Hidrol&oacute;gico Cuenca del Plata
+                      <li class="breadcrumb-item"><a href="https://www.ina.gob.ar/alerta">Alerta Hidrol&oacute;gico Cuenca del Plata</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Reporte diario
                       </li>
                     </ol>
                   </div>
@@ -592,7 +593,7 @@
               await queryWMSLayer(e)
 
 
-            }, 1000); // 1 second still
+            }, {{map_query_delay}}); // 1 second still
           }
         }
 
