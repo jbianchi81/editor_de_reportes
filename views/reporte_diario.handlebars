@@ -444,12 +444,17 @@
 
         const wmsLayerUrl = "{{geoserver_url}}/wms";
 
+        var tramos_timeend = new Date("{{date}}")
+        var tramos_timestart = new Date(tramos_timeend)
+        tramos_timestart.setDate(tramos_timestart.getDate() - 7)
+
         const wmsLayer = new ol.layer.Tile({
           source: new ol.source.TileWMS({
             url: wmsLayerUrl,
             params: {
               'LAYERS': 'public2:tramos_condicion_params',
-              'TILED': true
+              'TILED': true,
+              'VIEWPARAMS': `timestart:${tramos_timestart.toISOString()};timeend:${tramos_timeend.toISOString()}`
             },
             serverType: 'geoserver',
             transition: 0

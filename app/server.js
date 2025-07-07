@@ -120,14 +120,29 @@ app.get('/reporte_diario', async (req,res) => {
       console.error(err)
       return res.status(504).send('Server error');
     }
-    res.render(
-      'reporte_diario', {
-        landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
-        html_content: data,
-        geoserver_url: "https://alerta.ina.gob.ar/geoserver",
-        estacionId: [...config.station_ids, ...config.station_ids_caudal].join("_"),
-        map_query_delay: config.map_query_delay || 1000
-      })
+    readFile(path.join(__dirname, '..','public','json/reporte_diario.json'), 'utf8', (err, json_data) => {
+      if (err) {
+        console.error(err)
+        return res.status(504).send('Server error');
+      }
+      try {
+        var report_metadata = JSON.parse(json_data)
+      } catch (e) {
+        console.error("Failed to parse report metadata, using Defaults. \n" + e.toString())
+        var report_metadata = {}
+      }
+      res.render(
+        'reporte_diario', 
+        {
+          landscape_warning_class: (config.allow_portrait) ? "" : "enabled",
+          html_content: data,
+          geoserver_url: "https://alerta.ina.gob.ar/geoserver",
+          estacionId: [...config.station_ids, ...config.station_ids_caudal].join("_"),
+          map_query_delay: config.map_query_delay || 1000,
+          date: report_metadata.date || new Date().toISOString()
+        }
+      )
+    })      
   });
 })
 
@@ -157,17 +172,13 @@ app.get('/reporte_diario_local', async (req,res) => {
 // Save new HTML content
 app.post('/publish', isWriter, (req, res) => {
   const html = req.body.html;
+  // write report (html)
   writeFile(path.join(__dirname,'../public/saved.html'), html, async err => {
     if (err) return res.status(500).send('Error al guardar');
     res.send('Se guardó exitosamente!');
-    // download pdf
-    try {
-      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario_local` : undefined)
-    } catch(e) {
-      console.error(e)
-    }
     const date = new Date()
     const ymd = getYMDstrings(date)
+    // write json (report metadata)
     writeFile(
       path.join(__dirname,'../public/json/reporte_diario.json'), 
       JSON.stringify(
@@ -181,7 +192,12 @@ app.post('/publish', isWriter, (req, res) => {
         if(err) console.log("Error al guardar reporte_diario.json: " + e.toString())
       }
     )
-    
+    // download pdf
+    try {
+      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario_local` : undefined)
+    } catch(e) {
+      console.error(e)
+    } 
   });
 });
 
