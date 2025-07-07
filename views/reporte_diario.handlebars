@@ -564,8 +564,10 @@
         let lastPixel = null;
 
         function mapQueryHandler(e) {
-
-          document.getElementById('map-modal').style.display = 'none'
+          const modalcontainer = document.getElementById('map-modal-container')
+          if(modalcontainer) {
+            modalcontainer.remove()
+          }
 
           const pixel = e.pixel;
 
@@ -621,7 +623,6 @@
         }
 
         function showMapPopup(feature, response_type = "estacion") {
-          document.getElementById('map-modal').style.backgroundColor = null
           const props = feature.getProperties();
           console.log(props)
           const content = mapPopupContent(response_type, {
@@ -631,11 +632,16 @@
             aviso: props.aviso
           })
           // const content = (response_type == "tramo") ? `<strong>tramo</strong><br>${props.rio}<br>${props.nombre}<br>${props.condicion}` : `<strong>estación</strong><br>${props.Río}<br>${props.Estación}<br>${props.status_text}`
-          document.getElementById('map-modal-content').innerHTML = content;
-          if (props.status_color) {
-            document.getElementById('map-modal').style.backgroundColor = props.status_color
-          }
-          document.getElementById('map-modal').style.display = 'block';
+          createModalContainer(content,(props.status_color) ? props.status_color : null)
+        }
+
+        function createModalContainer(content, bkgColor) {
+          const modalContainer = document.createElement("div")
+          modalContainer.id = 'map-modal-container'
+          modalContainer.style.backgroundColor = bkgColor 
+          modalContainer.style.display = "block"
+          modalContainer.innerHTML = `<div id="map-modal-content">${content}</div>`
+          document.getElementById('mapa-condicion').after(modalContainer)
         }
 
         function createVectorSourceFromTable(table_id = "tabla-alturas") {
@@ -693,18 +699,13 @@
           if (response) {
             data = await response.json()
             if (data && data.features && data.features.length) {
-              document.getElementById('map-modal').style.backgroundColor = null
               feature = data.features[0]
               console.log(feature.properties)
               const props = feature.properties;
               props.condicion = (response_type == "tramos") ? props.condicion : (props.estado && props.estado != "normal") ? props.estado : ""
               const content = mapPopupContent(response_type, props)
-              // `<span style="font-style: italic;">río: </span>${props.rio}<br><span style="font-style: italic;">${feature_type}: </span>${props.nombre}<br><strong>${condicion}</strong>` 
-              document.getElementById('map-modal-content').innerHTML = content;
-              document.getElementById('map-modal').style.display = 'block';
-              if (props.condicion) {
-                document.getElementById('map-modal').style.backgroundColor = getStatusColor(props.condicion)
-              }
+              // `<span style="font-style: italic;">río: </span>${props.rio}<br><span style="font-style: italic;">${feature_type}: </span>${props.nombre}<br><strong>${condicion}</strong>`
+              createModalContainer(content,(props.condicion) ? getStatusColor(props.condicion) : null)
             }
           }
         }

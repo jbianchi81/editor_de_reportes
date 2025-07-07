@@ -150,7 +150,7 @@ html {
     align-items: center;
 }
 
-#map-modal {
+#map-modal-container {
     display: none;
     position: absolute;
     /* top: 20%; */
@@ -164,7 +164,7 @@ html {
     font-size: 14px;
 }
 
-#map-modal button {
+#map-modal-container button {
     margin-top: 10px;
 }
 
@@ -180,7 +180,7 @@ html {
 
     #report_container table.tabla-hidro th:nth-child(1), #report_container table.tabla-hidro td:nth-child(1), #report_container table.tabla-hidro th:nth-child(6), #report_container table.tabla-hidro td:nth-child(6) {
         overflow-wrap: break-word;
-        font-size: inherit;
+        font-size: 17px;
         max-width: 140px;
     }
 

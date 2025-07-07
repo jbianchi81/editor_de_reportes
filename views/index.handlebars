@@ -122,14 +122,23 @@
           <button class="button" id=load-template-button onclick="startFromTemplate()">Cargar plantilla</button>
         </span>
         <span>
-          <label for="fileInput" class="custom-button">Cargar HTML</label>
+          <button class="button" id=load-published-button onclick="loadPublished()">Cargar publicado</button>
+        </span>
+        <span>
+          <label for="fileInput" class="custom-button">Cargar archivo HTML</label>
           <input type="file" id="fileInput" accept=".html" style="display: none;">
         </span>
         <span>
-          <button class="button" onclick="saveAsHtml()" id="dwnld-button">Descargar HTML</button>
+          <button class="button" id=save-draft-button onclick="loadDraft()">Cargar borrador</button>
         </span>
         <span>
-          <button class="button" id=save-button onclick="saveContent()">Guardar</button>
+          <button class="button" id=save-draft-button onclick="saveDraft()">Guardar borrador</button>
+        </span>
+        <span>
+          <button class="button" onclick="saveAsHtml()" id="dwnld-button">Descargar</button>
+        </span>
+        <span>
+          <button class="button" id=publish-button onclick="saveDraftAndPublish()">Guardar y publicar</button>
         </span>
         <span>
           <a href="reporte_diario" target="_blank">Ver</a>
@@ -164,57 +173,33 @@
         blocker.style.display = 'none'; // re-enable interaction
       }
     }
-    loadContent('content')
+
+    // load draft
+    loadDraft()
     // const toggleBtn = document.getElementById('toggleView');
     const htmlView = document.getElementById('html-view');
     const editorContainer = document.getElementById('editor');
 
     let codeView = false;
 
-    // toggleBtn.addEventListener('click', async () => {
-    //   codeView = !codeView;
+    async function saveDraftAndPublish() {
+      await saveDraft()
+      publish()
+    }
 
-    //   if (codeView) {
-    //     // Switch to HTML view
-    //     const rawHtml = quill.root.innerHTML;
-    //     const formatted = await prettier.format(rawHtml, {
-    //       parser: 'html',
-    //       plugins: prettierPlugins
-    //     });
-    //     htmlView.value = formatted;
-    //     htmlView.style.display = 'block';
-    //     editorContainer.style.display = 'none';
-    //     toggleBtn.textContent = 'Cambiar a WYSIWYG';
-    //     document.getElementById("save-button").disabled = true
-    //     document.getElementById("load-template-button").disabled = true
-    //     document.getElementById("toolbar").style.display = "none" 
-    //   } else {
-    //     // Switch back to Quill
-    //     // quill.root.innerHTML = htmlView.value;
-    //     // const parser = new Clipboard(quill, quill.options.modules.clipboard)
-    //     var html = htmlView.value
-    //     html = convertTablesToP(html)
-    //     const delta = quill.getModule('clipboard').convert(html);
-    //     // const delta = quill.clipboard.convert(htmlView.value);
-    //     quill.setContents(delta);
-    //     htmlView.style.display = 'none';
-    //     editorContainer.style.display = 'block';
-    //     toggleBtn.textContent = 'Cambiar a vista de código';
-    //     document.getElementById("save-button").disabled = false
-    //     document.getElementById("load-template-button").disabled = false
-    //     document.getElementById("toolbar").style.display = "block" 
-    //   }
-    // });
-
-    // document.querySelector('.ql-insertTable').addEventListener('click', () => {
-    //   const tableModule = quill.getModule('better-table');
-    //   tableModule.insertTable(3, 3); // rows, columns
-    // });
-    // }
       // Save content
-    function saveContent() {
+    async function publish() {
       const html = $("textarea#editor").val();
-      fetch('save', {
+      return fetch('publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html })
+      }).then(res => res.text()).then(alert).catch(alert);
+    }
+
+    async function saveDraft() {
+      const html = $("textarea#editor").val();
+      return fetch('draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ html })
@@ -238,6 +223,14 @@
     // new from template
     function startFromTemplate() {
       loadContent("template")
+    }
+
+    function loadDraft() {
+      loadContent("draft.html")
+    }
+
+    function loadPublished() {
+      loadContent("saved.html")
     }
 
     function addToolbarButton() {

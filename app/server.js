@@ -155,7 +155,7 @@ app.get('/reporte_diario_local', async (req,res) => {
 })
 
 // Save new HTML content
-app.post('/save', isWriter, (req, res) => {
+app.post('/publish', isWriter, (req, res) => {
   const html = req.body.html;
   writeFile(path.join(__dirname,'../public/saved.html'), html, async err => {
     if (err) return res.status(500).send('Error al guardar');
@@ -184,6 +184,16 @@ app.post('/save', isWriter, (req, res) => {
     
   });
 });
+
+// Save draft
+app.post('/draft', isWriter, (req, res) => {
+  const html = req.body.html;
+  writeFile(path.join(__dirname,'../public/draft.html'), html, async err => {
+    if (err) return res.status(500).send('Error al guardar borrador');
+    res.send('Se guardó el borrador exitosamente!');
+  });
+});
+
 
 app.get('/', isWriterRedirect, (req, res) => {
   res.render('index',
