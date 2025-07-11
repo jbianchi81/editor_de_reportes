@@ -45,6 +45,7 @@ export type HydroTableRow = {
     percentil: number;
     tendencia_text: string;
     aviso_text: string;
+    fecha: string;
 };
 export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;

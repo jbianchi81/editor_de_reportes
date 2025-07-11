@@ -73,6 +73,15 @@ function formatDecimal(value, places = 2) {
     }
     return value.toFixed(places).replace(/\./, ",");
 }
+function formatDateLocal(date) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const day = pad(date.getDate());
+    const month = pad(date.getMonth() + 1); // Months are 0-based
+    const year = date.getFullYear();
+    const hours = pad(date.getHours());
+    const seconds = pad(date.getSeconds());
+    return `${day}/${month}/${year} ${hours}:${seconds}`;
+}
 export async function getLastValues(station_ids, var_id = 2) {
     const data = await fetchLastValues(var_id);
     const decimal_places = (var_id == 2) ? 2 : 0;
@@ -81,6 +90,7 @@ export async function getLastValues(station_ids, var_id = 2) {
         if (station_ids.indexOf(feature.properties.unid) >= 0) {
             const [tendencia_text, tendencia_icon] = getTrend(feature.properties.valor, feature.properties.valor_precedente, var_id);
             const aviso = detectWarning(feature.properties.valor, feature.properties.nivel_de_alerta, feature.properties.nivel_de_evacuacion);
+            const fecha = formatDateLocal(new Date(feature.properties.fecha));
             rows.push({
                 id: feature.properties.unid,
                 estacion_nombre: feature.properties.nombre,
@@ -99,7 +109,8 @@ export async function getLastValues(station_ids, var_id = 2) {
                 status_text: getStatusText(feature.properties.percentil),
                 percentil: feature.properties.percentil,
                 tendencia_text: tendencia_text,
-                aviso_text: aviso
+                aviso_text: aviso,
+                fecha: fecha
             });
         }
     }
