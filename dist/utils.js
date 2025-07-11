@@ -286,6 +286,7 @@ const plot_mapping = {
     29: { name: "Paraná", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/parana.png", river: "Paraná" },
     30: { name: "Santa Fe", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santa_fe.png", river: "Paraná" },
     34: { name: "Rosario", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/rosario.png", river: "Paraná" },
+    52: { name: "San Fernando", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/san_fernando.png", river: "Luján" },
     65: { name: "San Javier", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/san_javier.png", river: "Uruguay" },
     68: { name: "Santo Tomé", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/santo_tome.png", river: "Uruguay" },
     72: { name: "Paso de los Libres", src: "https://alerta.ina.gob.ar/ina/08-PRONOSTICOS/graficos/paso_de_los_libres.png", river: "Uruguay" },
