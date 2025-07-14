@@ -168,6 +168,19 @@ html {
     margin-top: 10px;
 }
 
+table tbody a[data-bs-toggle=tooltip] {
+    cursor: pointer;
+    color: #141414;
+    text-decoration: none;
+}
+
+@media (pointer: coarse) and (hover: none) {
+    table tbody a[data-bs-toggle=tooltip] {
+        color: #0767A7;
+        text-decoration: underline;
+    }
+}
+
 @media (max-width: 660px) {
     .container-reporte p {
         max-width: 95vw;

@@ -64,7 +64,7 @@ function getTrend(valor, valor_precedente, var_id) {
     const unidades = (var_id == 2) ? "m" : "m&#179/s";
     return [
         tendencia_text,
-        `<i class="${clases}" aria-hidden="true" title="diferencia con el registro anterior: ${diferencia.toString()} ${unidades}"></i>`
+        `<a href="#" title="diferencia con el registro anterior: ${diferencia.toString()} ${unidades}" data-bs-toggle="tooltip" data-bs-placement="top"><i class="${clases}" aria-hidden="true"></i></a>`
     ];
 }
 function formatDecimal(value, places = 2) {
@@ -248,8 +248,8 @@ const var_layer_map = {
 };
 const warning_icon_mapping = {
     "ok": '',
-    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>',
-    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>',
+    "alerta": '<a href="#" title="alerta" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i></a>',
+    "evacuacion": '<a href="#" title="evacuación" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i></a>',
     "no_data": ''
 };
 // MAPS

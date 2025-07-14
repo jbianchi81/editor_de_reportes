@@ -127,7 +127,7 @@ function getTrend(valor : number, valor_precedente : number, var_id : number) : 
 
     return [
         tendencia_text,
-        `<i class="${clases}" aria-hidden="true" title="diferencia con el registro anterior: ${diferencia.toString()} ${unidades}"></i>`
+        `<a href="#" title="diferencia con el registro anterior: ${diferencia.toString()} ${unidades}" data-bs-toggle="tooltip" data-bs-placement="top"><i class="${clases}" aria-hidden="true"></i></a>`
     ]
 }
 
@@ -343,8 +343,8 @@ const var_layer_map : Record<number, string> = {
 
 const warning_icon_mapping: Record<string, string> = {
     "ok": '',
-    "alerta": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>',
-    "evacuacion": '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>',
+    "alerta": '<a href="#" title="alerta" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i></a>',
+    "evacuacion": '<a href="#" title="evacuación" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i></a>',
     "no_data": ''
 }
 

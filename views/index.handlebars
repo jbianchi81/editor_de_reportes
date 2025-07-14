@@ -239,7 +239,7 @@
             const alertaButton = `
               <li class="alerta-icon-btn">
                 <a href="#" title="Insertar ícono alerta">
-                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>
+                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;" title="alerta"></i>
                 </a>
               </li>
             `;
@@ -248,8 +248,8 @@
 
             const evacuacionButton = `
               <li class="evacuacion-icon-btn">
-                <a href="#" title="Insertar ícono alerta">
-                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>
+                <a href="#" title="Insertar ícono evacuación">
+                  <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;" title="evacuación"></i>
                 </a>
               </li>
             `;
@@ -260,7 +260,7 @@
         $('.alerta-icon-btn').on('click', function (e) {
           e.preventDefault();
 
-          const iconHtml = '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i>';
+          const iconHtml = '<a href="#" title="alerta" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: yellow !important;"></i></a>';
 
           // Insert HTML at caret position
           const editor = $('.richText-editor');
@@ -270,7 +270,7 @@
         $('.evacuacion-icon-btn').on('click', function (e) {
           e.preventDefault();
 
-          const iconHtml = '<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i>';
+          const iconHtml = '<a href="#" title="evacuación" data-bs-toggle="tooltip" data-bs-placement="top"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red !important;"></i></a>';
 
           // Insert HTML at caret position
           const editor = $('.richText-editor');
