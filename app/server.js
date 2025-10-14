@@ -15,7 +15,7 @@ import {getYMDstrings} from '../dist/utils.js'
 
 app.use(express_static(path.join(__dirname,'..','public')));
 // app.use('/js',express_static('public'));
-app.use(json({ limit: '5mb' }));
+// app.use(json({ limit: '5mb' }));
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
