@@ -8,6 +8,6 @@
         "password": "xxxxxxx"
     },
     "port": 3000,
-    "skip_authentication": false,
+    "skip_authentication": true,
     "authentication_url": "http://localhost:4000"
 }
