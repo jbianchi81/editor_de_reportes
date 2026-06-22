@@ -79,8 +79,8 @@ function formatDateLocal(date) {
     const month = pad(date.getMonth() + 1); // Months are 0-based
     const year = date.getFullYear();
     const hours = pad(date.getHours());
-    const seconds = pad(date.getSeconds());
-    return `${day}/${month}/${year} ${hours}:${seconds}`;
+    const minutes = pad(date.getMinutes());
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 export async function getLastValues(station_ids, var_id = 2) {
     const data = await fetchLastValues(var_id);

@@ -146,9 +146,9 @@ function formatDateLocal(date : Date) : string {
   const year = date.getFullYear();
 
   const hours = pad(date.getHours());
-  const seconds = pad(date.getSeconds());
+  const minutes = pad(date.getMinutes());
 
-  return `${day}/${month}/${year} ${hours}:${seconds}`;
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
 export async function getLastValues(station_ids : number[], var_id : number = 2) {
