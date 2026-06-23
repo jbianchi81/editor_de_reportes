@@ -88,18 +88,18 @@
                 <Fill>
                   <CssParameter name="fill">
                     <ogc:Function name="Recode">
-                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:PropertyName>status_text</ogc:PropertyName>
+                      <ogc:Literal></ogc:Literal>
                       <ogc:Literal>#ffffff</ogc:Literal>
-                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>aguas altas</ogc:Literal>
                       <ogc:Literal>#6fa8dc</ogc:Literal>
-                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>aguas medias altas</ogc:Literal>
                       <ogc:Literal>#cfe2f3</ogc:Literal>
-                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>aguas medias</ogc:Literal>
                       <ogc:Literal>#fff2cc</ogc:Literal>
-                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>aguas medias bajas</ogc:Literal>
                       <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>aguas bajas</ogc:Literal>
                       <ogc:Literal>#ea9999</ogc:Literal>
                     </ogc:Function>
                   </CssParameter>
@@ -127,18 +127,18 @@
                 <Fill>
                   <CssParameter name="fill">
                     <ogc:Function name="Recode">
-                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:PropertyName>status_text</ogc:PropertyName>
+                      <ogc:Literal></ogc:Literal>
                       <ogc:Literal>#ffffff</ogc:Literal>
-                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>aguas altas</ogc:Literal>
                       <ogc:Literal>#6fa8dc</ogc:Literal>
-                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>aguas medias altas</ogc:Literal>
                       <ogc:Literal>#cfe2f3</ogc:Literal>
-                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>aguas medias</ogc:Literal>
                       <ogc:Literal>#fff2cc</ogc:Literal>
-                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>aguas medias bajas</ogc:Literal>
                       <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>aguas bajas</ogc:Literal>
                       <ogc:Literal>#ea9999</ogc:Literal>
                     </ogc:Function>
                   </CssParameter>
@@ -167,18 +167,18 @@
                 <Fill>
                   <CssParameter name="fill">
                     <ogc:Function name="Recode">
-                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:PropertyName>status_text</ogc:PropertyName>
+                      <ogc:Literal></ogc:Literal>
                       <ogc:Literal>#ffffff</ogc:Literal>
-                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>aguas altas</ogc:Literal>
                       <ogc:Literal>#6fa8dc</ogc:Literal>
-                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>aguas medias altas</ogc:Literal>
                       <ogc:Literal>#cfe2f3</ogc:Literal>
-                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>aguas medias</ogc:Literal>
                       <ogc:Literal>#fff2cc</ogc:Literal>
-                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>aguas medias bajas</ogc:Literal>
                       <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#f6b26b</ogc:Literal>
-                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>aguas bajas</ogc:Literal>
                       <ogc:Literal>#ea9999</ogc:Literal>
                     </ogc:Function>
                   </CssParameter>
