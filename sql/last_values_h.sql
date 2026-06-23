@@ -207,9 +207,11 @@ alturas_last.var_id
     d.percentil,
     d.fecha AS fecha,
     to_char(d.fecha, 'DD/MM/YYYY HH24:MI') AS fecha_format,
-    d.geom
+    d.geom,
+    d.est
   FROM dist d
   LEFT JOIN rio_mapping ON (rio_mapping.key=d.rio)
   LEFT JOIN status_colors ON (status_colors.key=d.percentil)
   LEFT JOIN status_categories ON (status_categories.key=d.percentil)
+  WHERE d.percentil IS NOT NULL
  ORDER BY tabla asc, unid asc, percentil desc

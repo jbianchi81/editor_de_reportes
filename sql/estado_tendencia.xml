@@ -85,8 +85,30 @@
             <Graphic>
               <Mark>
                 <WellKnownName>circle</WellKnownName>
+                <Fill>
+                  <CssParameter name="fill">
+                    <ogc:Function name="Recode">
+                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                    </ogc:Function>
+                  </CssParameter>
+                </Fill>
+                <Stroke>
+                  <CssParameter name="stoke">#000000</CssParameter>
+                </Stroke>
               </Mark>
-              <Size>20</Size>
+              <Size>14</Size>
             </Graphic>
           </PointSymbolizer>
         </Rule>
@@ -101,9 +123,32 @@
           <PointSymbolizer>
             <Graphic>
               <Mark>
-                <WellKnownName>shape://oarrow</WellKnownName>
+                <WellKnownName>triangle</WellKnownName>
+                <Fill>
+                  <CssParameter name="fill">
+                    <ogc:Function name="Recode">
+                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                    </ogc:Function>
+                  </CssParameter>
+                </Fill>
+                <Stroke>
+                  <CssParameter name="stoke">#000000</CssParameter>
+                </Stroke>
               </Mark>
               <Size>20</Size>
+              <Rotation>180</Rotation>
             </Graphic>
           </PointSymbolizer>
         </Rule>
@@ -118,14 +163,36 @@
           <PointSymbolizer>
             <Graphic>
               <Mark>
-                <WellKnownName>shape://oarrow</WellKnownName>
+                <WellKnownName>triangle</WellKnownName>
+                <Fill>
+                  <CssParameter name="fill">
+                    <ogc:Function name="Recode">
+                      <ogc:PropertyName>status_color</ogc:PropertyName>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#ffffff</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#6fa8dc</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#cfe2f3</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#fff2cc</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#f6b26b</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                      <ogc:Literal>#ea9999</ogc:Literal>
+                    </ogc:Function>
+                  </CssParameter>
+                </Fill>
+                <Stroke>
+                  <CssParameter name="stoke">#000000</CssParameter>
+                </Stroke>
               </Mark>
               <Size>20</Size>
-              <Rotation>180</Rotation>
+              <Rotation>0</Rotation>
             </Graphic>
           </PointSymbolizer>
         </Rule>
-        <VendorOption name="sortBy">est D,unid D</VendorOption>
+        <VendorOption name="sortBy">aviso D,unid D</VendorOption>
       </FeatureTypeStyle>
     </UserStyle>
   </NamedLayer>
