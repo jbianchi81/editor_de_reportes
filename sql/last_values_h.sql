@@ -115,7 +115,14 @@ alturas_last.var_id
             '-Infinity'::float8
         FROM series_percentiles_ref 
         WHERE percentil=5)
- ), dist as (
+ ), percentiles_dict AS (
+    SELECT 
+        series_percentiles_ref.series_id,
+        jsonb_object_agg(series_percentiles_ref.percentil, series_percentiles_ref.valor) AS percentiles
+    FROM series_percentiles_ref
+    JOIN ult ON ult.series_id=series_percentiles_ref.series_id
+    GROUP BY series_percentiles_ref.series_id
+  ), dist as (
  SELECT DISTINCT ON (estaciones.tabla, n.unid)
     n.unid,
     timezone('ART'::text, n.date) AS fecha,
@@ -136,14 +143,15 @@ alturas_last.var_id
     estaciones.cero_ign,
     ult.series_id,
     ult.var_id,
-    to_json(ult.timeseries)::text timeseries,
+    to_json(ult.timeseries) timeseries,
     niveles_de_alerta.valor nivel_de_alerta,
     niveles_de_evacuacion.valor nivel_de_evacuacion,
     niveles_de_aguas_bajas.valor nivel_de_aguas_bajas,
     ult.timestart,
     ult.timeend,
     estaciones.rio,
-    percentiles.percentil
+    percentiles.percentil,
+    percentiles_dict.percentiles
    FROM n
    JOIN estaciones ON (n.unid = estaciones.unid)
    JOIN ult ON (estaciones.unid = ult.unid)
@@ -151,6 +159,7 @@ alturas_last.var_id
    JOIN niveles_de_evacuacion ON (niveles_de_evacuacion.unid=n.unid)
    JOIN niveles_de_aguas_bajas ON (niveles_de_aguas_bajas.unid=n.unid)
    LEFT JOIN percentiles ON (percentiles.series_id=ult.series_id AND n.valor >= percentiles.valor)
+   LEFT JOIN percentiles_dict ON percentiles_dict.series_id = ult.series_id
  ORDER BY estaciones.tabla asc, n.unid asc, percentiles.valor desc  
  ), rio_mapping(key, value) AS (
   VALUES 
@@ -166,6 +175,7 @@ alturas_last.var_id
   VALUES 
     (5, 'aguas altas'),
     (25, 'aguas medias altas'),
+    (50, 'aguas medias'),
     (75, 'aguas medias'),
     (95, 'aguas medias bajas'),
     (100, 'aguas bajas')
@@ -173,6 +183,7 @@ alturas_last.var_id
   VALUES 
     (5, '#6fa8dc'),
     (25, '#cfe2f3'),
+    (50, '#fff2cc'),
     (75, '#fff2cc'),
     (95, '#f6b26b'),
     (100, '#ea9999')
@@ -208,7 +219,16 @@ alturas_last.var_id
     d.fecha AS fecha,
     to_char(d.fecha, 'DD/MM/YYYY HH24:MI') AS fecha_format,
     d.geom,
-    d.est
+    d.est,
+    d.timeseries,
+    d.cero_ign,
+    round((d.percentiles->>'5')::numeric,2) AS percentil_05,
+    round((d.percentiles->>'25')::numeric,2) AS percentil_25,
+    round((d.percentiles->>'50')::numeric,2) AS percentil_50,
+    round((d.percentiles->>'75')::numeric,2) AS percentil_75,
+    round((d.percentiles->>'95')::numeric,2) AS percentil_95,
+    d.timestart,
+    d.timeend
   FROM dist d
   LEFT JOIN rio_mapping ON (rio_mapping.key=d.rio)
   LEFT JOIN status_colors ON (status_colors.key=d.percentil)
