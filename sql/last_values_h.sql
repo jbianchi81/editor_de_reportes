@@ -228,7 +228,8 @@ alturas_last.var_id
     round((d.percentiles->>'75')::numeric,2) AS percentil_75,
     round((d.percentiles->>'95')::numeric,2) AS percentil_95,
     d.timestart,
-    d.timeend
+    d.timeend,
+    2 AS var_id
   FROM dist d
   LEFT JOIN rio_mapping ON (rio_mapping.key=d.rio)
   LEFT JOIN status_colors ON (status_colors.key=d.percentil)
