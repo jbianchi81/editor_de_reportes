@@ -49,7 +49,28 @@ export type HydroTableRow = {
 };
 export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;
-export declare function getLastValues(station_ids: number[], var_id?: number): Promise<HydroTableRow[]>;
+interface FilaTablaValores {
+    id: number;
+    estacion_nombre: string;
+    rio: string;
+    valor: string;
+    tendencia: string;
+    alerta: string;
+    evacuacion: string;
+    perspectiva: string;
+    aviso: string;
+    status_color: string;
+    series_id: number;
+    secciones_url: string;
+    x: number;
+    y: number;
+    status_text: string;
+    percentil: number;
+    tendencia_text: string;
+    aviso_text: string;
+    fecha: string;
+}
+export declare function getLastValues(station_ids: number[], var_id?: number): Promise<FilaTablaValores[]>;
 type YMDstrings = {
     year: string;
     month: string;
@@ -60,8 +81,8 @@ export declare function getValuesDiario(station_ids: number[], station_ids_cauda
     mapa_synop_semanal: string;
     texto_synop_semanal: string;
     mapa_suma_gfs: string;
-    tabla_hidro: HydroTableRow[];
-    tabla_caudales: HydroTableRow[];
+    tabla_hidro: FilaTablaValores[];
+    tabla_caudales: FilaTablaValores[];
     texto_hidro: string;
     hidrogramas: {
         id: number;
@@ -78,4 +99,27 @@ export declare function statusColorsDict(): Record<string, string>;
 export declare function getStatusColor(percentil: number): string;
 export declare function getStatusText(percentil: number): string;
 export declare function getStatus(percentil: number): string;
+interface ObsStats {
+    timestart: string;
+    timeend: string;
+    count: number;
+    min: number;
+    max: number;
+    mean: number;
+    nulls: number;
+}
+interface FilaTablaSemanal {
+    estacion_id: number;
+    var_id: number;
+    series_id: number;
+    unit_id: number;
+    estacion_nombre: string;
+    var_nombre: string;
+    unidades_nombre: string;
+    unidades_abrev: string;
+    obs?: ObsStats;
+    prono?: ObsStats;
+    tendencia?: string;
+}
+export declare function fetchValuesSemanal(estacion_id: number, var_id: number, timestart_days?: number, timeend_days?: number, api_url?: string): Promise<FilaTablaSemanal>;
 export {};

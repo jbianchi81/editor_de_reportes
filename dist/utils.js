@@ -310,3 +310,145 @@ const defaults = {
         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
 };
+function getObsStats(observaciones) {
+    var o_timestart = observaciones[0][0];
+    var o_timeend = observaciones[0][1];
+    var minval = observaciones[0][2];
+    var maxval = observaciones[0][2];
+    var sum = 0;
+    var count = 0;
+    observaciones.map(o => {
+        o_timestart = (o[0] < o_timestart) ? o[0] : o_timestart;
+        o_timeend = (o[1] > o_timeend) ? o[1] : o_timeend;
+        minval = (o[2] !== null) ? (minval !== null) ? (o[2] < minval) ? o[2] : minval : o[2] : minval;
+        maxval = (o[2] !== null) ? (maxval !== null) ? (o[2] > maxval) ? o[2] : maxval : o[2] : maxval;
+        sum = sum + o[2];
+        count = count + ((o[2] !== null) ? 1 : 0);
+    });
+    var count_nulls = observaciones.length - count;
+    return {
+        timestart: o_timestart,
+        timeend: o_timeend,
+        count: count,
+        min: minval,
+        max: maxval,
+        mean: sum / count,
+        nulls: count_nulls
+    };
+}
+function getPronoStats(series) {
+    var o_timestart = series[0].pronosticos[0].timestart;
+    var o_timeend = series[0].pronosticos[0].timeend;
+    var minval = series[0].pronosticos[0].valor;
+    var maxval = series[0].pronosticos[0].valor;
+    var sum = 0;
+    var count = 0;
+    var count_nulls = 0;
+    for (const serie of series) {
+        for (const o of serie.pronosticos) {
+            o_timestart = (o.timestart < o_timestart) ? o.timestart : o_timestart;
+            o_timeend = (o.timeend > o_timeend) ? o.timeend : o_timeend;
+            minval = (o.valor !== null) ? (minval !== null) ? (o.valor < minval) ? o.valor : minval : o.valor : minval;
+            maxval = (o.valor !== null) ? (maxval !== null) ? (o.valor > maxval) ? o.valor : maxval : o.valor : maxval;
+            sum = sum + o.valor;
+            count = count + ((o.valor !== null) ? 1 : 0);
+        }
+        count_nulls = count_nulls + serie.pronosticos.length - count;
+    }
+    return {
+        timestart: o_timestart,
+        timeend: o_timeend,
+        count: count,
+        min: minval,
+        max: maxval,
+        mean: sum / count,
+        nulls: count_nulls,
+        series_id: new Set(series.map(s => s.series_id)),
+        qualifiers: new Set(series.map(s => s.qualifier))
+    };
+}
+function getPronoStatsAll(pronosticos) {
+    const stats = pronosticos.filter(p => p.corrida).map(p => getPronoStats(p.corrida.series));
+    if (!stats.length) {
+        throw new Error("No hay prono para calcular stats");
+    }
+    var timestart = stats.reduce((a, b) => (a < b.timestart) ? a : b.timestart, stats[0].timestart);
+    var timeend = stats.reduce((a, b) => (a > b.timeend) ? a : b.timeend, stats[0].timeend);
+    var min = stats.reduce((a, b) => (a < b.min) ? a : b.min, stats[0].min);
+    var max = stats.reduce((a, b) => (a > b.max) ? a : b.max, stats[0].max);
+    var count = stats.reduce((a, b) => a + b.count, 0);
+    var sum = stats.reduce((a, b) => a + b.mean, 0);
+    var mean = sum / stats.length;
+    var nulls = stats.reduce((a, b) => a + b.nulls, 0);
+    return {
+        timestart: timestart,
+        timeend: timeend,
+        count: count,
+        min: min,
+        max: max,
+        mean: mean,
+        nulls: nulls
+    };
+}
+function getPronoResumen(pronosticos) {
+    var result = [];
+    for (var i = 0; i < pronosticos.length; i++) {
+        if (!pronosticos[i].corrida) {
+            continue;
+        }
+        const prono_resumen = {
+            cal_id: pronosticos[i].id,
+            nombre: pronosticos[i].nombre,
+            modelo: pronosticos[i].modelo,
+            activar: pronosticos[i].activar,
+            selected: pronosticos[i].selected,
+            cor_id: pronosticos[i].corrida.cor_id,
+            forecast_date: pronosticos[i].corrida.forecast_date,
+        };
+        if (!pronosticos[i].corrida.series && pronosticos[i].corrida.series.length) {
+            prono_resumen.stats = getPronoStats(pronosticos[i].corrida.series);
+        }
+        prono_resumen.cal_stats = pronosticos[i].cal_stats;
+        result.push(prono_resumen);
+    }
+    return result;
+}
+export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -7, timeend_days = 15, api_url = "https://alerta.ina.gob.ar/a5") {
+    const ts = new Date();
+    ts.setDate(ts.getDate() + timestart_days);
+    const te = new Date();
+    te.setDate(te.getDate() + timeend_days);
+    const response = await axios.get(`${api_url}/getSeriesBySiteAndVar`, {
+        params: {
+            estacion_id: estacion_id,
+            var_id: var_id,
+            timestart: ts.toISOString(),
+            timeend: te.toISOString(),
+            includeProno: true
+        }
+    });
+    const d = response.data;
+    const fila_semanal = {
+        estacion_id: d.estacion.id,
+        var_id: d.var.id,
+        series_id: d.id,
+        unit_id: d.unidades.id,
+        estacion_nombre: d.estacion.nombre,
+        var_nombre: d.var.nombre,
+        unidades_nombre: d.unidades.nombre,
+        unidades_abrev: d.unidades.abrev
+    };
+    if (!d.observaciones.length) {
+        console.warn("No hay observaciones");
+    }
+    else {
+        fila_semanal.obs = getObsStats(d.observaciones);
+    }
+    if (!d.pronosticos) {
+        console.warn("No hay pronósticos");
+    }
+    else {
+        fila_semanal.prono = getPronoStatsAll(d.pronosticos);
+    }
+    return fila_semanal;
+}
