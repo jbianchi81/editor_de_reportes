@@ -452,6 +452,8 @@ interface ObsStats {
     max: number
     mean: number
     nulls: number
+    series_id?: Set<number>
+    qualifiers?: Set<string>
 }
 
 interface FilaTablaSemanal {
@@ -559,9 +561,10 @@ function getPronoStats(series: CorridaSerie[]) : PronoStats {
 	var minval = series[0].pronosticos[0].valor
 	var maxval = series[0].pronosticos[0].valor
 	var sum = 0
-	var count = 0
     var count_nulls = 0
+    var count_total = 0
     for(const serie of series) {
+        var count = 0
         for(const o of serie.pronosticos) {
             o_timestart = (o.timestart < o_timestart) ? o.timestart : o_timestart
             o_timeend = (o.timeend > o_timeend) ? o.timeend : o_timeend
@@ -571,15 +574,16 @@ function getPronoStats(series: CorridaSerie[]) : PronoStats {
             count = count + ((o.valor !== null) ? 1 : 0)
         }
         count_nulls = count_nulls + serie.pronosticos.length - count
+        count_total = count_total + count;
     }
 
     return {
         timestart: o_timestart, 
         timeend: o_timeend, 
-        count: count, 
+        count: count_total, 
         min: minval, 
         max: maxval, 
-        mean: sum/count, 
+        mean: sum / count_total, 
         nulls: count_nulls,
         series_id: new Set(series.map(s=>s.series_id)),
         qualifiers: new Set(series.map(s=>s.qualifier))
@@ -599,6 +603,8 @@ function getPronoStatsAll(pronosticos : Calibrado[]) : ObsStats {
 	var sum = stats.reduce((a, b) => a + b.mean, 0)
 	var mean = sum / stats.length
     var nulls = stats.reduce((a, b) => a + b.nulls, 0)
+    var series_id = new Set(stats.map(s => s.series_id).flatMap(s=>[...s]))
+    var qualifiers = new Set(stats.map(s => s.qualifiers).flatMap(s=>[...s]))
     return {
         timestart: timestart,
         timeend: timeend,
@@ -606,7 +612,9 @@ function getPronoStatsAll(pronosticos : Calibrado[]) : ObsStats {
         min: min,
         max: max,
         mean: mean,
-        nulls: nulls
+        nulls: nulls,
+        series_id: series_id,
+        qualifiers: qualifiers
     }
 }
 
@@ -685,9 +693,9 @@ export async function fetchValuesSemanal(
     } else {
         fila_semanal.obs = getObsStats(d.observaciones)
     }
-    if(!d.pronosticos) {
+    if(!d.pronosticos || !d.pronosticos.length) {
         console.warn("No hay pronósticos")
-    } else{
+    } else {
         fila_semanal.prono = getPronoStatsAll(d.pronosticos)
     }
     return fila_semanal

@@ -107,6 +107,8 @@ interface ObsStats {
     max: number;
     mean: number;
     nulls: number;
+    series_id?: Set<number>;
+    qualifiers?: Set<string>;
 }
 interface FilaTablaSemanal {
     estacion_id: number;
