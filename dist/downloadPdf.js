@@ -4,10 +4,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-export default async (page_url) => {
+export default async (page_url, isSemanal = false) => {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.goto(page_url || 'http://localhost:3000/reporte_diario_local', { waitUntil: 'networkidle0' });
+    await page.goto(page_url || (isSemanal) ? 'http://localhost:3000/reporte_semanal_local' : 'http://localhost:3000/reporte_diario_local', { waitUntil: 'networkidle0' });
     const ymd = getYMDstrings(new Date());
     await page.evaluate(async () => {
         const images = Array.from(document.images);
@@ -24,7 +24,7 @@ export default async (page_url) => {
     //   return new Promise((resolve) => requestAnimationFrame(() => resolve));
     // });
     await page.pdf({
-        path: path.join(__dirname, `../public/pdf/reporte_diario_${ymd.year}-${ymd.month}-${ymd.day}.pdf`),
+        path: path.join(__dirname, (isSemanal) ? `../public/pdf/reporte_semanal_${ymd.year}-${ymd.month}-${ymd.day}.pdf` : `../public/pdf/reporte_diario_${ymd.year}-${ymd.month}-${ymd.day}.pdf`),
         format: 'A4',
         printBackground: true,
         displayHeaderFooter: true,

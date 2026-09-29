@@ -2,7 +2,7 @@ import express, { static as express_static } from 'express';
 import { engine } from 'express-handlebars';
 import pkg from 'body-parser';
 const { json } = pkg;
-import { readFile, writeFile } from 'fs';
+import { readFile, writeFile, writeFileSync } from 'fs';
 import axios from 'axios';
 import {config} from './config.js'
 const app = express();
@@ -12,10 +12,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import {getYMDstrings} from '../dist/utils.js'
+import {getValuesDiario, getValuesSemanal} from '../dist/utils.js'
+import downloadPdf from '../dist/downloadPdf.js'
 
 app.use(express_static(path.join(__dirname,'..','public')));
 // app.use('/js',express_static('public'));
-// app.use(json({ limit: '5mb' }));
+app.use(express.json());
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -28,9 +30,6 @@ app.set('views', path.join(__dirname,'..','views'));
 //   console.log('Session data:', req.session);
 //   next();
 // });
-
-import {getValuesDiario} from '../dist/utils.js'
-import downloadPdf from '../dist/downloadPdf.js'
 
 // authentication
 async function isWriter(req,res,next) {
@@ -182,32 +181,70 @@ app.get('/reporte_diario_local', async (req,res) => {
   });
 })
 
+app.get('/reporte_semanal_local', async (req,res) => {
+  readFile(path.join(__dirname, '..','public','saved_semanal.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
+    readFile(path.join(__dirname, '..','public','json/reporte_semanal.json'), 'utf8', (err, json_data) => {
+      if (err) {
+        console.error(err)
+        return res.status(504).send('Server error');
+      }
+      try {
+        var report_metadata = JSON.parse(json_data)
+      } catch (e) {
+        console.error("Failed to parse report metadata, using Defaults. \n" + e.toString())
+        var report_metadata = {}
+      }
+      if(config.directory_listings_url) {
+        data = data.replace(/https\:\/\/alerta.ina.gob.ar\/ina/g, `${config.directory_listings_url}/ina`)
+      }
+      if(config.geoserver_url) {
+        data = data.replace(/https\:\/\/alerta.ina.gob.ar\/geoserver/g, `${config.geoserver_url}`)
+      }
+      res.render(
+        'reporte_semanal', {
+          html_content: data,
+          fecha_emision: report_metadata.date || new Date().toISOString()
+        })
+    })
+  });
+})
+
+
 // Save new HTML content
 app.post('/publish', isWriter, (req, res) => {
+  const reporte = (req.query && req.query.reporte && req.query.reporte == "semanal") ? "semanal" : "diario"
   const html = req.body.html;
   // write report (html)
-  writeFile(path.join(__dirname,'../public/saved.html'), html, async err => {
+  const filename = (reporte == "semanal") ? "../public/saved_semanal.html" : '../public/saved.html'
+  writeFile(path.join(__dirname, filename), html, async err => {
     if (err) return res.status(500).send('Error al guardar');
     res.send('Se guardó exitosamente!');
     const date = new Date()
     const ymd = getYMDstrings(date)
     // write json (report metadata)
+    const md_filename = (reporte == "semanal") ? '../public/json/reporte_semanal.json' : '../public/json/reporte_diario.json'
+    const reporte_url = (reporte == "semanal") ? "https://alerta.ina.gob.ar/a5/diario/reporte_semanal" : "https://alerta.ina.gob.ar/a5/diario/reporte_diario"
     writeFile(
-      path.join(__dirname,'../public/json/reporte_diario.json'), 
+      path.join(__dirname,md_filename), 
       JSON.stringify(
         {
-          "url": "https://alerta.ina.gob.ar/a5/diario/reporte_diario",
+          "url": reporte_url,
           "fecha": `${ymd.day}-${ymd.month}-${ymd.year}`,
           "date": date.toISOString()
         }
       ),
       async err => {
-        if(err) console.log("Error al guardar reporte_diario.json: " + e.toString())
+        if(err) console.log("Error al guardar " + md_filename + ": " + e.toString())
       }
     )
     // download pdf
+    const local_pdf = (config.public_url) ? (reporte == "semanal") ? `${config.public_url}/reporte_semanal_local` : `${config.public_url}/reporte_diario_local` : undefined
     try {
-      await downloadPdf((config.public_url) ? `${config.public_url}/reporte_diario_local` : undefined)
+      await downloadPdf(local_pdf, (reporte == "semanal"))
     } catch(e) {
       console.error(e)
     } 
@@ -216,17 +253,68 @@ app.post('/publish', isWriter, (req, res) => {
 
 // Save draft
 app.post('/draft', isWriter, (req, res) => {
+  const reporte = (req.query && req.query.reporte && req.query.reporte == "semanal") ? "semanal" : "diario"
   const html = req.body.html;
-  writeFile(path.join(__dirname,'../public/draft.html'), html, async err => {
+  const filename = (reporte == "semanal") ? '../public/draft_semanal.html' : '../public/draft.html'
+  writeFile(path.join(__dirname,filename), html, async err => {
     if (err) return res.status(500).send('Error al guardar borrador');
     res.send('Se guardó el borrador exitosamente!');
   });
 });
 
+app.get('/template_semanal', isWriter, async (req, res) => {
+  try {
+    const values = await getValuesSemanal()
+    writeFileSync("public/json/datos_mapa_semanal.json", JSON.stringify(values.datos_mapa_semanal))
+    res.render('template_semanal', values)
+  } catch(e) {
+    console.error(e)
+    res.status(500).send({ error: e.message || 'Internal Server Error' })
+  }
+})
+
+app.get('/editor', isWriterRedirect, (req, res) => {
+  const reporte = (req.query && req.query.reporte && req.query.reporte == "semanal") ? "semanal" : "diario"
+  res.render('index',
+    {
+      reporte: reporte,
+      isSemanal: (reporte == "semanal") ? true : false,
+      layout: 'index'
+  })
+})
+
+app.get('/reporte_semanal', async (req,res) => {
+  readFile(path.join(__dirname, '..','public','saved_semanal.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
+    readFile(path.join(__dirname, '..','public','json/reporte_semanal.json'), 'utf8', (err, json_data) => {
+          if (err) {
+            console.error(err)
+            return res.status(504).send('Server error');
+          }
+          try {
+            var report_metadata = JSON.parse(json_data)
+          } catch (e) {
+            console.error("Failed to parse report metadata, using Defaults. \n" + e.toString())
+            var report_metadata = {}
+        }
+        res.render(
+          'reporte_semanal', {
+            html_content: data,
+            fecha_emision: report_metadata.date || new Date().toISOString()
+          })
+        })
+  });
+})
+
 
 app.get('/', isWriterRedirect, (req, res) => {
   res.render('index',
     {
+      reporte: "diario",
+      isSemanal: false,
       layout: 'index'
   })
 })

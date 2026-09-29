@@ -1,5 +1,5 @@
 <head>
-  <title>Editor de reporte diario</title>
+  <title>Editor de reporte {{reporte}}</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -105,13 +105,42 @@
       margin-top: 10px;
       font-weight: 500;
     }
+
+    .leaflet-popup-content-wrapper {
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid #333;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .info-estacion { font-size: 14px; line-height: 1.4; color: #333; }
+    .info-estacion b { color: #004488; font-size: 15px; }
+    
+    /* Estilo de la fecha flotante */
+    .fecha-box {
+        position: absolute;
+        top: 20px;
+        left: 50px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px 20px;
+        border: 2px solid #333;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    #mapa { 
+      height: 100vh; 
+      max-width: 800px;
+    }
   </style>
 </head>
 <body>
   <div id="screen-blocker" class="position-fixed top-0 start-0 w-100 h-100 bg-light bg-opacity-50" 
      style="z-index: 1055; display: none; cursor: wait; position: fixed; top: 0; width: 100%; height: 100%; opacity: 50;"></div>
   <div>
-    <h1>Editar reporte diario</h1>
+    <h1>Editar reporte {{reporte}}</h1>
     <div style="display: grid; place-items: center;">
       <!-- <button id="toggleView">Cambiar a vista de código</button> -->
       <div id="editor_container">
@@ -141,7 +170,7 @@
           <button class="button" id=publish-button onclick="saveDraftAndPublish()">Guardar y publicar</button>
         </span>
         <span>
-          <a href="reporte_diario" target="_blank">Ver</a>
+          <a href={{#if isSemanal}}reporte_semanal{{else}}reporte_diario{{/if}} target="_blank">Ver</a>
         </span>
       </div>
     </div>
@@ -190,7 +219,8 @@
       // Save content
     async function publish() {
       const html = $("textarea#editor").val();
-      return fetch('publish', {
+      const url = {{#if isSemanal}}"publish?reporte=semanal"{{else}}"publish?reporte=diario"{{/if}}
+      return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ html })
@@ -199,7 +229,8 @@
 
     async function saveDraft() {
       const html = $("textarea#editor").val();
-      return fetch('draft', {
+      const url = {{#if isSemanal}}"draft?reporte=semanal"{{else}}"draft?reporte=diario"{{/if}}
+      return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ html })
@@ -213,7 +244,7 @@
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "saved.html";
+      a.download = {{#if isSemanal}}"saved_semanal.html"{{else}}"saved.html"{{/if}};
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -222,15 +253,18 @@
 
     // new from template
     function startFromTemplate() {
-      loadContent("template")
+      const url = {{#if isSemanal}}"template_semanal"{{else}}"template"{{/if}};
+      loadContent(url)
     }
 
     function loadDraft() {
-      loadContent("draft.html")
+      const url = {{#if isSemanal}}"draft_semanal.html"{{else}}"draft.html"{{/if}};
+      loadContent(url)
     }
 
     function loadPublished() {
-      loadContent("saved.html")
+      const url = {{#if isSemanal}}"saved_semanal.html"{{else}}"saved.html"{{/if}};
+      loadContent(url)
     }
 
     function addToolbarButton() {

@@ -211,6 +211,9 @@ table tbody a[data-bs-toggle=tooltip] {
   #mapa-row {
     flex-direction: column; /* stack vertically on small screens */
   }
+  #mapa-row-anom {
+    flex-direction: column;
+  }
 }
 
 @media (min-width: 1200px) {

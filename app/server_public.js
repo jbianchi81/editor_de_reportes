@@ -80,6 +80,32 @@ app.get('/reporte_diario_local', async (req,res) => {
   });
 })
 
+app.get('/reporte_semanal', async (req,res) => {
+  readFile(path.join(__dirname, '..','public','saved_semanal.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(504).send('Server error');
+    }
+    readFile(path.join(__dirname, '..','public','json/reporte_semanal.json'), 'utf8', (err, json_data) => {
+          if (err) {
+            console.error(err)
+            return res.status(504).send('Server error');
+          }
+          try {
+            var report_metadata = JSON.parse(json_data)
+          } catch (e) {
+            console.error("Failed to parse report metadata, using Defaults. \n" + e.toString())
+            var report_metadata = {}
+        }
+        res.render(
+          'reporte_semanal', {
+            html_content: data,
+            fecha_emision: report_metadata.date || new Date().toISOString()
+          })
+        })
+  });
+})
+
 
 
 app.use('/',(req, res) => {
