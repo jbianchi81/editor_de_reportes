@@ -88,6 +88,7 @@ export declare function getValuesSemanal(): Promise<{
     datos_mapa_semanal: Record<string, string>;
     pdf_url: string;
     mapa_anomalia: string;
+    mapa_suma_gfs: string;
 }>;
 export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
     mapa_synop_semanal: string;

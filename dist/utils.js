@@ -287,10 +287,12 @@ export async function getHydrologicalReport(apiUrl, seriesMapping, stateThreshol
 export async function getValuesSemanal() {
     const config = await loadConfig();
     const datos_mapa_semanal = await getHydrologicalReport(config.semanal.url, config.semanal.mapeo_series, config.semanal.limites_estados);
+    const current_date = new Date();
     return {
         "datos_mapa_semanal": datos_mapa_semanal,
-        pdf_url: getPdfUrl(new Date(), config.pdf_dir, true),
-        mapa_anomalia: getAnomaliaSemanalUrl(new Date())
+        pdf_url: getPdfUrl(current_date, config.pdf_dir, true),
+        mapa_anomalia: getAnomaliaSemanalUrl(current_date),
+        mapa_suma_gfs: getGfsUrl(current_date)
     };
 }
 export async function getValuesDiario(station_ids, station_ids_caudal) {

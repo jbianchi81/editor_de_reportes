@@ -12,6 +12,11 @@
     height: auto;
 }
 
+#editor_container #mapa_pmad, div.richText #mapa_pmad, #report_container #mapa_pmad {
+    min-width: 600px;
+    min-height: 600px;
+}
+
 #editor_container img.plot, div.richText img.plot, #report_container img.plot {
     /* max-width: 714px; */
     clip-path: inset(0% 3% 0% 1%);
@@ -206,12 +211,15 @@ table tbody a[data-bs-toggle=tooltip] {
     }
 }
 
+.mapa-row-semanal {
+    display: flex;
+}
 
 @media (max-width: 600px) {
   #mapa-row {
     flex-direction: column; /* stack vertically on small screens */
   }
-  #mapa-row-anom {
+  .mapa-row-semanal {
     flex-direction: column;
   }
 }
