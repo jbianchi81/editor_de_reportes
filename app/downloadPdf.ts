@@ -1,5 +1,8 @@
 import puppeteer from 'puppeteer';
-
+import { ReadableStream } from 'node:stream/web';
+if (!global.ReadableStream) {
+  global.ReadableStream = ReadableStream;
+}
 import {getYMDstrings} from './utils.js'
 
 import path from 'path';
@@ -10,7 +13,7 @@ const __dirname = path.dirname(__filename);
 export default async (page_url: string | undefined, isSemanal: boolean=false) => {
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
-    await page.goto(page_url || (isSemanal) ? 'http://localhost:3000/reporte_semanal_local' : 'http://localhost:3000/reporte_diario_local', { waitUntil: 'networkidle0' });
+    await page.goto((page_url) ? page_url : (isSemanal) ? 'http://localhost:3000/reporte_semanal_local' : 'http://localhost:3000/reporte_diario_local', { waitUntil: 'networkidle0' });
     const ymd = getYMDstrings(new Date())
     await page.evaluate(async () => {
       const images = Array.from(document.images);
