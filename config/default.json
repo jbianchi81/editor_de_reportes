@@ -1,7 +1,42 @@
 {
-    "station_ids": [9, 19, 20, 23, 24, 26, 29, 30, 32, 34, 55, 57, 65, 68, 72, 79, 81, 84],
-    "station_ids_caudal": [91, 92, 8, 93, 87, 88],
-    "station_ids_all": [19, 20, 23, 24, 26, 29, 30, 34],
+    "station_ids": [
+        9,
+        19,
+        20,
+        23,
+        24,
+        26,
+        29,
+        30,
+        32,
+        34,
+        55,
+        57,
+        65,
+        68,
+        72,
+        79,
+        81,
+        84
+    ],
+    "station_ids_caudal": [
+        91,
+        92,
+        8,
+        93,
+        87,
+        88
+    ],
+    "station_ids_all": [
+        19,
+        20,
+        23,
+        24,
+        26,
+        29,
+        30,
+        34
+    ],
     "geoserver": {
         "url": "https://alerta.ina.gob.ar/geoserver/ows",
         "username": "xxx",
@@ -9,5 +44,107 @@
     },
     "port": 3000,
     "skip_authentication": true,
-    "authentication_url": "http://localhost:4000"
+    "authentication_url": "http://localhost:4000",
+    "public_url": "http://localhost:3000",
+    "semanal": {
+        "url": "https://alerta.ina.gob.ar/a5",
+        "mapeo_series": {
+            "paraguay": {
+                "caudal": 906
+            },
+            "corrientes": {
+                "caudal": 868
+            },
+            "yacyreta": {
+                "afluente": 936,
+                "descarga": 937
+            },
+            "salto_grande": {
+                "entra": 926,
+                "sale": 927
+            },
+            "itaipu": {
+                "entran": 940,
+                "salen": 941
+            },
+            "iguazu": {
+                "caudal": 857
+            },
+            "alto_uruguay": {
+                "caudal": 910
+            }
+        },
+        "limites_estados": {
+            "940": {
+                "bajas": 6700,
+                "mb": 8700,
+                "medias": 10400,
+                "ma": 12600,
+                "altas": 17400
+            },
+            "941": {
+                "bajas": 6700,
+                "mb": 8700,
+                "medias": 10400,
+                "ma": 12600,
+                "altas": 17400
+            },
+            "857": {
+                "bajas": 480,
+                "mb": 1000,
+                "medias": 1400,
+                "ma": 1900,
+                "altas": 3600
+            },
+            "936": {
+                "bajas": 9100,
+                "mb": 11500,
+                "medias": 13100,
+                "ma": 15700,
+                "altas": 24000
+            },
+            "937": {
+                "bajas": 9600,
+                "mb": 11600,
+                "medias": 13100,
+                "ma": 15800,
+                "altas": 23800
+            },
+            "868": {
+                "bajas": 12250,
+                "mb": 15300,
+                "medias": 17800,
+                "ma": 21500,
+                "altas": 29800
+            },
+            "910": {
+                "bajas": 400,
+                "mb": 860,
+                "medias": 1580,
+                "ma": 2680,
+                "altas": 6500
+            },
+            "926": {
+                "bajas": 746,
+                "mb": 2120,
+                "medias": 4460,
+                "ma": 7365,
+                "altas": 14110
+            },
+            "927": {
+                "bajas": 746,
+                "mb": 2120,
+                "medias": 4460,
+                "ma": 7365,
+                "altas": 14110
+            },
+            "906": {
+                "bajas": 1600,
+                "mb": 2370,
+                "medias": 3045,
+                "ma": 3920,
+                "altas": 6170
+            }
+        }
+    }
 }

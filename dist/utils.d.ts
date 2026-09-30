@@ -77,6 +77,18 @@ type YMDstrings = {
     day: string;
 };
 export declare function getYMDstrings(date: Date): YMDstrings;
+type HydrologicalThresholds = {
+    bajas: number;
+    mb: number;
+    ma: number;
+    altas: number;
+};
+export declare function getHydrologicalReport(apiUrl: string, seriesMapping: Record<string, Record<string, number>>, stateThresholds: Record<string, HydrologicalThresholds>, currentDate?: Date): Promise<Record<string, string>>;
+export declare function getValuesSemanal(): Promise<{
+    datos_mapa_semanal: Record<string, string>;
+    pdf_url: string;
+    mapa_anomalia: string;
+}>;
 export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
     mapa_synop_semanal: string;
     texto_synop_semanal: string;

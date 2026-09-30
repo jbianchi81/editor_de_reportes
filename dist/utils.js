@@ -137,6 +137,16 @@ function getRio(rio) {
         return "";
     }
 }
+function getAnomaliaSemanalUrl(current_date) {
+    const date = new Date(current_date);
+    const n_days = (date.getHours() < 12) ? 9 : 8;
+    date.setDate(date.getDate() - n_days);
+    const d = getYMDstrings(date);
+    const end_date = new Date(date);
+    end_date.setDate(end_date.getDate() + 7);
+    const ed = getYMDstrings(end_date);
+    return `https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_anomalia_semanal/${d.year}/${d.month}/ppanom_${d.year}${d.month}${d.day}_${ed.year}${ed.month}${ed.day}.png`;
+}
 function getSynopSemanalUrl(current_date) {
     const date = new Date(current_date);
     const n_days = (date.getHours() < 12) ? 8 : 7;
@@ -168,13 +178,120 @@ function getMapaCaudalesUrl(current_date) {
     const fe = getYMDstrings(fecha_emision);
     return `https://alerta.ina.gob.ar/ina/mapa_informe_diario/mapa_estado_${fe.year}-${fe.month}-${fe.day}.png`;
 }
-function getPdfUrl(current_date, pdf_dir = "http://localhost:3000/pdf" // "https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf"
-) {
+function getPdfUrl(current_date, pdf_dir = "http://localhost:3000/pdf", // "https://alerta.ina.gob.ar/ina/06-INFORMES/diario/pdf"
+semanal = false) {
     const fe = getYMDstrings(current_date);
+    if (semanal) {
+        return `${pdf_dir}/reporte_semanal_${fe.year}-${fe.month}-${fe.day}.pdf`;
+    }
     return `${pdf_dir}/reporte_diario_${fe.year}-${fe.month}-${fe.day}.pdf`;
 }
 function getSeccionesUrl(series_id) {
     return `https://alerta.ina.gob.ar/a5/secciones?seriesId=${series_id}`;
+}
+function formatReportNumber(value) {
+    if (value == null) {
+        return "S/D";
+    }
+    return Math.trunc(value).toLocaleString('en-US').replace(/,/g, '.');
+}
+function getHydrologicalState(value, seriesId, thresholds) {
+    if (value == null) {
+        return "S/D";
+    }
+    const limits = thresholds[String(seriesId)];
+    if (!limits) {
+        return "Estado no definido";
+    }
+    if (value <= limits.bajas)
+        return "Aguas bajas";
+    if (value <= limits.mb)
+        return "Aguas medias bajas";
+    if (value <= limits.ma)
+        return "Aguas medias";
+    if (value <= limits.altas)
+        return "Aguas medias altas";
+    return "Aguas altas";
+}
+function combineHydrologicalStates(first, second) {
+    if (first === "S/D" || second === "S/D") {
+        return first !== "S/D" ? first : second;
+    }
+    if (first === second) {
+        return `${first}.`;
+    }
+    return `${first} / ${second.replace("Aguas ", "")}.`;
+}
+async function fetchHydrologicalObservation(apiUrl, seriesId, startDate, endDate) {
+    try {
+        const response = await axios.get(`${apiUrl.replace(/\/$/, '')}/getSeriesBySiteAndVar`, {
+            params: {
+                series_id: seriesId,
+                tipo: "puntual",
+                timestart: startDate,
+                timeend: endDate,
+                includeProno: "false"
+            },
+            timeout: 10000
+        });
+        const observations = response.data.observaciones;
+        const lastObservation = observations?.[observations.length - 1];
+        if (!lastObservation || typeof lastObservation[0] !== "string" || typeof lastObservation[2] !== "number") {
+            return { value: null, date: null };
+        }
+        return {
+            value: lastObservation[2],
+            date: lastObservation[0].slice(0, 10)
+        };
+    }
+    catch {
+        return { value: null, date: null };
+    }
+}
+export async function getHydrologicalReport(apiUrl, seriesMapping, stateThresholds, currentDate = new Date()) {
+    const endDate = new Date(currentDate);
+    endDate.setDate(endDate.getDate() + 1);
+    const startDate = new Date(currentDate);
+    startDate.setDate(startDate.getDate() - 5);
+    const toIsoDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const startDateString = toIsoDate(startDate);
+    const endDateString = toIsoDate(endDate);
+    const report = {};
+    let reportDate = null;
+    for (const [station, variables] of Object.entries(seriesMapping)) {
+        let text;
+        const variableNames = Object.keys(variables);
+        if (Object.prototype.hasOwnProperty.call(variables, "caudal")) {
+            const seriesId = variables.caudal;
+            const observation = await fetchHydrologicalObservation(apiUrl, seriesId, startDateString, endDateString);
+            const state = getHydrologicalState(observation.value, seriesId, stateThresholds);
+            text = `Caudal: ${formatReportNumber(observation.value)} m3/s\nEstado: ${state}.`;
+            reportDate ?? (reportDate = observation.date);
+        }
+        else {
+            const [inputName, outputName] = variableNames;
+            const inputSeriesId = variables[inputName];
+            const outputSeriesId = variables[outputName];
+            const inputObservation = await fetchHydrologicalObservation(apiUrl, inputSeriesId, startDateString, endDateString);
+            const outputObservation = await fetchHydrologicalObservation(apiUrl, outputSeriesId, startDateString, endDateString);
+            const inputState = getHydrologicalState(inputObservation.value, inputSeriesId, stateThresholds);
+            const outputState = getHydrologicalState(outputObservation.value, outputSeriesId, stateThresholds);
+            const combinedState = combineHydrologicalStates(inputState, outputState);
+            text = `${inputName.charAt(0).toUpperCase()}${inputName.slice(1)}: ${formatReportNumber(inputObservation.value)} m3/s\n${outputName.charAt(0).toUpperCase()}${outputName.slice(1)}: ${formatReportNumber(outputObservation.value)} m3/s\nEstado: ${combinedState}`;
+            reportDate ?? (reportDate = inputObservation.date ?? outputObservation.date);
+        }
+        report[station] = text;
+    }
+    return { fecha: reportDate ? `${reportDate.slice(8, 10)}/${reportDate.slice(5, 7)}/${reportDate.slice(0, 4)}` : "Error: Sin datos", ...report };
+}
+export async function getValuesSemanal() {
+    const config = await loadConfig();
+    const datos_mapa_semanal = await getHydrologicalReport(config.semanal.url, config.semanal.mapeo_series, config.semanal.limites_estados);
+    return {
+        "datos_mapa_semanal": datos_mapa_semanal,
+        pdf_url: getPdfUrl(new Date(), config.pdf_dir, true),
+        mapa_anomalia: getAnomaliaSemanalUrl(new Date())
+    };
 }
 export async function getValuesDiario(station_ids, station_ids_caudal) {
     const config = await loadConfig();
