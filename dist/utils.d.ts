@@ -89,6 +89,8 @@ export declare function getValuesSemanal(): Promise<{
     pdf_url: string;
     mapa_anomalia: string;
     mapa_suma_gfs: string;
+    tablas: Record<string, FilaTablaSemanal[]>;
+    proxima_fecha: string;
 }>;
 export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
     mapa_synop_semanal: string;
@@ -134,5 +136,5 @@ interface FilaTablaSemanal {
     prono?: ObsStats;
     tendencia?: string;
 }
-export declare function fetchValuesSemanal(estacion_id: number, var_id: number, timestart_days?: number, timeend_days?: number, api_url?: string): Promise<FilaTablaSemanal>;
+export declare function fetchValuesSemanal(estacion_id: number, var_id: number, timestart_days?: number, timeend_days?: number, api_url?: string, api_token?: string): Promise<FilaTablaSemanal>;
 export {};

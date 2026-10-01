@@ -12,11 +12,6 @@
     height: auto;
 }
 
-#editor_container #mapa_pmad, div.richText #mapa_pmad, #report_container #mapa_pmad {
-    min-width: 600px;
-    min-height: 600px;
-}
-
 #editor_container img.plot, div.richText img.plot, #report_container img.plot {
     /* max-width: 714px; */
     clip-path: inset(0% 3% 0% 1%);
@@ -139,6 +134,7 @@ html {
     display: flex;
     align-items: center; /* vertical centering */
     justify-content: center; /* optional: horizontal centering */
+    overflow-y: auto;
 }
 
 .text-box p, .text-box div {
@@ -213,6 +209,28 @@ table tbody a[data-bs-toggle=tooltip] {
 
 .mapa-row-semanal {
     display: flex;
+    gap: 16px;
+    width: 100%;
+    /* height: 450px; */
+    margin-bottom: 16px;
+}
+
+.media-container {
+  flex: 1 1 0;
+  min-width: 0; /* Prevents intrinsic content size from overflowing */
+  height: 100%;
+}
+
+.media-container img,
+#mapa_pmad {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Keeps image aspect ratio clean */
+  display: block;
+}
+
+#mapa_pmad {
+    min-height: 450px;
 }
 
 @media (max-width: 600px) {

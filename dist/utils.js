@@ -8,6 +8,22 @@ export async function loadConfig(config_file = path.join(__dirname, '../config/d
     const config_raw = await fs.readFile(config_file, 'utf-8');
     return JSON.parse(config_raw);
 }
+async function loadCredentials(credentials_file = path.join(__dirname, '../config/credentials.json')) {
+    try {
+        var f = await fs.readFile(credentials_file, { encoding: "utf-8" });
+    }
+    catch (e) {
+        console.error("Credentials file not found");
+        return;
+    }
+    try {
+        var credentials = JSON.parse(f);
+    }
+    catch (e) {
+        console.error("Credentials file not valid");
+    }
+    return credentials;
+}
 export async function getFeature(url, layer_name) {
     return axios.get(url, {
         params: {
@@ -287,12 +303,26 @@ export async function getHydrologicalReport(apiUrl, seriesMapping, stateThreshol
 export async function getValuesSemanal() {
     const config = await loadConfig();
     const datos_mapa_semanal = await getHydrologicalReport(config.semanal.url, config.semanal.mapeo_series, config.semanal.limites_estados);
+    const credentials = await loadCredentials();
+    const a5_token = (credentials && credentials.a5_token) ? credentials.a5_token : "my_token";
     const current_date = new Date();
+    const tablas = {};
+    for (const region of config.semanal.tablas) {
+        const rows = [];
+        for (const serie of region.series) {
+            rows.push(await fetchValuesSemanal(serie[0], serie[1], -7, 0, config.semanal.url, a5_token));
+        }
+        tablas[region.id] = rows;
+    }
+    const proxima_fecha = new Date();
+    proxima_fecha.setDate(proxima_fecha.getDate() + 7);
     return {
         "datos_mapa_semanal": datos_mapa_semanal,
         pdf_url: getPdfUrl(current_date, config.pdf_dir, true),
         mapa_anomalia: getAnomaliaSemanalUrl(current_date),
-        mapa_suma_gfs: getGfsUrl(current_date)
+        mapa_suma_gfs: getGfsUrl(current_date),
+        tablas: tablas,
+        proxima_fecha: proxima_fecha.toLocaleDateString('en-GB')
     };
 }
 export async function getValuesDiario(station_ids, station_ids_caudal) {
@@ -532,7 +562,7 @@ function getPronoResumen(pronosticos) {
     }
     return result;
 }
-export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -7, timeend_days = 15, api_url = "https://alerta.ina.gob.ar/a5") {
+export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -7, timeend_days = 15, api_url = "https://alerta.ina.gob.ar/a5", api_token = "my_token") {
     const ts = new Date();
     ts.setDate(ts.getDate() + timestart_days);
     const te = new Date();
@@ -544,6 +574,9 @@ export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -
             timestart: ts.toISOString(),
             timeend: te.toISOString(),
             includeProno: true
+        },
+        headers: {
+            "Authorization": `Bearer ${api_token}`
         }
     });
     const d = response.data;
@@ -564,6 +597,9 @@ export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -
         fila_semanal.obs = getObsStats(d.observaciones);
     }
     if (!d.pronosticos) {
+        console.warn("No hay pronósticos");
+    }
+    else if (!d.pronosticos.length) {
         console.warn("No hay pronósticos");
     }
     else {

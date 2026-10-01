@@ -7,4 +7,5 @@ public/pdf/*.pdf
 public/json/*.json
 .vscode
 config/default.json
+config/credentials.json
 log

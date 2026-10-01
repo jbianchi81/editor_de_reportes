@@ -8,7 +8,9 @@
     <div id="anomalia">
       <h3>Anomalía de precipitación - última semana</h3>
       <div class="mapa-row-semanal">
-        <div><img class="mapa" src={{mapa_anomalia}}></div>
+        <div class="media-container">
+          <img src={{mapa_anomalia}}>
+        </div>
         <div class="text-box">Se calcula la anomalía como la diferencia entre el valor acumulado durante la ventana temporal considerada y el valor considerado como normal (período de los últimos 30 años) correspondiente a la misma ventana temporal (semanal, últimos 7 días).
         </div>
       </div>
@@ -16,136 +18,95 @@
     <div id="qpf">
       <h3>Previsión de precipitación - próxima semana</h3>
       <div class="mapa-row-semanal">
-        <div><img class="mapa" src={{mapa_suma_gfs}}></div>
+        <div class="media-container">
+          <img src={{mapa_suma_gfs}}>
+        </div>
         <div class="text-box">Las previsiones numéricas de precipitación para los próximos siete días indican elprobable desarrollo de eventos precipitantes...
         </div>
       </div>
     </div>
     <div id="pmad">
       <h3>Precipitación media areal</h3>
+      <label for="pmad-view-select">Elegir región: </label>
+      <select id="pmad-view-select">
+        <option value="0" selected>Alto Paraná</option>
+        <option value="1">Iguazú</option>
+        <option value="2">Paraná Medio</option>
+        <option value="3">Paraguay</option>
+      </select>
+      <input type="range" min="0" max="100" value="60" class="slider" id="pmad-opacity-slider">
       <div class="mapa-row-semanal">
-        <div class="mapa">
+        <div class="mapa media-container">
           <div id="mapa_pmad"></div>
         </div>
-        <div class="text-box">
-          <h4>Alto Paraná</h4>
-          <div>Durante los últimos 7 días se observaron eventos de precipitación en gran parte del Alto Paraná. En el sector regulado, predominaron las lluvias con acumulados medios areales leves (por encima de lo normal para la época del año), con núcleos moderados sobre el sur de la vertiente oriental. Asimismo, en el sector no regulado se registraron lluvias leves, con montos más significativos (leves a moderados) sobre la vertiente oriental. Durante los próximos 7 días se prevé un escenario de escasez de lluvias sobre la totalidad del Alto Paraná (normal para la época del año).</div>
+        <div class="text-box pmad-text" id="alto-parana">
+          <div class="text-box-content">
+            <b>Alto Paraná</b>
+            Durante los últimos 7 días se observaron eventos de precipitación en gran parte del Alto Paraná. En el sector regulado, predominaron las lluvias con acumulados medios areales leves (por encima de lo normal para la época del año), con núcleos moderados sobre el sur de la vertiente oriental. Asimismo, en el sector no regulado se registraron lluvias leves, con montos más significativos (leves a moderados) sobre la vertiente oriental. Durante los próximos 7 días se prevé un escenario de escasez de lluvias sobre la totalidad del Alto Paraná (normal para la época del año).
+          </div>
+        </div>
+        <div class="text-box pmad-text" id="iguazu">
+          <div class="text-box-content">
+            <b>Iguazú</b>
+            Durante los últimos 7 días se registró un escenario meteorológico positivo, con acumulados de precipitación abundantes sobre la mayor parte de la cuenca...
+          </div>
+        </div>
+        <div class="text-box pmad-text"  id="parana-medio">
+          <div class="text-box-content">
+            <b>Paraná Medio</b>
+            Durante los últimos 7 días se registraron precipitaciones moderadas sobre la cuenca propia de Yacyretá, mientras que en el tramo incremental Yacyretá - Corrientes se observaron lluvias leves...
+          </div>
+        </div>
+        <div class="text-box pmad-text"  id="paraguay">
+          <div class="text-box-content">
+            <b>Paraguay</b>
+            Durante los últimos siete días se registraron precipitaciones leves en la cuenca alta del río Paraguay...
+          </div>
         </div>
       </div>
-
     </div>
-
-
-    <h2>Situación hidrológica</h2>
-    <div>Fecha de actualización: <b>{{fecha_emision}}</b></div>
-    <div class="pdf_download"><a href="{{pdf_url}}" target="_blank">Versión PDF</a></div>
-    <h3>Situación meteorológica</h3>
-    <div class="mapas-flex-grid">
-      <div class="mapas-flex-item">Caudales observados en las secciones más importantes</div>
-      <div class="mapas-flex-item"><img class="mapa" src={{mapa_caudales}}></div>
-    </div>
-    <h3>Río Paraná en Brasil</h3>
-    <b>{{alto_parana.condicion}}</b>
-    <p>Durante los últimos 7 días predominó la escasez de precipitaciones en gran parte del Alto Paraná. Se registraron
-      lluvias con acumulados medios areales leves en el extremo sur de la vertiente oriental del sector regulado (cuenca
-      del río Tibagi), así como en la vertiente oriental del sector no regulado (cuenca de los ríos Piquirí e Ivaí).
-      Durante los próximos 7 días se espera la persistencia del escenario deficitario en la totalidad del Alto Paraná,
-      normal para la época del año.</p>
-    <p>El almacenamiento en las principales presas del sector regulado se observó en descenso, actualmente con un valor
-      medio ponderado en torno al 67,4% (11,7% por encima del valor observado en 2025, para la misma época del año), con
-      atenuación de tasa respecto a la tendencia de descenso predominante en julio. En el último ciclo, la afluencia se
-      observó estable o en leve descenso y la generación hidráulica se mantuvo por encima de los valores previstos. En
-      efecto, en Ilha Solteira la erogación media semanal exhibió incremento en rango de valores levemente por debajo de
-      lo normal para la época del año, semejante a los registros de julio/agosto. En consecuencia, el valor medio
-      ponderado del almacenamiento se observó en descenso, atenuado por la afluencia estable en los sistemas Paraná y
-      Tieté. A corto plazo, se prevé que continúe en gradual descenso (en función de las maniobras de regulación),
-      puesto la persistencia de condiciones deficitarias en la región. En plazo extendido, es probable que continúe con
-      dinámica semejante, todavía con chances de estabilidad ocasional puesto la probabilidad de un escenario de lluvias
-      más favorable durante la transición agosto/septiembre.</p>
-    <p>El caudal erogado en Porto Primavera exhibió incremento del valor medio semanal, con valores diarios levemente
-      por debajo de lo normal para la época del año, en sintonía con la mayor generación hidráulica en el sistema
-      Paraná. A partir del 13/8 se sostuvo oscilante en punta en torno a los 5.000 m³/s, por efecto del pulso de
-      erogación observado en Jupiá - Porto Primavera sumado a las maniobras de vertido para control del nivel del
-      embalse. En efecto, el almacenamiento se observó en descenso hacia el valor óptimo habitual. Por otro lado, el
-      aporte del río Paranapanema continuó en gradual en descenso, sosteniendo recuperación respecto a los valores
-      observados a mediados de julio. En consecuencia, la descarga semanal en Porto Primavera - Rosana exhibió
-      incremento en rango inferior de aguas medias, con valor semejante a los registros de la primera década de julio.
-      Actualmente, sostiene leve recuperación de base en la franja límite aguas medias bajas/medias. A corto plazo, se
-      prevé que continúe oscilante con amplitud acotada sobre tendencia de base en aguas medias bajas/medias, en
-      asociación al patrón actual en la descarga del sistema Paraná y la previsión de escasez de lluvias en la región.
-      En plazo extendido, se espera que el valor medio semanal continúe regulado/oscilante al menos en aguas medias
-      bajas (escenario de mínima), si bien la condición del almacenamiento en el sector regulado y la probabilidad de un
-      escenario de lluvias más favorable hacia agosto/septiembre favorecen sostener el incremento actual (inclusive
-      observar nuevos pulsos de erogación más notorios).</p>
-    <p>El caudal en Guairá sostuvo el valor medio semanal estable en rango propio de aguas medias bajas, por combinación
-      del incremento del aporte del sector regulado y la estabilización de la fluencia en ruta desde el sector no
-      regulado. En efecto, se observó leve incremento de los valores diarios en la franja límite aguas medias
-      bajas/medias, con motivo del pulso de erogación registrado en Porto Primavera - Rosana y la persistencia de
-      lluvias leves en la vertiente oriental del sector no regulado. Actualmente, exhibe leve recuperación de base en
-      rango superior de aguas medias bajas. A corto plazo, se prevé que continúe oscilante en aguas medias bajas, con
-      gradual imposición de tendencia de descenso, puesto la previsión de escasez de lluvias en la región (recesión de
-      la afluencia en ruta). Hacia plazo extendido, se espera que el valor medio semanal continúe en gradual
-      descenso/estabilización en aguas medias bajas, acoplándose al patrón en la descarga del sector regulado, puesto la
-      continuidad del escenario deficitario al menos durante el resto del mes. A partir de la transición
-      agosto/septiembre es más probable observar recuperación por repuntes de la afluencia en ruta, en relación al
-      escenario de lluvias leve o significativamente por encima de los normal previsto en el sector no regulado.</p>
-    <p>Finalmente, la erogación en Itaipú mantuvo el valor medio semanal estable en aguas medias bajas/medias,
-      sosteniendo la recuperación del derrame observada en julio-agosto. En efecto, se sostuvo oscilante en aguas medias
-      bajas/medias (muy leve ascenso de base), a expensas del consumo de reservas, puesto la estabilización de la
-      afluencia. Actualmente, exhibe leve incremento de punta en rango inferior de aguas medias. En consecuencia, el
-      valor medio semanal del almacenamiento se observó en descenso en valores óptimos, con incremento de tasa respecto
-      a la tendencia de leve descenso registrada a partir de junio/julio. A corto plazo, se prevé que continúe oscilante
-      en aguas medias bajas/medias, en principio con derrame estable. En plazo extendido, se espera que el valor medio
-      semanal exhiba gradual descenso en aguas medias bajas, puesto la persistencia de condiciones deficitarias en la
-      región, con probable aproximación de mínimos hacia aguas bajas/medias bajas. Aún así, la condición óptima del
-      almacenamiento actualmente observada favorece la estabilización del aporte en aguas medias bajas, atenuando el
-      descenso al menos hasta el retorno de condiciones favorables para la recuperación de la afluencia (con mayores
-      chances a partir de la transición agosto/septiembre).</p>
-
-    <div class="table-wrapper">
-      <table class="table-hover tabla-hidro" id="tabla-alturas">
-        <caption>Caudales. Valores observados en los últimos 7 días y tendencia para los próximos 7 días</caption>
-        <thead>
-          <th>Sección</th>
-          <th>Mínimo observado [m<sup>3</sup>/s]</th>
-          <th>Máximo observado [m<sup>3</sup>/s]</th>
-          <th>Promedio observado [m<sup>3</sup>/s]</th>
-          <th>Rango probable [m<sup>3</sup>/s]</th>
-          <th>Escenario (tendencia)</th>
-          <th></th>
-        </thead>
-        {{#each alto_parana.tabla_hidro}}
-        <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}"
-          data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
-          data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
-          <td>
-            <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
-              data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
-              {{this.estacion_nombre}}</div>
-          </td>
-          <td>{{this.obs.min}}</td>
-          <td>{{this.obs.max}}</td>
-          <td>{{this.obs.mean}}</td>
-          <td>[{{this.pron.min}} + {{this.prono.max}}</td>
-          <td>{{this.tendencia}}</td>
-        </tr>
-        {{/each}}
-      </table>
-    </div>
-    <div>
-      <div class="mapas-flex-grid">
-        <div class="mapas-flex-item"><img class="mapa" src={{mapa_anomalias}}></div>
-        <div class="mapas-flex-item">Se calcula la anomalía como la diferencia entre el valor acumulado durante la
-          ventana temporal considerada y el valor considerado como normal (período de los últimos 30 años)
-          correspondiente a la misma ventana temporal (semanal, últimos 7 días). Durante los últimos 7 días se registró
-          un núcleo de anomalías positivas sobre las nacientes del Pilcomayo y Bermejo, prolongandose en sentido sudeste
-          hacia el Paraná en el tramo Esquina y Santa Fe. En cuanto a las condiciones de normalidad predominan sobre el
-          sector regulado del Alto Paraná y la cuenca alta del río Paraguay y cuencas altas de los ríos Pilcomayo y
-          Bermejo (valores de estación seca, en todos los casos). En referencia a las anomalías negativas, predominaron
-          en la región centro-este de la cuenca, sobre la confluencia entre Iguazú y el Paraná.</div>
+    <div id="hidro">
+      <h3>Río Paraná en Brasil</h3>
+      <b>{{alto_parana.condicion}}</b>
+      <div class="table-wrapper">
+        <table class="table-hover tabla-hidro" id="tabla-alturas">
+          <caption>Caudales. Valores observados en los últimos 7 días y tendencia para los próximos 7 días</caption>
+          <thead>
+            <th>Sección</th>
+            <th>Mínimo observado [m<sup>3</sup>/s]</th>
+            <th>Máximo observado [m<sup>3</sup>/s]</th>
+            <th>Promedio observado [m<sup>3</sup>/s]</th>
+            <th>Rango probable [m<sup>3</sup>/s]</th>
+            <th>Escenario (tendencia)</th>
+            <th></th>
+          </thead>
+          {{#each tablas.alto_parana}}
+          <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}"
+            data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
+            data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
+            <td>
+              <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
+                data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
+                {{this.estacion_nombre}}</div>
+            </td>
+            <td>{{this.obs.min}}</td>
+            <td>{{this.obs.max}}</td>
+            <td>{{this.obs.mean}}</td>
+            <td>[{{this.prono.min}} - {{this.prono.max}}]</td>
+            <td>{{this.tendencia}}</td>
+          </tr>
+          {{/each}}
+        </table>
+      </div>
+      <div>Durante los últimos 7 días predominó la escasez de precipitaciones en gran parte del Alto Paraná. Se registraron
+        lluvias con acumulados medios areales leves en el extremo sur de la vertiente oriental del sector regulado (cuenca
+        del río Tibagi), así como en la vertiente oriental del sector no regulado (cuenca de los ríos Piquirí e Ivaí).
+        Durante los próximos 7 días se espera la persistencia del escenario deficitario en la totalidad del Alto Paraná,
+        normal para la época del año.
       </div>
     </div>
-    <div>
+
+    <div id="notas">
       <h4>Notas</h4>
       <ul id="lista-notas">
         <li>EL PRÓXIMO MENSAJE COMPLETO SERÁ EMITIDO EL {{proxima_fecha}}</li>

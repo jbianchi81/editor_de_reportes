@@ -12,6 +12,24 @@ export async function loadConfig(config_file : string = path.join(__dirname,'../
     return JSON.parse(config_raw);
 }
 
+async function loadCredentials(
+    credentials_file : string = path.join(__dirname,'../config/credentials.json') 
+) {
+    try {
+        var f = await fs.readFile(credentials_file, {encoding: "utf-8"})
+    } catch(e) {
+        console.error("Credentials file not found")
+        return
+    }
+    try {
+        var credentials = JSON.parse(f)
+    } catch(e) {
+        console.error("Credentials file not valid")
+    }
+    return credentials
+
+}
+
 export type GeoJSONObject = {
     type : string
     features : Feature[] 
@@ -440,12 +458,31 @@ export async function getValuesSemanal() {
         config.semanal.mapeo_series,
         config.semanal.limites_estados
     )
+
+    const credentials = await loadCredentials()
+    const a5_token = (credentials && credentials.a5_token) ? credentials.a5_token : "my_token"
+
     const current_date = new Date()
+
+    const tablas : Record<string, FilaTablaSemanal[]> = {}
+    for(const region of config.semanal.tablas) {
+        const rows = []
+        for(const serie of region.series) {
+            rows.push(await fetchValuesSemanal(serie[0], serie[1], -7, 0, config.semanal.url, a5_token))
+        }
+        tablas[region.id] = rows
+    }
+
+    const proxima_fecha = new Date()
+    proxima_fecha.setDate(proxima_fecha.getDate() + 7)
+
     return {
         "datos_mapa_semanal": datos_mapa_semanal,
         pdf_url: getPdfUrl(current_date, config.pdf_dir, true),
         mapa_anomalia: getAnomaliaSemanalUrl(current_date),
-        mapa_suma_gfs: getGfsUrl(current_date)
+        mapa_suma_gfs: getGfsUrl(current_date),
+        tablas: tablas,
+        proxima_fecha: proxima_fecha.toLocaleDateString('en-GB')
     }
 }
 
@@ -814,7 +851,8 @@ export async function fetchValuesSemanal(
     var_id: number,
     timestart_days: number=-7,
     timeend_days: number=15,
-    api_url: string="https://alerta.ina.gob.ar/a5"
+    api_url: string="https://alerta.ina.gob.ar/a5",
+    api_token: string="my_token"
 ) : Promise<FilaTablaSemanal> {
     const ts = new Date()
     ts.setDate(ts.getDate() + timestart_days)
@@ -829,6 +867,9 @@ export async function fetchValuesSemanal(
                 timestart: ts.toISOString(),
                 timeend: te.toISOString(),
                 includeProno: true
+            },
+            headers: {
+                "Authorization": `Bearer ${api_token}`
             }
         }
     )
@@ -851,6 +892,8 @@ export async function fetchValuesSemanal(
         fila_semanal.obs = getObsStats(d.observaciones)
     }
     if(!d.pronosticos) {
+        console.warn("No hay pronósticos")
+    } else if(!d.pronosticos.length) {
         console.warn("No hay pronósticos")
     } else{
         fila_semanal.prono = getPronoStatsAll(d.pronosticos)
