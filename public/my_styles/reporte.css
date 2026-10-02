@@ -219,6 +219,87 @@ table tbody a[data-bs-toggle=tooltip] {
   flex: 1 1 0;
   min-width: 0; /* Prevents intrinsic content size from overflowing */
   height: 100%;
+  flex-direction: column;
+  position: relative;
+}
+
+.mapa_caption {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  color: #6c757d;
+  text-align: left;
+}
+
+.pmad-tabs {
+    display: flex;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.pmad-tabs-top {
+    border-bottom: 1px solid #d5dadd;
+}
+
+.pmad-tabs-bottom {
+    border-top: 1px solid #d5dadd;
+}
+
+.pmad-tab {
+    position: relative;
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 0 18px;
+    border: 0;
+    background: transparent;
+    color: #4b5560;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease;
+}
+
+.pmad-tab:hover {
+    background-color: #f1f5f6;
+    color: #075985;
+}
+
+.pmad-tab[aria-selected="true"] {
+    color: #075985;
+}
+
+.pmad-tabs-top .pmad-tab[aria-selected="true"]::after {
+    position: absolute;
+    right: 12px;
+    bottom: 0;
+    left: 12px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: #087e8b;
+    content: "";
+}
+
+.pmad-tabs-bottom .pmad-tab[aria-selected="true"]::after {
+    position: absolute;
+    right: 12px;
+    top: 0;
+    left: 12px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: #087e8b;
+    content: "";
+}
+
+
+.pmad-tab:focus-visible,
+.pmad-text:focus-visible {
+    outline: 2px solid #087e8b;
+    outline-offset: -2px;
+}
+
+.pmad-text[hidden],
+.region-hidro[hidden] {
+    display: none;
 }
 
 .media-container img,

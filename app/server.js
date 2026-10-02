@@ -23,6 +23,27 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,'..','views'));
 
+const semanalCacheTtl = 5 * 60 * 1000;
+let semanalValuesCache;
+let semanalValuesCacheAt = 0;
+let semanalValuesPending;
+
+async function getCachedValuesSemanal() {
+  if (semanalValuesCache && Date.now() - semanalValuesCacheAt < semanalCacheTtl) {
+    return semanalValuesCache;
+  }
+  if (!semanalValuesPending) {
+    semanalValuesPending = getValuesSemanal().then(values => {
+      semanalValuesCache = values;
+      semanalValuesCacheAt = Date.now();
+      return values;
+    }).finally(() => {
+      semanalValuesPending = undefined;
+    });
+  }
+  return semanalValuesPending;
+}
+
 // app.use((req, res, next) => {
 //   console.log(`[${req.method}] ${req.originalUrl}`);
 //   console.log('Cookies:', req.headers.cookie);
@@ -267,6 +288,17 @@ app.get('/template_semanal', isWriter, async (req, res) => {
     const values = await getValuesSemanal()
     writeFileSync("public/json/datos_mapa_semanal.json", JSON.stringify(values.datos_mapa_semanal))
     res.render('template_semanal', values)
+  } catch(e) {
+    console.error(e)
+    res.status(500).send({ error: e.message || 'Internal Server Error' })
+  }
+})
+
+app.get('/api/template_semanal', isWriter, async (req, res) => {
+  try {
+    // const values = await getCachedValuesSemanal()
+    const values = await getValuesSemanal()
+    res.json(values)
   } catch(e) {
     console.error(e)
     res.status(500).send({ error: e.message || 'Internal Server Error' })

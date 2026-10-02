@@ -54,6 +54,8 @@
   <link rel="stylesheet" href="styles/richtext.min.css" type="text/css">
   <script class="jsbin" src="js/jquery.richtext.min.js" type="application/javascript"></script>
   <link rel="stylesheet" href="my_styles/reporte.css" type="text/css">
+  <script src="my_js/actualizar_semanal.js"></script>
+  <script src="my_js/regiones_hidro.js"></script>
   <style>
     /* #editor, div.richText {  */
       /* width: 794px;  */
@@ -133,6 +135,7 @@
     #mapa { 
       height: 100vh; 
       max-width: 800px;
+      display: flex;
     }
   </style>
 </head>
@@ -150,6 +153,11 @@
         <span>
           <button class="button" id=load-template-button onclick="startFromTemplate()">Cargar plantilla</button>
         </span>
+        {{#if isSemanal}}
+          <span id="actualiza-reporte-button">
+            <button class="button" id=update-draft-button onclick="actualizarReporteSemanal()">Actualizar datos</button>
+          </span>
+        {{/if}}
         <span>
           <button class="button" id=load-published-button onclick="loadPublished()">Cargar publicado</button>
         </span>
@@ -195,6 +203,7 @@
         $("textarea#editor").val(response_text).trigger("change")
         await new Promise(requestAnimationFrame);
         await new Promise(requestAnimationFrame);
+        setupTabs()
       } catch (error) {
         alert('Falló la carga de contenido: ' + error.message)
         console.error('Falló la carga de contenido', error.message);

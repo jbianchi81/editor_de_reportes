@@ -26,6 +26,14 @@ function getColorCuenca(nombre) {
 
 
 function cargarMapaCaudales() {
+
+    // remove placeholder
+    const placeholder = document.querySelector("#caudales-placeholder")
+    if(placeholder) {
+        placeholder.remove()
+    }
+
+    // instantiate leaflet map
     var map = L.map(
         'mapa',{
         scrollWheelZoom: false

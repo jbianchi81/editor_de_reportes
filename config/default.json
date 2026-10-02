@@ -146,12 +146,32 @@
                 "altas": 6170
             }
         },
-        "tablas": [
+        "hidro": [
             {
-                "id": "alto_parana",
+                "id": "alto-parana",
+                "nombre": "Río Paraná en Brasil",
                 "series": [
-                    [91, 4],
-                    [92, 4]
+                    940,
+                    941
+                ]
+            },
+            {
+                "id": "iguazu",
+                "nombre": "Río Iguazú",
+                "series": [
+                    857
+                ]
+            },
+            {
+                "id": "parana-medio",
+                "nombre": "Parana Medio",
+                "series": [
+                    942,
+                    936,
+                    937
+                ],
+                "series_altura": [
+                    9
                 ]
             }
         ]

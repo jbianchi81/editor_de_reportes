@@ -1,15 +1,17 @@
 <div>
   <div class="container-reporte">
     <h2>Reporte semanal de la Cuenca del Plata</h2>
-    <div>Fecha de actualización: <b>{{fecha_emision}}</b></div>
-    <div class="pdf_download"><a href="{{pdf_url}}" target="_blank">Versión PDF</a></div>
+    <div>Fecha de actualización: <b id="fecha-emision">{{fecha_emision}}</b></div>
+    <div class="pdf_download"><a id="pdf-link" href="{{pdf_url}}" target="_blank">Versión PDF</a></div>
     <h3>Caudales observados en las secciones más importantes</h3>
-    <div id="mapa"></div>
+    <div id="mapa">
+      <img id="caudales-placeholder" src="img/caudales_placeholder.png">
+    </div>
     <div id="anomalia">
       <h3>Anomalía de precipitación - última semana</h3>
       <div class="mapa-row-semanal">
         <div class="media-container">
-          <img src={{mapa_anomalia}}>
+          <img id="mapa-anomalia" src="{{mapa_anomalia}}">
         </div>
         <div class="text-box">Se calcula la anomalía como la diferencia entre el valor acumulado durante la ventana temporal considerada y el valor considerado como normal (período de los últimos 30 años) correspondiente a la misma ventana temporal (semanal, últimos 7 días).
         </div>
@@ -19,97 +21,160 @@
       <h3>Previsión de precipitación - próxima semana</h3>
       <div class="mapa-row-semanal">
         <div class="media-container">
-          <img src={{mapa_suma_gfs}}>
+          <img id="mapa-suma-gfs" src="{{mapa_suma_gfs}}">
         </div>
         <div class="text-box">Las previsiones numéricas de precipitación para los próximos siete días indican elprobable desarrollo de eventos precipitantes...
         </div>
       </div>
     </div>
-    <div id="pmad">
-      <h3>Precipitación media areal</h3>
-      <label for="pmad-view-select">Elegir región: </label>
-      <select id="pmad-view-select">
-        <option value="0" selected>Alto Paraná</option>
-        <option value="1">Iguazú</option>
-        <option value="2">Paraná Medio</option>
-        <option value="3">Paraguay</option>
-      </select>
+    <div id="regiones">
+      <h3>Análisis por región</h3>
+      <div class="pmad-tabs pmad-tabs-top" role="tablist" aria-label="Análisis por región">
+        <button class="pmad-tab" id="pmad-tab-alto-parana" type="button" role="tab" aria-selected="true" aria-controls="pmad-alto-parana" tabindex="0" data-region-index="0">Alto Paraná</button>
+        <button class="pmad-tab" id="pmad-tab-iguazu" type="button" role="tab" aria-selected="false" aria-controls="pmad-iguazu" tabindex="-1" data-region-index="1">Iguazú</button>
+        <button class="pmad-tab" id="pmad-tab-parana-medio" type="button" role="tab" aria-selected="false" aria-controls="pmad-parana-medio" tabindex="-1" data-region-index="2">Paraná Medio</button>
+        <button class="pmad-tab" id="pmad-tab-paraguay" type="button" role="tab" aria-selected="false" aria-controls="pmad-paraguay" tabindex="-1" data-region-index="3">Paraguay</button>
+        <button class="pmad-tab" id="pmad-tab-parana-inferior" type="button" role="tab" aria-selected="false" aria-controls="pmad-parana-inferior" tabindex="-1" data-region-index="4">Paraná Inferior</button>
+        <button class="pmad-tab" id="pmad-tab-uruguay" type="button" role="tab" aria-selected="false" aria-controls="pmad-uruguay" tabindex="-1" data-region-index="5">Uruguay</button>
+      </div>
       <input type="range" min="0" max="100" value="60" class="slider" id="pmad-opacity-slider">
       <div class="mapa-row-semanal">
-        <div class="mapa media-container">
-          <div id="mapa_pmad"></div>
+        <div class="mapa media-container" style="min-width: 300px">
+          <div id="mapa_pmad">
+            <img src="img/pmad_placeholder.png" id="pmad-placeholder">
+          </div>
+          <div class="mapa_caption">Precipitación media areal - últimos 7 días [mm]</div>
         </div>
-        <div class="text-box pmad-text" id="alto-parana">
+        <div class="text-box pmad-text" id="pmad-alto-parana" role="tabpanel" aria-labelledby="pmad-tab-alto-parana" tabindex="0">
           <div class="text-box-content">
             <b>Alto Paraná</b>
             Durante los últimos 7 días se observaron eventos de precipitación en gran parte del Alto Paraná. En el sector regulado, predominaron las lluvias con acumulados medios areales leves (por encima de lo normal para la época del año), con núcleos moderados sobre el sur de la vertiente oriental. Asimismo, en el sector no regulado se registraron lluvias leves, con montos más significativos (leves a moderados) sobre la vertiente oriental. Durante los próximos 7 días se prevé un escenario de escasez de lluvias sobre la totalidad del Alto Paraná (normal para la época del año).
           </div>
         </div>
-        <div class="text-box pmad-text" id="iguazu">
+        <div class="text-box pmad-text" id="pmad-iguazu" role="tabpanel" aria-labelledby="pmad-tab-iguazu" tabindex="0">
           <div class="text-box-content">
             <b>Iguazú</b>
             Durante los últimos 7 días se registró un escenario meteorológico positivo, con acumulados de precipitación abundantes sobre la mayor parte de la cuenca...
           </div>
         </div>
-        <div class="text-box pmad-text"  id="parana-medio">
+        <div class="text-box pmad-text"  id="pmad-parana-medio" role="tabpanel" aria-labelledby="pmad-tab-parana-medio" tabindex="0">
           <div class="text-box-content">
             <b>Paraná Medio</b>
             Durante los últimos 7 días se registraron precipitaciones moderadas sobre la cuenca propia de Yacyretá, mientras que en el tramo incremental Yacyretá - Corrientes se observaron lluvias leves...
           </div>
         </div>
-        <div class="text-box pmad-text"  id="paraguay">
+        <div class="text-box pmad-text"  id="pmad-paraguay" role="tabpanel" aria-labelledby="pmad-tab-paraguay" tabindex="0">
           <div class="text-box-content">
             <b>Paraguay</b>
             Durante los últimos siete días se registraron precipitaciones leves en la cuenca alta del río Paraguay...
           </div>
         </div>
+        <div class="text-box pmad-text"  id="pmad-parana-inferior" role="tabpanel" aria-labelledby="pmad-tab-parana-inferior" tabindex="0">
+          <div class="text-box-content">
+            <b>Paraná inferior</b>
+            Durante los últimos 7 días se observaron lluvias con acumulados medios areales leves principalmente sobre la ruta Goya - Paraná...
+          </div>
+        </div>
+        <div class="text-box pmad-text"  id="pmad-uruguay" role="tabpanel" aria-labelledby="pmad-tab-uruguay" tabindex="0">
+          <div class="text-box-content">
+            <b>Uruguay</b>
+            Los eventos de precipitación más significativos en los últimos 7 días se registraron sobre la cuenca alta...
+          </div>
+        </div>
       </div>
-    </div>
-    <div id="hidro">
-      <h3>Río Paraná en Brasil</h3>
-      <b>{{alto_parana.condicion}}</b>
-      <div class="table-wrapper">
-        <table class="table-hover tabla-hidro" id="tabla-alturas">
-          <caption>Caudales. Valores observados en los últimos 7 días y tendencia para los próximos 7 días</caption>
-          <thead>
-            <th>Sección</th>
-            <th>Mínimo observado [m<sup>3</sup>/s]</th>
-            <th>Máximo observado [m<sup>3</sup>/s]</th>
-            <th>Promedio observado [m<sup>3</sup>/s]</th>
-            <th>Rango probable [m<sup>3</sup>/s]</th>
-            <th>Escenario (tendencia)</th>
-            <th></th>
-          </thead>
-          {{#each tablas.alto_parana}}
-          <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}"
-            data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
-            data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
-            <td>
-              <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
-                data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
-                {{this.estacion_nombre}}</div>
-            </td>
-            <td>{{this.obs.min}}</td>
-            <td>{{this.obs.max}}</td>
-            <td>{{this.obs.mean}}</td>
-            <td>[{{this.prono.min}} - {{this.prono.max}}]</td>
-            <td>{{this.tendencia}}</td>
-          </tr>
-          {{/each}}
-        </table>
+      <div id="hidro">
+        {{#each hidro}}
+        <div class="region-hidro" id="hidro-{{@key}}">
+          <h3 id="hidro-{{@key}}-nombre">{{this.nombre}}</h3>
+          <b id="hidro-{{@key}}-condicion">{{this.condicion}}</b>
+          {{#if this.tabla}}
+          <div class="table-wrapper">
+            <table class="table-hover tabla-hidro">
+              <caption>Caudales. Valores observados en los últimos 7 días y tendencia para los próximos 7 días</caption>
+              <thead>
+                <th>Sección</th>
+                <th>Mínimo observado [m<sup>3</sup>/s]</th>
+                <th>Máximo observado [m<sup>3</sup>/s]</th>
+                <th>Promedio observado [m<sup>3</sup>/s]</th>
+                <th>Rango probable [m<sup>3</sup>/s]</th>
+                <th>Escenario (tendencia)</th>
+                <th></th>
+              </thead>
+              <tbody id="tabla-caudales-body-{{@key}}">
+              {{#each this.tabla}}
+              <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}"
+                data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
+                data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
+                <td>
+                  <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
+                    data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
+                    {{this.estacion_nombre}}</div>
+                </td>
+                <td>{{this.obs.min}}</td>
+                <td>{{this.obs.max}}</td>
+                <td>{{this.obs.mean}}</td>
+                <td>[{{this.prono.min}} - {{this.prono.max}}]</td>
+                <td>{{this.tendencia}}</td>
+              </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{/if}}
+          {{#if this.tabla_altura}}
+          <div class="table-wrapper">
+            <table class="table-hover tabla-hidro">
+              <caption>Alturas. Valores observados en los últimos 7 días y tendencia para los próximos 7 días</caption>
+              <thead>
+                <th>Sección</th>
+                <th>Mínimo observado [m]</th>
+                <th>Máximo observado [m]</th>
+                <th>Promedio observado [m]</th>
+                <th>Rango probable [m]</th>
+                <th>Escenario (tendencia)</th>
+                <th></th>
+              </thead>
+              <tbody id="tabla-alturas-body-{{@key}}">
+              {{#each this.tabla_altura}}
+              <tr data-id="{{this.id}}" data-series_id="{{this.series_id}}" data-x="{{this.x}}" data-y="{{this.y}}"
+                data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
+                data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
+                <td>
+                  <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
+                    data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
+                    {{this.estacion_nombre}}</div>
+                </td>
+                <td>{{this.obs.min}}</td>
+                <td>{{this.obs.max}}</td>
+                <td>{{this.obs.mean}}</td>
+                <td>[{{this.prono.min}} - {{this.prono.max}}]</td>
+                <td>{{this.tendencia}}</td>
+              </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{/if}}
+          <div>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum</div>
+        </div>
+        {{/each}}
+
+        {{!-- fin hidro --}}
       </div>
-      <div>Durante los últimos 7 días predominó la escasez de precipitaciones en gran parte del Alto Paraná. Se registraron
-        lluvias con acumulados medios areales leves en el extremo sur de la vertiente oriental del sector regulado (cuenca
-        del río Tibagi), así como en la vertiente oriental del sector no regulado (cuenca de los ríos Piquirí e Ivaí).
-        Durante los próximos 7 días se espera la persistencia del escenario deficitario en la totalidad del Alto Paraná,
-        normal para la época del año.
+      <div class="pmad-tabs pmad-tabs-bottom" role="tablist" aria-label="Análisis por región, navegación inferior">
+        <button class="pmad-tab" id="pmad-tab-bottom-alto-parana" type="button" role="tab" aria-selected="true" aria-controls="pmad-alto-parana" tabindex="0" data-region-index="0">Alto Paraná</button>
+        <button class="pmad-tab" id="pmad-tab-bottom-iguazu" type="button" role="tab" aria-selected="false" aria-controls="pmad-iguazu" tabindex="-1" data-region-index="1">Iguazú</button>
+        <button class="pmad-tab" id="pmad-tab-bottom-parana-medio" type="button" role="tab" aria-selected="false" aria-controls="pmad-parana-medio" tabindex="-1" data-region-index="2">Paraná Medio</button>
+        <button class="pmad-tab" id="pmad-tab-bottom-paraguay" type="button" role="tab" aria-selected="false" aria-controls="pmad-paraguay" tabindex="-1" data-region-index="3">Paraguay</button>
+        <button class="pmad-tab" id="pmad-tab-bottom-parana-inferior" type="button" role="tab" aria-selected="false" aria-controls="pmad-parana-inferior" tabindex="-1" data-region-index="4">Paraná Inferior</button>
+        <button class="pmad-tab" id="pmad-tab-bottom-uruguay" type="button" role="tab" aria-selected="false" aria-controls="pmad-uruguay" tabindex="-1" data-region-index="5">Uruguay</button>
       </div>
     </div>
 
     <div id="notas">
       <h4>Notas</h4>
       <ul id="lista-notas">
-        <li>EL PRÓXIMO MENSAJE COMPLETO SERÁ EMITIDO EL {{proxima_fecha}}</li>
+        <li>EL PRÓXIMO MENSAJE COMPLETO SERÁ EMITIDO EL <span id="proxima-fecha">{{proxima_fecha}}</span></li>
       </ul>
     </div>
   </div>

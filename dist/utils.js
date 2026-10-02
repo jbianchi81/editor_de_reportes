@@ -161,7 +161,7 @@ function getAnomaliaSemanalUrl(current_date) {
     const end_date = new Date(date);
     end_date.setDate(end_date.getDate() + 7);
     const ed = getYMDstrings(end_date);
-    return `https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_anomalia_semanal/${d.year}/${d.month}/ppanom_${d.year}${d.month}${d.day}_${ed.year}${ed.month}${ed.day}.png`;
+    return `https://alerta.ina.gob.ar/ina/13-SYNOP/mapas_anomalia_semanal/${ed.year}/${ed.month}/ppanom_${d.year}${d.month}${d.day}_${ed.year}${ed.month}${ed.day}.png`;
 }
 function getSynopSemanalUrl(current_date) {
     const date = new Date(current_date);
@@ -306,22 +306,53 @@ export async function getValuesSemanal() {
     const credentials = await loadCredentials();
     const a5_token = (credentials && credentials.a5_token) ? credentials.a5_token : "my_token";
     const current_date = new Date();
-    const tablas = {};
-    for (const region of config.semanal.tablas) {
+    const hidro = {};
+    for (const region of config.semanal.hidro) {
         const rows = [];
-        for (const serie of region.series) {
-            rows.push(await fetchValuesSemanal(serie[0], serie[1], -7, 0, config.semanal.url, a5_token));
+        var i = 0;
+        var condicion = "S/D";
+        if (region.series && region.series.length) {
+            // tabla caudales
+            for (const serie of region.series) {
+                console.debug(`retrieving series ${serie}...`);
+                const row = await fetchValuesSemanal(serie, -7, 0, config.semanal.url, a5_token, 0);
+                i = i + 1;
+                if (i == region.series.length && row.obs) {
+                    condicion = getHydrologicalState(row.obs?.mean, serie, config.semanal.limites_estados);
+                }
+                rows.push(row);
+            }
         }
-        tablas[region.id] = rows;
+        const rows_altura = [];
+        i = 0;
+        if (region.series_altura && region.series_altura.length) {
+            // tabla alturas
+            for (const serie of region.series_altura) {
+                console.debug(`retrieving series ${serie}...`);
+                const row = await fetchValuesSemanal(serie, -7, 0, config.semanal.url, a5_token, 2);
+                i = i + 1;
+                // if(i == region.series_altura.length && row.obs) {
+                //     condicion = getHydrologicalState(row.obs?.mean,serie, config.semanal.limites_estados)
+                // }
+                rows_altura.push(row);
+            }
+        }
+        hidro[region.id] = {
+            nombre: region.nombre,
+            tabla: (rows.length) ? rows : undefined,
+            tabla_altura: (rows_altura.length) ? rows_altura : undefined,
+            condicion: condicion
+        };
     }
     const proxima_fecha = new Date();
     proxima_fecha.setDate(proxima_fecha.getDate() + 7);
     return {
         "datos_mapa_semanal": datos_mapa_semanal,
+        fecha_emision: current_date.toLocaleDateString('en-GB'),
         pdf_url: getPdfUrl(current_date, config.pdf_dir, true),
         mapa_anomalia: getAnomaliaSemanalUrl(current_date),
         mapa_suma_gfs: getGfsUrl(current_date),
-        tablas: tablas,
+        hidro: hidro,
         proxima_fecha: proxima_fecha.toLocaleDateString('en-GB')
     };
 }
@@ -459,7 +490,7 @@ const defaults = {
         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
 };
-function getObsStats(observaciones) {
+function getObsStats(observaciones, precision) {
     var o_timestart = observaciones[0][0];
     var o_timeend = observaciones[0][1];
     var minval = observaciones[0][2];
@@ -475,13 +506,19 @@ function getObsStats(observaciones) {
         count = count + ((o[2] !== null) ? 1 : 0);
     });
     var count_nulls = observaciones.length - count;
+    var mean = sum / count;
+    if (precision != null) {
+        minval = roundTo(minval, precision);
+        maxval = roundTo(maxval, precision);
+        mean = roundTo(mean, precision);
+    }
     return {
         timestart: o_timestart,
         timeend: o_timeend,
         count: count,
         min: minval,
         max: maxval,
-        mean: sum / count,
+        mean: mean,
         nulls: count_nulls
     };
 }
@@ -516,7 +553,7 @@ function getPronoStats(series) {
         qualifiers: new Set(series.map(s => s.qualifier))
     };
 }
-function getPronoStatsAll(pronosticos) {
+function getPronoStatsAll(pronosticos, precision) {
     const stats = pronosticos.filter(p => p.corrida).map(p => getPronoStats(p.corrida.series));
     if (!stats.length) {
         throw new Error("No hay prono para calcular stats");
@@ -529,6 +566,11 @@ function getPronoStatsAll(pronosticos) {
     var sum = stats.reduce((a, b) => a + b.mean, 0);
     var mean = sum / stats.length;
     var nulls = stats.reduce((a, b) => a + b.nulls, 0);
+    if (precision != null) {
+        min = roundTo(min, precision);
+        max = roundTo(max, precision);
+        mean = roundTo(mean, precision);
+    }
     return {
         timestart: timestart,
         timeend: timeend,
@@ -538,6 +580,9 @@ function getPronoStatsAll(pronosticos) {
         mean: mean,
         nulls: nulls
     };
+}
+function roundTo(value, precision) {
+    return parseInt((value * 10 ** precision).toString()) / 10 ** precision;
 }
 function getPronoResumen(pronosticos) {
     var result = [];
@@ -562,15 +607,14 @@ function getPronoResumen(pronosticos) {
     }
     return result;
 }
-export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -7, timeend_days = 15, api_url = "https://alerta.ina.gob.ar/a5", api_token = "my_token") {
+export async function fetchValuesSemanal(series_id, timestart_days = -7, timeend_days = 15, api_url = "https://alerta.ina.gob.ar/a5", api_token = "my_token", precision = 2) {
     const ts = new Date();
     ts.setDate(ts.getDate() + timestart_days);
     const te = new Date();
     te.setDate(te.getDate() + timeend_days);
     const response = await axios.get(`${api_url}/getSeriesBySiteAndVar`, {
         params: {
-            estacion_id: estacion_id,
-            var_id: var_id,
+            series_id: series_id,
             timestart: ts.toISOString(),
             timeend: te.toISOString(),
             includeProno: true
@@ -594,7 +638,7 @@ export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -
         console.warn("No hay observaciones");
     }
     else {
-        fila_semanal.obs = getObsStats(d.observaciones);
+        fila_semanal.obs = getObsStats(d.observaciones, precision);
     }
     if (!d.pronosticos) {
         console.warn("No hay pronósticos");
@@ -603,7 +647,7 @@ export async function fetchValuesSemanal(estacion_id, var_id, timestart_days = -
         console.warn("No hay pronósticos");
     }
     else {
-        fila_semanal.prono = getPronoStatsAll(d.pronosticos);
+        fila_semanal.prono = getPronoStatsAll(d.pronosticos, precision);
     }
     return fila_semanal;
 }

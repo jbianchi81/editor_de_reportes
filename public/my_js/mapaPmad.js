@@ -1,39 +1,21 @@
-const regiones = [
-    {
-        "id": "alto-parana",
-        "titulo": "Alto Paraná",
-        "coords": [-20, -50],
-        "zoom": 6
-    },
-    {
-        "id": "iguazu",
-        "titulo": "Iguazú",
-        "coords": [-25, -50],
-        "zoom": 7
-    },
-    {
-        "id": "parana-medio",
-        "titulo": "Paraná Medio",
-        "coords": [-27, -55],
-        "zoom": 7
-    },
-    {
-        "id": "paraguay",
-        "titulo": "Paraguay",
-        "coords": [-25, -57],
-        "zoom": 6
-    }
-]
 
 
 function cargarMapaPmad(container) {
-    var pmad_map = L.map(
+
+    // remove placeholder
+    const placeholder = document.querySelector("#pmad-placeholder");
+    if(placeholder) {
+        placeholder.remove();
+    }
+
+    // instantiate leaflet map
+    window.pmad_map = L.map(
         container,
         {
             scrollWheelZoom: false
         }).setView([-27.5, -56.5], 6);
 
-    const mapContainer = pmad_map.getContainer();
+    const mapContainer = window.pmad_map.getContainer();
 
     mapContainer.addEventListener('wheel', (event) => {
         // Check for Ctrl key (Windows/Linux) or Meta key (Mac)
@@ -41,9 +23,9 @@ function cargarMapaPmad(container) {
             event.preventDefault(); // Prevent browser/page zoom
             
             if (event.deltaY < 0) {
-            pmad_map.zoomIn();
+            window.pmad_map.zoomIn();
             } else if (event.deltaY > 0) {
-            pmad_map.zoomOut();
+            window.pmad_map.zoomOut();
             }
         }
     }, { passive: false });
@@ -52,7 +34,7 @@ function cargarMapaPmad(container) {
      L.tileLayer('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png', {
         attribution: '© IGN Argentina',
         maxZoom: 18
-    }).addTo(pmad_map);
+    }).addTo(window.pmad_map);
 
     const timestart = new Date()
     timestart.setDate(timestart.getDate() - 7)
@@ -68,7 +50,7 @@ function cargarMapaPmad(container) {
         VIEWPARAMS: `timeStart:${ts_formatted};timeEnd:${te_formatted};function:sum;sourceId:7`,
         transparent: true,
         opacity: 0.6
-    }).addTo(pmad_map);
+    }).addTo(window.pmad_map);
 
     // 3. Cargar el GeoJSON de las Cuencas
     fetch('geojson/ccas.geojson')
@@ -84,7 +66,7 @@ function cargarMapaPmad(container) {
                             fillOpacity: 0
                         };
                     }
-                }).addTo(pmad_map);
+                }).addTo(window.pmad_map);
             })
             .catch(err => console.error("Error cargando cuencas:", err));
 
@@ -100,28 +82,9 @@ function cargarMapaPmad(container) {
                             opacity: 0.8
                         };
                     }
-                }).addTo(pmad_map);
+                }).addTo(window.pmad_map);
             })
             .catch(err => console.error("Error cargando ríos:", err));
-
-    // set default view
-    pmad_map.setView(regiones[0].coords, regiones[0].zoom);
-    document.querySelectorAll(".pmad-text").forEach(element => {
-        element.style.display = "none";
-    })
-    document.getElementById(regiones[0].id).style.display ="block";
-    pmad_map.invalidateSize()
-
-    // select view event listener
-    document.getElementById('pmad-view-select').addEventListener('change', (e) => {
-        const region = regiones[e.target.value];
-        pmad_map.setView(region.coords, region.zoom);
-        document.querySelectorAll(".pmad-text").forEach(element => {
-            element.style.display = "none";
-        })
-        document.getElementById(region.id).style.display = "block";
-        pmad_map.invalidateSize()
-    });
 
     const slider = document.getElementById('pmad-opacity-slider');
 
@@ -131,4 +94,3 @@ function cargarMapaPmad(container) {
         pmad_layer.setOpacity(newOpacity);
     });
 }
-cargarMapaPmad("mapa_pmad")

@@ -86,10 +86,16 @@ type HydrologicalThresholds = {
 export declare function getHydrologicalReport(apiUrl: string, seriesMapping: Record<string, Record<string, number>>, stateThresholds: Record<string, HydrologicalThresholds>, currentDate?: Date): Promise<Record<string, string>>;
 export declare function getValuesSemanal(): Promise<{
     datos_mapa_semanal: Record<string, string>;
+    fecha_emision: string;
     pdf_url: string;
     mapa_anomalia: string;
     mapa_suma_gfs: string;
-    tablas: Record<string, FilaTablaSemanal[]>;
+    hidro: Record<string, {
+        nombre: string;
+        tabla?: FilaTablaSemanal[];
+        tabla_altura?: FilaTablaSemanal[];
+        condicion: string;
+    }>;
     proxima_fecha: string;
 }>;
 export declare function getValuesDiario(station_ids: number[], station_ids_caudal: number[]): Promise<{
@@ -136,5 +142,5 @@ interface FilaTablaSemanal {
     prono?: ObsStats;
     tendencia?: string;
 }
-export declare function fetchValuesSemanal(estacion_id: number, var_id: number, timestart_days?: number, timeend_days?: number, api_url?: string, api_token?: string): Promise<FilaTablaSemanal>;
+export declare function fetchValuesSemanal(series_id: number, timestart_days?: number, timeend_days?: number, api_url?: string, api_token?: string, precision?: number): Promise<FilaTablaSemanal>;
 export {};
