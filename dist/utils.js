@@ -24,8 +24,8 @@ async function loadCredentials(credentials_file = path.join(__dirname, '../confi
     }
     return credentials;
 }
-export async function getFeature(url, layer_name) {
-    return axios.get(url, {
+export async function getFeature(url, layer_name, username, password) {
+    const getParams = {
         params: {
             service: 'WFS',
             version: '1.0.0',
@@ -34,12 +34,17 @@ export async function getFeature(url, layer_name) {
             maxFeatures: '500',
             outputFormat: 'application/json'
         }
-        // ,
-        // auth: {
-        //     username: username,
-        //     password: password
-        // }
-    });
+    };
+    if (username) {
+        if (!password) {
+            throw new Error("Falta password");
+        }
+        getParams.auth = {
+            username: username,
+            password: password
+        };
+    }
+    return axios.get(url, getParams);
 }
 export async function fetchLastValues(var_id = 2) {
     const config = await loadConfig();
@@ -48,7 +53,7 @@ export async function fetchLastValues(var_id = 2) {
     }
     const layer_name = var_layer_map[var_id];
     try {
-        const response = await getFeature(config.geoserver.url, layer_name); //, config.geoserver.username, config.geoserver.password)
+        const response = await getFeature(config.geoserver.url, layer_name, config.geoserver.username, config.geoserver.password);
         return response.data; // Use the parsed JSON
     }
     catch (err) {

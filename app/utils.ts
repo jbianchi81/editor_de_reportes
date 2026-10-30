@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { AxiosResponse } from 'axios';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -81,24 +81,29 @@ export type HydroTableRow = {
     fecha : string
 }
 
-export async function getFeature(url :string, layer_name : string) {// , username : string, password : string) : Promise<AxiosResponse> {
+export async function getFeature(url :string, layer_name : string, username? : string, password? : string) : Promise<AxiosResponse> {
+    const getParams : AxiosRequestConfig = {
+        params: {
+            service: 'WFS',
+            version: '1.0.0',
+            request: 'GetFeature',
+            typeName: layer_name,
+            maxFeatures: '500',
+            outputFormat: 'application/json'
+        }
+    }
+    if(username) {
+        if(!password) {
+            throw new Error("Falta password")
+        }
+        getParams.auth = {
+            username: username,
+            password: password
+        }
+    }
     return axios.get(
         url,
-        {
-            params: {
-                service: 'WFS',
-                version: '1.0.0',
-                request: 'GetFeature',
-                typeName: layer_name,
-                maxFeatures: '500',
-                outputFormat: 'application/json'
-            }
-            // ,
-            // auth: {
-            //     username: username,
-            //     password: password
-            // }
-        }
+        getParams
     )
 }
 
@@ -113,7 +118,11 @@ export async function fetchLastValues(var_id : number = 2) : Promise<GeoJSONObje
     const layer_name = var_layer_map[var_id]
 
     try {
-        const response = await getFeature(config.geoserver.url, layer_name) //, config.geoserver.username, config.geoserver.password)
+        const response = await getFeature(
+            config.geoserver.url, 
+            layer_name, 
+            config.geoserver.username, 
+            config.geoserver.password)
         return response.data as GeoJSONObject; // Use the parsed JSON
     } catch (err) {
       throw err

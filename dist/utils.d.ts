@@ -47,7 +47,7 @@ export type HydroTableRow = {
     aviso_text: string;
     fecha: string;
 };
-export declare function getFeature(url: string, layer_name: string): Promise<AxiosResponse<any, any>>;
+export declare function getFeature(url: string, layer_name: string, username?: string, password?: string): Promise<AxiosResponse>;
 export declare function fetchLastValues(var_id?: number): Promise<GeoJSONObject>;
 interface FilaTablaValores {
     id: number;
