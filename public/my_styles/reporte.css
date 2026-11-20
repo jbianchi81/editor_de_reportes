@@ -175,6 +175,27 @@ table tbody a[data-bs-toggle=tooltip] {
     text-decoration: none;
 }
 
+#map-viewer-legend {
+    position: absolute;
+    z-index: 1000;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: 220px;
+    padding: .5rem;
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid #aaa;
+    border-radius: .25rem;
+}
+
+#map-viewer-legend img {
+    display: block;
+    max-width: 200px;
+    max-height: 300px;
+}
+.slider-width50 {
+    width: 50px;
+}
+
 @media (pointer: coarse) and (hover: none) {
     table tbody a[data-bs-toggle=tooltip] {
         color: #0767A7;
@@ -221,6 +242,14 @@ table tbody a[data-bs-toggle=tooltip] {
   height: 100%;
   flex-direction: column;
   position: relative;
+}
+
+.mapa_caption_it {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  color: #000000;
+  text-align: left;
+  font-style: italic;
 }
 
 .mapa_caption {

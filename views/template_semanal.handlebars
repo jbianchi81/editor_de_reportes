@@ -37,13 +37,18 @@
         <button class="pmad-tab" id="pmad-tab-parana-inferior" type="button" role="tab" aria-selected="false" aria-controls="pmad-parana-inferior" tabindex="-1" data-region-index="4">Paraná Inferior</button>
         <button class="pmad-tab" id="pmad-tab-uruguay" type="button" role="tab" aria-selected="false" aria-controls="pmad-uruguay" tabindex="-1" data-region-index="5">Uruguay</button>
       </div>
-      <input type="range" min="0" max="100" value="60" class="slider" id="pmad-opacity-slider">
       <div class="mapa-row-semanal">
         <div class="mapa media-container" style="min-width: 300px">
+          <div class="mapa_caption_it">Precipitación media areal - últimos 7 días [mm]</div>
           <div id="mapa_pmad">
             <img src="img/pmad_placeholder.png" id="pmad-placeholder">
           </div>
-          <div class="mapa_caption">Precipitación media areal - últimos 7 días [mm]</div>
+          <div id="map-viewer-legend">
+            <strong id="map-viewer-legend-title">Leyenda</strong>
+              <img id="map-viewer-legend-image" alt="Leyenda de la capa WMS">
+              <span id="map-viewer-legend-unavailable" hidden>La leyenda no está disponible.</span>
+              <input type="range" min="0" max="100" value="80" class="slider-width50" id="pmad-opacity-slider">
+          </div>
         </div>
         <div class="text-box pmad-text" id="pmad-alto-parana" role="tabpanel" aria-labelledby="pmad-tab-alto-parana" tabindex="0">
           <div class="text-box-content">
@@ -155,7 +160,7 @@
             </table>
           </div>
           {{/if}}
-          <div>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum</div>
+          <div>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
         </div>
         {{/each}}
 
