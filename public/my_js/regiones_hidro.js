@@ -20,7 +20,7 @@ const regiones = [
     {
         "id": "paraguay",
         "titulo": "Paraguay",
-        "coords": [-25, -57],
+        "coords": [-22, -57],
         "zoom": 6
     },
     {
@@ -55,21 +55,26 @@ function selectRegion(index, focusTablist) {
 
     if (window.pmad_map) {
         window.pmad_map.setView(region.coords, region.zoom)
+        setPmadRegion(region.id)
     }
     document.querySelectorAll(".pmad-text").forEach(element => {
-        element.hidden = true;
+        // element.hidden = true;
+        element.classList.remove("is-visible")
     });
     const textPanel = document.getElementById(`pmad-${region.id}`);
-    if (textPanel) textPanel.hidden = false;
+    // if (textPanel) textPanel.hidden = false;
+    if (textPanel) textPanel.classList.add("is-visible")
 
     if(window.pmad_map) {
         window.pmad_map.invalidateSize()
     }
     document.querySelectorAll(".region-hidro").forEach(element => {
-        element.hidden = true;
+        // element.hidden = true;
+        element.classList.remove(("is-visible"))
     })
     const hydroPanel = document.getElementById(`hidro-${region.id}`);
-    if (hydroPanel) hydroPanel.hidden = false;
+    // if (hydroPanel) hydroPanel.hidden = false;
+    if (hydroPanel) hydroPanel.classList.add("is-visible")
 }
 
 function setupTabs() {

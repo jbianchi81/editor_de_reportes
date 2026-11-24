@@ -326,9 +326,30 @@ table tbody a[data-bs-toggle=tooltip] {
     outline-offset: -2px;
 }
 
+.region-hidro, .pmad-text {
+    grid-area: 1 / 1; /* Places all panels in the exact same grid slot */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.region-hidro.is-visible, .pmad-text.is-visible {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+}
+
+.region-hidro-content, .text-box-content {
+    overflow: hidden;
+}
+
 .pmad-text[hidden],
 .region-hidro[hidden] {
     display: none;
+}
+
+.pmad-text-container, .region-hidro-container {
+    display: grid;
 }
 
 .media-container img,

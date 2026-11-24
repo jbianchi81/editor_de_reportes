@@ -405,6 +405,22 @@
       </div>
       <!-- Inicio Reporte semanal  -->
       <div id="report_container">{{{html_content}}}</div>
+      <!-- MODAL -->
+      <div class="modal fade" id="hidrolinksModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column text-center gap-2">
+              <a href="#hidrograma-0" id="hidrograma-link" class="btn btn-link" onclick="closeModal()">gráfico de previsión</a>
+              <a href="" target="_blank" id="secciones-link" class="btn btn-link" onclick="closeModal()">visualizador
+                (en pestaña nueva)</a>
+            </div>
+          </div>
+        </div>
+      </div>
       <script src="my_js/mapa_semanal.js"></script>
       <script src="my_js/mapaPmad.js"></script>
       <script>
@@ -414,6 +430,7 @@
       <script>
         setupTabs()
       </script>
+      <script src="my_js/hidro_links_modal.js"></script>
       <!-- Fin Reporte  -->
     </main>
     <footer class="main-footer">

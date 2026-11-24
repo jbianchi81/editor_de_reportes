@@ -1,3 +1,33 @@
+const cuencasDefaultStyle = {
+    color: "#000000", 
+    weight: 2,        
+    fillColor: null, 
+    fillOpacity: 0
+}
+
+const cuencasSelectedStyle = {
+    color: "#ff7800", 
+    weight: 4,        
+    fillColor: null, 
+    fillOpacity: 0
+}
+
+function setPmadRegion(region_id) {
+    if(window.cuencas_layer) {
+        let matched_layer = null;
+        window.cuencas_layer.eachLayer(function (layer) {
+            window.cuencas_layer.resetStyle(layer)
+            if (layer.feature.properties.id === region_id) {
+                matched_layer = layer;
+            }
+        });
+        if(matched_layer) {
+            matched_layer.bringToFront();
+            window.pmad_map.fitBounds(matched_layer.getBounds(), { padding: [20, 20] });
+            matched_layer.setStyle(cuencasSelectedStyle);
+        }
+    }
+}   
 
 
 function cargarMapaPmad(container) {
@@ -51,7 +81,7 @@ function cargarMapaPmad(container) {
         layers: "public2:timeseries_areal",
         VIEWPARAMS: VIEWPARAMS,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.9
     }).addTo(window.pmad_map);
 
     // agrega iteraccion query wms
@@ -126,17 +156,13 @@ function cargarMapaPmad(container) {
     fetch('geojson/ccas.geojson')
     .then(response => response.json())
     .then(data => {
-        L.geoJSON(data, {
+        window.cuencas_layer = L.geoJSON(data, {
             style: function (feature) {
             // let nombreCuenca = feature.properties.nombre; 
-                return {
-                    color: "#000000", 
-                    weight: 2,        
-                    fillColor: null, 
-                    fillOpacity: 0
-                };
+                return cuencasDefaultStyle;
             }
         }).addTo(window.pmad_map);
+        setPmadRegion("alto-parana")
     })
     .catch(err => console.error("Error cargando cuencas:", err));
 

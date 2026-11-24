@@ -83,7 +83,7 @@ type HydrologicalThresholds = {
     ma: number;
     altas: number;
 };
-export declare function getHydrologicalReport(apiUrl: string, seriesMapping: Record<string, Record<string, number>>, stateThresholds: Record<string, HydrologicalThresholds>, currentDate?: Date): Promise<Record<string, string>>;
+export declare function getHydrologicalReport(apiUrl: string, seriesMapping: Record<string, Record<string, number>>, stateThresholds: Record<string, HydrologicalThresholds>, currentDate?: Date, apiToken?: string): Promise<Record<string, string>>;
 export declare function getValuesSemanal(): Promise<{
     datos_mapa_semanal: Record<string, string>;
     fecha_emision: string;

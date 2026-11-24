@@ -382,7 +382,8 @@ async function fetchHydrologicalObservation(
     apiUrl: string,
     seriesId: number,
     startDate: string,
-    endDate: string
+    endDate: string,
+    token?: string
 ): Promise<HydrologicalObservation> {
     try {
         const response = await axios.get<HydrologicalObservationResponse>(
@@ -395,7 +396,8 @@ async function fetchHydrologicalObservation(
                     timeend: endDate,
                     includeProno: "false"
                 },
-                timeout: 10000
+                timeout: 10000,
+                headers: (token) ? {"Authorization" : `Bearer ${token}`} : undefined
             }
         )
         const observations = response.data.observaciones
@@ -417,7 +419,8 @@ export async function getHydrologicalReport(
     apiUrl: string,
     seriesMapping: Record<string, Record<string, number>>,
     stateThresholds: Record<string, HydrologicalThresholds>,
-    currentDate: Date = new Date()
+    currentDate: Date = new Date(),
+    apiToken?: string
 ): Promise<Record<string, string>> {
     const endDate = new Date(currentDate)
     endDate.setDate(endDate.getDate() + 1)
@@ -436,7 +439,7 @@ export async function getHydrologicalReport(
 
         if(Object.prototype.hasOwnProperty.call(variables, "caudal")) {
             const seriesId = variables.caudal
-            const observation = await fetchHydrologicalObservation(apiUrl, seriesId, startDateString, endDateString)
+            const observation = await fetchHydrologicalObservation(apiUrl, seriesId, startDateString, endDateString, apiToken)
             const state = getHydrologicalState(observation.value, seriesId, stateThresholds)
             text = `Caudal: ${formatReportNumber(observation.value)} m3/s\nEstado: ${state}.`
             reportDate ??= observation.date
@@ -444,8 +447,8 @@ export async function getHydrologicalReport(
             const [inputName, outputName] = variableNames
             const inputSeriesId = variables[inputName]
             const outputSeriesId = variables[outputName]
-            const inputObservation = await fetchHydrologicalObservation(apiUrl, inputSeriesId, startDateString, endDateString)
-            const outputObservation = await fetchHydrologicalObservation(apiUrl, outputSeriesId, startDateString, endDateString)
+            const inputObservation = await fetchHydrologicalObservation(apiUrl, inputSeriesId, startDateString, endDateString, apiToken)
+            const outputObservation = await fetchHydrologicalObservation(apiUrl, outputSeriesId, startDateString, endDateString, apiToken)
             const inputState = getHydrologicalState(inputObservation.value, inputSeriesId, stateThresholds)
             const outputState = getHydrologicalState(outputObservation.value, outputSeriesId, stateThresholds)
             const combinedState = combineHydrologicalStates(inputState, outputState)
@@ -465,7 +468,9 @@ export async function getValuesSemanal() {
     const datos_mapa_semanal = await getHydrologicalReport(
         config.semanal.url,
         config.semanal.mapeo_series,
-        config.semanal.limites_estados
+        config.semanal.limites_estados,
+        undefined,
+        config.semanal.token
     )
 
     const credentials = await loadCredentials()
