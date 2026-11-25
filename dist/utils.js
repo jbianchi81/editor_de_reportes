@@ -308,12 +308,13 @@ export async function getHydrologicalReport(apiUrl, seriesMapping, stateThreshol
 }
 export async function getValuesSemanal() {
     const config = await loadConfig();
-    const datos_mapa_semanal = await getHydrologicalReport(config.semanal.url, config.semanal.mapeo_series, config.semanal.limites_estados, undefined, config.semanal.token);
+    const config_semanal = await loadConfig(path.join(__dirname, '../config/semanal/default.json'));
+    const datos_mapa_semanal = await getHydrologicalReport(config.api_url, config_semanal.mapeo_series, config_semanal.limites_estados, undefined, config.api_token);
     const credentials = await loadCredentials();
     const a5_token = (credentials && credentials.a5_token) ? credentials.a5_token : "my_token";
     const current_date = new Date();
     const hidro = {};
-    for (const region of config.semanal.hidro) {
+    for (const region of config_semanal.hidro) {
         const rows = [];
         var i = 0;
         var condicion = "S/D";
@@ -321,10 +322,10 @@ export async function getValuesSemanal() {
             // tabla caudales
             for (const serie of region.series) {
                 console.debug(`retrieving series ${serie}...`);
-                const row = await fetchValuesSemanal(serie, -7, 0, config.semanal.url, a5_token, 0);
+                const row = await fetchValuesSemanal(serie, -7, 8, config.api_url, a5_token, 0);
                 i = i + 1;
                 if (i == region.series.length && row.obs) {
-                    condicion = getHydrologicalState(row.obs?.mean, serie, config.semanal.limites_estados);
+                    condicion = getHydrologicalState(row.obs?.mean, serie, config_semanal.limites_estados);
                 }
                 rows.push(row);
             }
@@ -335,11 +336,8 @@ export async function getValuesSemanal() {
             // tabla alturas
             for (const serie of region.series_altura) {
                 console.debug(`retrieving series ${serie}...`);
-                const row = await fetchValuesSemanal(serie, -7, 0, config.semanal.url, a5_token, 2);
+                const row = await fetchValuesSemanal(serie, -7, 8, config.api_url, a5_token, 2);
                 i = i + 1;
-                // if(i == region.series_altura.length && row.obs) {
-                //     condicion = getHydrologicalState(row.obs?.mean,serie, config.semanal.limites_estados)
-                // }
                 rows_altura.push(row);
             }
         }

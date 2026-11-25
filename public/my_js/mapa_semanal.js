@@ -25,7 +25,7 @@ function getColorCuenca(nombre) {
 }
 
 
-function cargarMapaCaudales() {
+function cargarMapaCaudales(cargar_cuencas, fecha_box) {
 
     // remove placeholder
     const placeholder = document.querySelector("#caudales-placeholder")
@@ -37,7 +37,7 @@ function cargarMapaCaudales() {
     var map = L.map(
         'mapa',{
         scrollWheelZoom: false
-    }).setView([-27.9, -55.9], 7);
+    }).setView([-27.9, -55.9], 6);
 
     const mapContainer = map.getContainer();
 
@@ -61,27 +61,30 @@ function cargarMapaCaudales() {
         maxZoom: 18
     }).addTo(map);
 
-
+    // add graticule
+    L.graticule({ interval: 2.5, style: {weight: 1, color: "grey"} }).addTo(map);
+    
 
     // 3. Cargar el GeoJSON de las Cuencas
-    fetch('geojson/ccas.geojson')
-        .then(response => response.json())
-        .then(data => {
-            L.geoJSON(data, {
-                style: function (feature) {
-                    let nombreCuenca = feature.properties.nombre;
+    if(cargar_cuencas) {
+        fetch('geojson/ccas.geojson')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: function (feature) {
+                        let nombreCuenca = feature.properties.nombre;
 
-                    return {
-                        color: "#555555",
-                        weight: 1,
-                        fillColor: getColorCuenca(nombreCuenca),
-                        fillOpacity: 0.5
-                    };
-                }
-            }).addTo(map);
-        })
-        .catch(err => console.error("Error cargando cuencas:", err));
-
+                        return {
+                            color: "#555555",
+                            weight: 1,
+                            fillColor: getColorCuenca(nombreCuenca),
+                            fillOpacity: 0.5
+                        };
+                    }
+                }).addTo(map);
+            })
+            .catch(err => console.error("Error cargando cuencas:", err));
+    }
     // 4. Cargar el GeoJSON de los Ríos Principales
     fetch('geojson/rios.geojson')
         .then(response => response.json())
@@ -114,9 +117,31 @@ function cargarMapaCaudales() {
         "corrientes": {direction: "top",offset: [-30, 0]},    // Corrientes
         "yacyreta": {direction: "bottom",offset: [0, 30]},      // Yacyretá
         "salto_grande": {direction: "right",offset: [5, -20]},  // Represa Salto Grande
-        "itaipu": {direction: "top",offset: [-30, 0]},        // Represa Itaipú
+        "itaipu": {direction: "left",offset: [-30, 20]},        // Represa Itaipú
         "iguazu": {direction: "bottom",offset: [20, 30]},        // Andresito
         "alto_uruguay": {direction: "bottom",offset: [0, 30]}
+    }
+
+    function fitMarkersMapaCaudal() {
+        
+        map.invalidateSize();
+
+        const markers = [];
+
+        map.eachLayer(layer => {
+            if (layer instanceof L.Marker) {
+                markers.push(layer);
+            }
+        });
+
+        if (markers.length) {
+            const group = L.featureGroup(markers);
+
+            map.fitBounds(group.getBounds(), {
+                padding: [20, 20],
+                animate: false
+            });
+        }
     }
 
     // 6. Cargar los datos dinámicos desde el JSON
@@ -124,7 +149,7 @@ function cargarMapaCaudales() {
         .then(response => response.json())
         .then(datosSemana => {
 
-            if (datosSemana.fecha) {
+            if (fecha_box && datosSemana.fecha) {
                 let fechaDiv = document.createElement('div');
                 fechaDiv.className = 'fecha-box';
                 fechaDiv.innerHTML = datosSemana.fecha;
@@ -153,8 +178,15 @@ function cargarMapaCaudales() {
                         });
                 }
             }
+            fitMarkersMapaCaudal()
         })
         .catch(err => console.error("Error cargando el JSON de datos:", err));
+
+    // window.addEventListener('beforeprint', () => {
+        // document.getElementById("mapa").style.height = "630px";
+        // fitMarkersMapaCaudal();
+    // });
+    return map
 }
 
-cargarMapaCaudales()
+// const mapa_caudales = cargarMapaCaudales()

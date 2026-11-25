@@ -196,6 +196,13 @@ table tbody a[data-bs-toggle=tooltip] {
     width: 50px;
 }
 
+/* div.as-link {
+} */
+
+div.region-hidro.is-visible div.as-link {
+    cursor: pointer;                         
+}
+
 @media (pointer: coarse) and (hover: none) {
     table tbody a[data-bs-toggle=tooltip] {
         color: #0767A7;
@@ -234,6 +241,20 @@ table tbody a[data-bs-toggle=tooltip] {
     width: 100%;
     /* height: 450px; */
     margin-bottom: 16px;
+}
+
+.mapa-row-caudales {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+#mapa { 
+    min-width: 487px;
+    max-height: 406px;
+    width: 487px;
+    height: 406px;
+    float: left;
+    margin: 0 15px 10px 0;
 }
 
 .media-container {
@@ -337,6 +358,7 @@ table tbody a[data-bs-toggle=tooltip] {
     grid-template-rows: 1fr;
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
 }
 
 .region-hidro-content, .text-box-content {

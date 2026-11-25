@@ -7,7 +7,6 @@ function closeModal() {
 const hidrolinksModal = document.getElementById('hidrolinksModal');
 
 hidrolinksModal.addEventListener('show.bs.modal', function (event) {
-  alert("show modal")
   const trigger = event.relatedTarget;
   const title = trigger.getAttribute('data-title');
   const id = trigger.getAttribute('data-id');
@@ -17,9 +16,9 @@ hidrolinksModal.addEventListener('show.bs.modal', function (event) {
   hidrolinksModal.querySelector('#hidrograma-link').setAttribute("href", `#hidrograma-${id}`)
   const hidrograma = document.getElementById(`hidrograma-${id}`)
   if (hidrograma) {
-    hidrolinksModal.querySelector('#hidrograma-link').classList.remove("hidden")
+    hidrolinksModal.querySelector('#hidrograma-link').classList.remove("d-none")
   } else {
-    hidrolinksModal.querySelector('#hidrograma-link').classList.add("hidden")
+    hidrolinksModal.querySelector('#hidrograma-link').classList.add("d-none")
   }
   hidrolinksModal.querySelector('#secciones-link').setAttribute("href", seccionesurl);
 });

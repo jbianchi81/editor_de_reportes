@@ -1,0 +1,166 @@
+{
+    "mapeo_series": {
+        "paraguay": {
+            "caudal": 906
+        },
+        "corrientes": {
+            "caudal": 868
+        },
+        "yacyreta": {
+            "afluente": 936,
+            "descarga": 937
+        },
+        "salto_grande": {
+            "entra": 926,
+            "sale": 927
+        },
+        "itaipu": {
+            "entran": 940,
+            "salen": 941
+        },
+        "iguazu": {
+            "caudal": 857
+        },
+        "alto_uruguay": {
+            "caudal": 910
+        }
+    },
+    "limites_estados": {
+        "940": {
+            "bajas": 6700,
+            "mb": 8700,
+            "medias": 10400,
+            "ma": 12600,
+            "altas": 17400
+        },
+        "941": {
+            "bajas": 6700,
+            "mb": 8700,
+            "medias": 10400,
+            "ma": 12600,
+            "altas": 17400
+        },
+        "857": {
+            "bajas": 480,
+            "mb": 1000,
+            "medias": 1400,
+            "ma": 1900,
+            "altas": 3600
+        },
+        "936": {
+            "bajas": 9100,
+            "mb": 11500,
+            "medias": 13100,
+            "ma": 15700,
+            "altas": 24000
+        },
+        "937": {
+            "bajas": 9600,
+            "mb": 11600,
+            "medias": 13100,
+            "ma": 15800,
+            "altas": 23800
+        },
+        "868": {
+            "bajas": 12250,
+            "mb": 15300,
+            "medias": 17800,
+            "ma": 21500,
+            "altas": 29800
+        },
+        "910": {
+            "bajas": 400,
+            "mb": 860,
+            "medias": 1580,
+            "ma": 2680,
+            "altas": 6500
+        },
+        "926": {
+            "bajas": 746,
+            "mb": 2120,
+            "medias": 4460,
+            "ma": 7365,
+            "altas": 14110
+        },
+        "927": {
+            "bajas": 746,
+            "mb": 2120,
+            "medias": 4460,
+            "ma": 7365,
+            "altas": 14110
+        },
+        "906": {
+            "bajas": 1600,
+            "mb": 2370,
+            "medias": 3045,
+            "ma": 3920,
+            "altas": 6170
+        }
+    },
+    "hidro": [
+        {
+            "id": "alto-parana",
+            "nombre": "Río Paraná en Brasil",
+            "series": [
+                940,
+                941
+            ]
+        },
+        {
+            "id": "iguazu",
+            "nombre": "Río Iguazú",
+            "series": [
+                857
+            ]
+        },
+        {
+            "id": "parana-medio",
+            "nombre": "Parana Medio",
+            "series": [
+                942,
+                936,
+                937
+            ],
+            "series_altura": [
+                9
+            ]
+        },
+        {
+            "id": "paraguay",
+            "nombre": "Paraguay",
+            "series_altura": [
+                153,
+                155,
+                55,
+                57
+            ]
+        },
+        {
+            "id": "parana-inferior",
+            "nombre": "Paraná inferior",
+            "series_altura": [
+                19,
+                23,
+                26,
+                29,
+                30,
+                34,
+                38
+            ]
+        },
+        {
+            "id": "uruguay",
+            "nombre": "Uruguay",
+            "series": [
+                914,
+                917,
+                921
+            ],
+            "series_altura": [
+                79,
+                81,
+                84
+            ]
+        }
+    ]
+}

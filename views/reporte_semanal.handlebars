@@ -34,6 +34,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/L.Graticule.js"></script>
   <style>
     .print-header {
       display: none;
@@ -115,10 +116,8 @@
       display: none;
     }
 
-    #mapa { 
-      height: 90vh; 
-      max-height: 700px;
-      max-width: 800px;
+    #caudales {
+      overflow: hidden;
     }
 
     @media (min-width: 1200px) {
@@ -235,9 +234,44 @@
         display: none !important;
       }
 
-      #mapa {
-        width: 642px;
-        height: 642px;
+      #mapa .leaflet-control-zoom {
+        display: none;
+      }
+
+      #mapa_pmad .leaflet-control-zoom {
+        display: none;
+      }
+
+      .region-hidro, .pmad-text {
+        grid-area: auto;
+        opacity: 1;
+      }
+
+      .pmad-tabs {
+        display: none;
+      }
+
+      .mapa-row-semanal {
+        flex-direction: column;
+      }
+
+      .mapa-row-semanal .text-box {
+        width: 100%;
+      }
+
+      #anomalia, #qpf, #regiones {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .pmad-text-container .text-box {
+        width: 100%;
+        padding: 5px;
+        justify-content: left;
+      }
+
+      #mapa_pmad {
+        height: 83%;
       }
 
       /* --G-- */
@@ -284,16 +318,20 @@
         display: none !important;
       }
 
+      #mapa { 
+        height: 550px; 
+      }
+
     }
 
         /* Estilos de los cuadros de texto */
     .leaflet-popup-content-wrapper {
         background: rgba(255, 255, 255, 0.95);
-        border: 2px solid #333;
-        border-radius: 4px;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        border: 1px solid #333;
+        border-radius: 2px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
-    .info-estacion { font-size: 14px; line-height: 1.4; color: #333; }
+    .info-estacion { font-size: 11px; line-height: 1.0; color: #333; }
     .info-estacion b { color: #004488; font-size: 15px; }
     
     /* Estilo de la fecha flotante */
@@ -422,6 +460,9 @@
         </div>
       </div>
       <script src="my_js/mapa_semanal.js"></script>
+      <script>
+        const mapa_caudales = cargarMapaCaudales()
+      </script>
       <script src="my_js/mapaPmad.js"></script>
       <script>
         cargarMapaPmad("mapa_pmad");

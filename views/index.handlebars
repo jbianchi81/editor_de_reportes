@@ -54,6 +54,7 @@
   <link rel="stylesheet" href="styles/richtext.min.css" type="text/css">
   <script class="jsbin" src="js/jquery.richtext.min.js" type="application/javascript"></script>
   <link rel="stylesheet" href="my_styles/reporte.css" type="text/css">
+  <script src="my_js/mapa_semanal.js"></script>
   <script src="my_js/actualizar_semanal.js"></script>
   <script src="my_js/regiones_hidro.js"></script>
   <style>
@@ -247,7 +248,21 @@
     }
 
     function saveAsHtml() {
-      const content = document.getElementById("editor").value;
+      var content = document.getElementById("editor").value;
+
+      //{{#if isSemanal}}
+      //  const parser = new DOMParser();
+      //  const doc = parser.parseFromString(content, 'text/html');
+
+      //  const element = doc.getElementById('mapa');
+
+      // if (element) {
+      //      element.innerHTML = '';
+      //  }
+
+      //  content = doc.body.innerHTML;
+      //{{/if}}
+
       const blob = new Blob([content], { type: "text/html" });
       const url = URL.createObjectURL(blob);
 
@@ -264,6 +279,9 @@
     function startFromTemplate() {
       const url = {{#if isSemanal}}"template_semanal"{{else}}"template"{{/if}};
       loadContent(url)
+      // {{#if isSemanal}}
+      //  cargarMapaCaudales()
+      // {{/if}}
     }
 
     function loadDraft() {

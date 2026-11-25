@@ -94,6 +94,7 @@ async function actualizarReporteSemanal() {
             }
         }
         setText("proxima-fecha", values.proxima_fecha);
+
     } catch (error) {
         document.body.style.cursor = "default"
         alert("No se pudo actualizar el reporte semanal:", error);

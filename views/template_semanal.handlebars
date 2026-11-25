@@ -3,11 +3,18 @@
     <h2>Reporte semanal de la Cuenca del Plata</h2>
     <div>Fecha de actualización: <b id="fecha-emision">{{fecha_emision}}</b></div>
     <div class="pdf_download"><a id="pdf-link" href="{{pdf_url}}" target="_blank">Versión PDF</a></div>
-    <h3>Caudales observados en las secciones más importantes</h3>
-    <div id="mapa">
-      <img id="caudales-placeholder" src="img/caudales_placeholder.png">
+    <div id="caudales">
+      <h3>Caudales observados en las secciones más importantes</h3>
+      <div class="mapa-row-caudales">
+        <div id="mapa">
+          <img id="caudales-placeholder" src="img/caudales_placeholder.png" style="min-width: 500px; max-height: 500px">
+        </div>
+        <div class="text-box-caudales">
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+        </div>
+      </div>
     </div>
-    <div id="anomalia">
+    <div id="anomalia" style="clear: both;">
       <h3>Anomalía de precipitación - última semana</h3>
       <div class="mapa-row-semanal">
         <div class="media-container">
@@ -93,7 +100,7 @@
         {{#each hidro}}
         <div class="region-hidro" id="hidro-{{@key}}">
           <div class="region-hidro-content">
-            <h3 id="hidro-{{@key}}-nombre">{{this.nombre}}</h3>
+            <h4 id="hidro-{{@key}}-nombre">{{this.nombre}}</h4>
             <b id="hidro-{{@key}}-condicion">{{this.condicion}}</b>
             {{#if this.tabla}}
             <div class="table-wrapper">
@@ -114,9 +121,14 @@
                   data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
                   data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
                   <td>
-                    <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
-                      data-title="{{this.estacion_nombre}}" data-id="{{this.series_id}}" data-seccionesurl="https://alerta.ina.gob.ar/a5/secciones?seriesId={{this.series_id}}">
-                      {{this.estacion_nombre}}</div>
+                    <div class="as-link" 
+                         data-bs-toggle="modal" 
+                         data-bs-target="#hidrolinksModal" 
+                         data-title="{{this.estacion_nombre}}" 
+                         data-id="{{this.series_id}}" 
+                         data-seccionesurl="https://alerta.ina.gob.ar/a5/secciones?seriesId={{this.series_id}}">
+                      {{this.estacion_nombre}}
+                    </div>
                   </td>
                   <td>{{this.obs.min}}</td>
                   <td>{{this.obs.max}}</td>
@@ -148,8 +160,13 @@
                   data-status_color="{{this.status_color}}" data-status_text="{{this.status_text}}"
                   data-percentil="{{this.percentil}}" data-tendencia="{{this.tendencia_text}}" data-aviso="{{this.aviso_text}}">
                   <td>
-                    <div class="as-link" data-bs-toggle="modal" data-bs-target="#hidrolinksModal" style="cursor:pointer;"
-                      data-title="{{this.estacion_nombre}}" data-id="{{this.id}}" data-seccionesurl="{{this.secciones_url}}">
+                    <div class="as-link" 
+                         data-bs-toggle="modal" 
+                         data-bs-target="#hidrolinksModal" 
+                         style="cursor:pointer;"
+                         data-title="{{this.estacion_nombre}}" 
+                         data-id="{{this.series_id}}" 
+                         data-seccionesurl="https://alerta.ina.gob.ar/a5/secciones?seriesId={{this.series_id}}">
                       {{this.estacion_nombre}}</div>
                   </td>
                   <td>{{this.obs.min}}</td>
