@@ -54,7 +54,11 @@
   <link rel="stylesheet" href="styles/richtext.min.css" type="text/css">
   <script class="jsbin" src="js/jquery.richtext.min.js" type="application/javascript"></script>
   <link rel="stylesheet" href="my_styles/reporte.css" type="text/css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/L.Graticule.js"></script>
   <script src="my_js/mapa_semanal.js"></script>
+  <script src="my_js/mapaPmad.js"></script>
   <script src="my_js/actualizar_semanal.js"></script>
   <script src="my_js/regiones_hidro.js"></script>
   <style>
@@ -205,6 +209,10 @@
         await new Promise(requestAnimationFrame);
         await new Promise(requestAnimationFrame);
         setupTabs()
+        {{#if isSemanal}}
+          cargarMapaCaudales()
+          cargarMapaPmad(document.getElementById("mapa_pmad"))
+        {{/if}}
       } catch (error) {
         alert('Falló la carga de contenido: ' + error.message)
         console.error('Falló la carga de contenido', error.message);
@@ -226,10 +234,38 @@
       publish()
     }
 
+    function removeLeafletMaps(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      const element_mapa_caudales = doc.getElementById('mapa');
+
+      if (element_mapa_caudales) {
+          element_mapa_caudales.innerHTML = '';
+          element_mapa_caudales.removeAttribute('class');
+          element_mapa_caudales.removeAttribute('style');
+      }
+
+      const element_mapa_pmad = doc.getElementById('mapa_pmad');
+
+      if (element_mapa_pmad) {
+          element_mapa_pmad.innerHTML = '<img src="img/pmad_placeholder.png" id="pmad-placeholder" style="cursor: default;">';
+          element_mapa_pmad.removeAttribute('class')
+          element_mapa_pmad.removeAttribute('style')
+      }
+
+      return doc.body.innerHTML;
+    }
+
       // Save content
     async function publish() {
-      const html = $("textarea#editor").val();
+      var html = $("textarea#editor").val();
       const url = {{#if isSemanal}}"publish?reporte=semanal"{{else}}"publish?reporte=diario"{{/if}}
+
+      {{#if isSemanal}}
+        html = removeLeafletMaps(html)
+      {{/if}}
+
       return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -238,8 +274,13 @@
     }
 
     async function saveDraft() {
-      const html = $("textarea#editor").val();
+      var html = $("textarea#editor").val();
       const url = {{#if isSemanal}}"draft?reporte=semanal"{{else}}"draft?reporte=diario"{{/if}}
+
+      {{#if isSemanal}}
+        html = removeLeafletMaps(html)
+      {{/if}}
+
       return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -248,22 +289,13 @@
     }
 
     function saveAsHtml() {
-      var content = document.getElementById("editor").value;
+      var html = document.getElementById("editor").value;
 
-      //{{#if isSemanal}}
-      //  const parser = new DOMParser();
-      //  const doc = parser.parseFromString(content, 'text/html');
+      {{#if isSemanal}}
+        html = removeLeafletMaps(html)
+      {{/if}}
 
-      //  const element = doc.getElementById('mapa');
-
-      // if (element) {
-      //      element.innerHTML = '';
-      //  }
-
-      //  content = doc.body.innerHTML;
-      //{{/if}}
-
-      const blob = new Blob([content], { type: "text/html" });
+      const blob = new Blob([html], { type: "text/html" });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -279,9 +311,10 @@
     function startFromTemplate() {
       const url = {{#if isSemanal}}"template_semanal"{{else}}"template"{{/if}};
       loadContent(url)
-      // {{#if isSemanal}}
-      //  cargarMapaCaudales()
-      // {{/if}}
+      {{#if isSemanal}}
+        cargarMapaCaudales()
+        cargarMapaPmad(document.getElementById("mapa_pmad"))
+      {{/if}}
     }
 
     function loadDraft() {

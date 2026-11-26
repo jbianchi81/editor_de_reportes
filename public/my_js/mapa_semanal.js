@@ -1,3 +1,26 @@
+const maps = new WeakMap();
+
+// 5. Coordenadas
+const coordenadas = {
+    "paraguay": [-25.3249, -57.6719],      // Asuncion
+    "corrientes": [-27.4667, -58.8333],    // Corrientes
+    "yacyreta": [-27.4833, -56.7333],      // Yacyretá
+    "salto_grande": [-31.2667, -57.9333],  // Represa Salto Grande
+    "itaipu": [-25.4000, -54.5833],        // Represa Itaipú
+    "iguazu": [-25.6069, -53.7977],        // Andresito
+    "alto_uruguay": [-27.2833, -54.2000]   // El Soberbio
+};
+
+const label_options = {
+    "paraguay": {direction: "left",offset: [-30, 20]},      // Asuncion
+    "corrientes": {direction: "top",offset: [-30, 0]},    // Corrientes
+    "yacyreta": {direction: "bottom",offset: [0, 30]},      // Yacyretá
+    "salto_grande": {direction: "right",offset: [5, -20]},  // Represa Salto Grande
+    "itaipu": {direction: "left",offset: [-30, 20]},        // Represa Itaipú
+    "iguazu": {direction: "bottom",offset: [20, 30]},        // Andresito
+    "alto_uruguay": {direction: "bottom",offset: [0, 30]}
+}
+
 // --- FUNCIÓN DE COLORES PARA LAS CUENCAS ---
 function getColorCuenca(nombre) {
     switch (nombre) {
@@ -33,13 +56,25 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
         placeholder.remove()
     }
 
+    const mapElement = document.getElementById('mapa');
+
+    if (!mapElement) {
+        throw new Error("No se encontró el elemento mapa")
+    } 
+    const existingMap = maps.get(mapElement);
+    if(existingMap) {
+        existingMap.remove();
+    }
+
     // instantiate leaflet map
-    var map = L.map(
-        'mapa',{
+    const mapa_caudales = L.map(
+        mapElement, {
         scrollWheelZoom: false
     }).setView([-27.9, -55.9], 6);
 
-    const mapContainer = map.getContainer();
+    maps.set(mapElement, mapa_caudales)
+
+    const mapContainer = mapa_caudales.getContainer();
 
     mapContainer.addEventListener('wheel', (event) => {
         // Check for Ctrl key (Windows/Linux) or Meta key (Mac)
@@ -47,9 +82,9 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
             event.preventDefault(); // Prevent browser/page zoom
             
             if (event.deltaY < 0) {
-            map.zoomIn();
+            mapa_caudales.zoomIn();
             } else if (event.deltaY > 0) {
-            map.zoomOut();
+            mapa_caudales.zoomOut();
             }
         }
     }, { passive: false });
@@ -59,10 +94,10 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
     // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© IGN Argentina',
         maxZoom: 18
-    }).addTo(map);
+    }).addTo(mapa_caudales);
 
     // add graticule
-    L.graticule({ interval: 2.5, style: {weight: 1, color: "grey"} }).addTo(map);
+    L.graticule({ interval: 2.5, style: {weight: 1, color: "grey"} }).addTo(mapa_caudales);
     
 
     // 3. Cargar el GeoJSON de las Cuencas
@@ -81,7 +116,7 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
                             fillOpacity: 0.5
                         };
                     }
-                }).addTo(map);
+                }).addTo(mapa_caudales);
             })
             .catch(err => console.error("Error cargando cuencas:", err));
     }
@@ -97,57 +132,52 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
                         opacity: 0.8
                     };
                 }
-            }).addTo(map);
+            }).addTo(mapa_caudales);
         })
         .catch(err => console.error("Error cargando ríos:", err));
 
-    // 5. Coordenadas
-    const coordenadas = {
-        "paraguay": [-25.3249, -57.6719],      // Asuncion
-        "corrientes": [-27.4667, -58.8333],    // Corrientes
-        "yacyreta": [-27.4833, -56.7333],      // Yacyretá
-        "salto_grande": [-31.2667, -57.9333],  // Represa Salto Grande
-        "itaipu": [-25.4000, -54.5833],        // Represa Itaipú
-        "iguazu": [-25.6069, -53.7977],        // Andresito
-        "alto_uruguay": [-27.2833, -54.2000]   // El Soberbio
-    };
-
-    const label_options = {
-        "paraguay": {direction: "left",offset: [-30, 20]},      // Asuncion
-        "corrientes": {direction: "top",offset: [-30, 0]},    // Corrientes
-        "yacyreta": {direction: "bottom",offset: [0, 30]},      // Yacyretá
-        "salto_grande": {direction: "right",offset: [5, -20]},  // Represa Salto Grande
-        "itaipu": {direction: "left",offset: [-30, 20]},        // Represa Itaipú
-        "iguazu": {direction: "bottom",offset: [20, 30]},        // Andresito
-        "alto_uruguay": {direction: "bottom",offset: [0, 30]}
-    }
-
-    function fitMarkersMapaCaudal() {
-        
-        map.invalidateSize();
-
-        const markers = [];
-
-        map.eachLayer(layer => {
-            if (layer instanceof L.Marker) {
-                markers.push(layer);
-            }
-        });
-
-        if (markers.length) {
-            const group = L.featureGroup(markers);
-
-            map.fitBounds(group.getBounds(), {
-                padding: [20, 20],
-                animate: false
-            });
-        }
-    }
-
     // 6. Cargar los datos dinámicos desde el JSON
+    actualizarDatosMapaCaudales(mapa_caudales, fecha_box)
+    
+    // window.addEventListener('beforeprint', () => {
+        // document.getElementById("mapa").style.height = "630px";
+        // fitMarkersMapaCaudal();
+    // });
+    return mapa_caudales
+}
+
+function fitMarkersMapaCaudal(mapa_caudales, feature_group_datos) {
+    
+    mapa_caudales.invalidateSize();
+
+    // const markers = [];
+
+    //mapa_caudales.eachLayer(layer => {
+    //    if (layer instanceof L.Marker) {
+    //        markers.push(layer);
+    //    }
+    //});
+
+    // if (markers.length) {
+        //const group = L.featureGroup(markers);
+    if(window.feature_group_datos) {
+
+        mapa_caudales.fitBounds(feature_group_datos.getBounds(), {
+        // mapa_caudales.fitBounds(group.getBounds(), {
+            padding: [20, 20],
+            animate: false
+        });
+    }
+}
+
+function actualizarDatosMapaCaudales(mapa_caudales, fecha_box) {
     fetch('json/datos_mapa_semanal.json')
         .then(response => response.json())
         .then(datosSemana => {
+
+            const feature_group_datos = L.featureGroup().addTo(mapa_caudales);
+            
+            feature_group_datos.clearLayers();
 
             if (fecha_box && datosSemana.fecha) {
                 let fechaDiv = document.createElement('div');
@@ -168,7 +198,8 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
 
                     let offset = (label_options[clave]) ? L.point(label_options[clave].offset[0], label_options[clave].offset[1]) : L.point(10, -20)
 
-                    L.marker(coord).addTo(map).bindTooltip(
+                    const layer = L.marker(coord)
+                    layer.bindTooltip(
                         contenidoPopup,
                         {
                             permanent: true,
@@ -176,17 +207,13 @@ function cargarMapaCaudales(cargar_cuencas, fecha_box) {
                             offset: offset, // [x, y] pixel shift
                             className: 'info-estacion'
                         });
+                    feature_group_datos.addLayer(layer)
                 }
             }
-            fitMarkersMapaCaudal()
+            fitMarkersMapaCaudal(mapa_caudales, feature_group_datos)
         })
         .catch(err => console.error("Error cargando el JSON de datos:", err));
 
-    // window.addEventListener('beforeprint', () => {
-        // document.getElementById("mapa").style.height = "630px";
-        // fitMarkersMapaCaudal();
-    // });
-    return map
 }
 
 // const mapa_caudales = cargarMapaCaudales()

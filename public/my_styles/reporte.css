@@ -354,6 +354,11 @@ div.region-hidro.is-visible div.as-link {
   transition: opacity 0.25s ease;
 }
 
+.region-hidro {
+    min-width: 0;
+    max-width: 100%;
+}
+
 .region-hidro.is-visible, .pmad-text.is-visible {
     grid-template-rows: 1fr;
     opacity: 1;
@@ -370,8 +375,16 @@ div.region-hidro.is-visible div.as-link {
     display: none;
 }
 
-.pmad-text-container, .region-hidro-container {
+.pmad-text-container {
     display: grid;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.region-hidro-container {
+    display: grid;
+    min-width: 0;
+    width: 100%;
 }
 
 .media-container img,

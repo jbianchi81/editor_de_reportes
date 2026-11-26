@@ -25,6 +25,8 @@ function setPmadRegion(region_id) {
             matched_layer.bringToFront();
             window.pmad_map.fitBounds(matched_layer.getBounds(), { padding: [20, 20] });
             matched_layer.setStyle(cuencasSelectedStyle);
+        } else {
+            window.pmad_map.fitBounds(window.cuencas_layer.getBounds())
         }
     }
 }   
@@ -36,6 +38,14 @@ function cargarMapaPmad(container) {
     const placeholder = document.querySelector("#pmad-placeholder");
     if(placeholder) {
         placeholder.remove();
+    }
+
+    if (!container) {
+        throw new Error("No se encontró el elemento contenedor de mapa pmad")
+    } 
+    if(container._leaflet_id) {
+        console.warn("Ya se inició el mapa")
+        return
     }
 
     // instantiate leaflet map
@@ -81,7 +91,10 @@ function cargarMapaPmad(container) {
         layers: "public2:timeseries_areal",
         VIEWPARAMS: VIEWPARAMS,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.9,
+        styles: "pmad_int_m",
+        version: "1.3.0",
+        FORMAT: "image/png"
     }).addTo(window.pmad_map);
 
     // agrega iteraccion query wms
@@ -95,8 +108,6 @@ function cargarMapaPmad(container) {
             layers: 'public2:timeseries_areal',
             query_layers: 'public2:timeseries_areal',
             VIEWPARAMS: VIEWPARAMS,
-            styles: '',
-            format: 'image/png',
             info_format: 'application/json',
             feature_count: 5,
             srs: 'EPSG:4326',
@@ -162,7 +173,7 @@ function cargarMapaPmad(container) {
                 return cuencasDefaultStyle;
             }
         }).addTo(window.pmad_map);
-        setPmadRegion("alto-parana")
+        setPmadRegion() // ("alto-parana")
     })
     .catch(err => console.error("Error cargando cuencas:", err));
 
@@ -192,7 +203,7 @@ function cargarMapaPmad(container) {
 
         const legend_seach_params = {
             SERVICE: "WMS",
-            VERSION: "1.1.1",
+            VERSION: "1.3.0",
             REQUEST: "GetLegendGraphic",
             FORMAT: "image/png",
             LAYER: "public2:timeseries_areal",

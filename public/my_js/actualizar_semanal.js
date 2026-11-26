@@ -95,6 +95,9 @@ async function actualizarReporteSemanal() {
         }
         setText("proxima-fecha", values.proxima_fecha);
 
+        // actualiza mapa
+        cargarMapaCaudales()
+
     } catch (error) {
         document.body.style.cursor = "default"
         alert("No se pudo actualizar el reporte semanal:", error);
