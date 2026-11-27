@@ -135,7 +135,7 @@ html {
     padding: 1em;
     background: #f8f8f8;
     border-left: 1px solid #ccc;
-    display: flex;
+    /* display: flex; */
     align-items: center; /* vertical centering */
     justify-content: center; /* optional: horizontal centering */
     overflow-y: auto;
