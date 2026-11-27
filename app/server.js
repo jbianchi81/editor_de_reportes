@@ -298,6 +298,7 @@ app.get('/api/template_semanal', isWriter, async (req, res) => {
   try {
     // const values = await getCachedValuesSemanal()
     const values = await getValuesSemanal()
+    writeFileSync("public/json/datos_mapa_semanal.json", JSON.stringify(values.datos_mapa_semanal))
     res.json(values)
   } catch(e) {
     console.error(e)

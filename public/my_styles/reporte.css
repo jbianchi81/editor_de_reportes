@@ -34,6 +34,10 @@
     margin-right: auto;
 }
 
+.richText .richText-editor table.tabla-hidro-semanal, #report_container table.tabla-hidro-semanal {
+    width: auto;
+}
+
 .richText .richText-editor table.tabla-hidro td, .richText .richText-editor table.tabla-hidro th, #report_container table.tabla-hidro td, #report_container table.tabla-hidro th {
     padding: 5px;
     border: #EFEFEF solid 2px;
@@ -201,6 +205,19 @@ table tbody a[data-bs-toggle=tooltip] {
 
 div.region-hidro.is-visible div.as-link {
     cursor: pointer;                         
+}
+
+.leaflet-tooltip.info-estacion { 
+    font-size: 11px; 
+    line-height: 1.0; 
+    color: #333; 
+    min-width: 134px;
+    white-space: break-spaces;
+}
+
+.leaflet-tooltip.info-estacion b { 
+    color: #004488; 
+    font-size: 15px; 
 }
 
 @media (pointer: coarse) and (hover: none) {
