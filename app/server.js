@@ -286,7 +286,7 @@ app.post('/draft', isWriter, (req, res) => {
 app.get('/template_semanal', isWriter, async (req, res) => {
   try {
     const values = await getValuesSemanal()
-    writeFileSync("public/json/datos_mapa_semanal.json", JSON.stringify(values.datos_mapa_semanal))
+    writeFileSync(path.join(__dirname,"../public/json/datos_mapa_semanal.json"), JSON.stringify(values.datos_mapa_semanal))
     res.render('template_semanal', values)
   } catch(e) {
     console.error(e)
@@ -298,7 +298,7 @@ app.get('/api/template_semanal', isWriter, async (req, res) => {
   try {
     // const values = await getCachedValuesSemanal()
     const values = await getValuesSemanal()
-    writeFileSync("public/json/datos_mapa_semanal.json", JSON.stringify(values.datos_mapa_semanal))
+    writeFileSync(path.join(__dirname,"../public/json/datos_mapa_semanal.json"), JSON.stringify(values.datos_mapa_semanal))
     res.json(values)
   } catch(e) {
     console.error(e)
