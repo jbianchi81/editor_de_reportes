@@ -146,6 +146,12 @@ html {
     font-style: italic;
 }
 
+.text-box-caudales p, .text-box-caudales div {
+    font-size: 14px;
+    font-style: italic;
+}
+
+
 
 #mapa-row {
     display: flex;
