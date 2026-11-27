@@ -407,7 +407,7 @@ div.region-hidro.is-visible div.as-link {
 .media-container img,
 #mapa_pmad {
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   object-fit: cover; /* Keeps image aspect ratio clean */
   display: block;
 }
