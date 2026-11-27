@@ -248,7 +248,7 @@ app.post('/publish', isWriter, (req, res) => {
     const ymd = getYMDstrings(date)
     // write json (report metadata)
     const md_filename = (reporte == "semanal") ? '../public/json/reporte_semanal.json' : '../public/json/reporte_diario.json'
-    const reporte_url = (reporte == "semanal") ? "https://alerta.ina.gob.ar/a5/diario/reporte_semanal" : "https://alerta.ina.gob.ar/a5/diario/reporte_diario"
+    const reporte_url = (reporte == "semanal") ? "https://alerta.ina.gob.ar/a5/semanal/reporte_semanal" : "https://alerta.ina.gob.ar/a5/diario/reporte_diario"
     writeFile(
       path.join(__dirname,md_filename), 
       JSON.stringify(
